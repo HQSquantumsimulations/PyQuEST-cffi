@@ -8,7 +8,7 @@ PyQuEST provides two main functionalities:
 
 2. A compile function generating a complete QuEST c-source-file from python calls, building it and importing it into python via cffi ).
 
-For more information see the detailed code [documentation](http://rtd.office.quantumsimulations.de/pyquest/)
+For more information see the detailed code [documentation]()
 
 ## Note
 
@@ -25,6 +25,6 @@ Do not assume that any bugs occuring using pyQuEST are QuEST bugs unless the sam
 At the moment we do not provide PyPi packages. The recommended way to install pyQuEST is
 ```shell
 # pyQuEST add QuEST as a git submodule
-git clone --recurse-submodules $PYQUEST_REPO_URL
+git clone --recurse-submodules https://github.com/HQSquantumsimulations/pyquest.git
 pip install -e pyquest/
 ```
