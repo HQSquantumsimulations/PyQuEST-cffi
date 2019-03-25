@@ -8,7 +8,7 @@ PyQuEST provides two main functionalities:
 
 2. A compile function generating a complete QuEST c-source-file from python calls, building it and importing it into python via cffi ).
 
-For more information see the detailed code [documentation]()
+For more information see the detailed code [documentation](https://pyquest.readthedocs.io/en/latest/)
 
 ## Note
 
