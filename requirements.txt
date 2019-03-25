@@ -1,0 +1,6 @@
+sphinx>=1.4
+nbsphinx
+numpy
+cffi
+sphinx_rtd_theme
+gitpython
