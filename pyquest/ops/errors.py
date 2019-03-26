@@ -27,10 +27,6 @@ class applyOneQubitDephaseError(_PYQUEST):
     .. math::
         \rho &= (1-p) \rho + p \sigma^z_q \rho \sigma^z_q \\
         \rho &= \mathcal{K} \rho \mathcal{K} \\
-        \mathcal{K}  &=  \begin{pmatrix}
-        \sqrt{1-p} + \sqrt{p} & 0\\
-         0 & \sqrt{1-p}-\sqrt{p}
-        \end{pmatrix} \\
         \vec{\rho} &= \mathcal{L} \vec{\rho} \\ 
         \mathcal{L} &= \begin{pmatrix}
             1 & 0 & 0 & 0\\
