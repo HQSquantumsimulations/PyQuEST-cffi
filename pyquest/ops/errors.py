@@ -183,10 +183,6 @@ class applyOneQubitDampingError(_PYQUEST):
 
     .. math::
         \rho &= \mathcal{K} \rho \mathcal{K}\\
-        \mathcal{K} &=  \begin{pmatrix}
-        1 & \sqrt{p}\\
-         0 & \sqrt{1-p}
-        \end{pmatrix}
 
     Args:
         qureg: a qureg containing a density matrix
