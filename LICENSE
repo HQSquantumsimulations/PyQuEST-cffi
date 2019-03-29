@@ -200,7 +200,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
    
-INCLUDED CODE: pyQuEST includes code not licensed under Apache 2.0
+INCLUDED CODE: PyQuEST-cffi includes code not licensed under Apache 2.0
 
    pyquest_cffi includes code from QuEST, which is licensed under the MIT license:
 

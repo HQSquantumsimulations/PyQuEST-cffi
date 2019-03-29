@@ -8,7 +8,7 @@ from pyquest_cffi.utils import reporting
 
 def run_example_interactive():
     """
-    Running a damping example to demonstrate decoherence in pyQuEST
+    Running a damping example to demonstrate decoherence in PyQuEST-cffi
     """
 
     # creating environment

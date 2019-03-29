@@ -1,4 +1,4 @@
-pyQuEST
+PyQuEST-cffi
 =======
 
 .. automodule:: pyquest_cffi
