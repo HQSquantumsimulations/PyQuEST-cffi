@@ -1,11 +1,11 @@
 # Copyright 2019 HQS Quantum Simulations GmbH
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,29 +47,29 @@ class CustomBuild(build_ext):
             src_path = os.path.dirname(os.path.realpath(__file__))
             os.chdir(src_path)
             QuEST_release_link = 'https://github.com/HQSquantumsimulations/QuEST/archive/develop_damping_v0.1.tar.gz'
-            try:
-                #repo = git.Repo()
-                #repo.submodule_update(init=True, recursive=True)
-                subprocess.run(['git', 'submodule', 'update', '--init', '--recursive'], check=True)
-            except Exception:
-                if not os.path.exists((os.path.realpath(__file__)+'/QuEST')):
-                    os.makedirs(os.path.realpath(__file__)+'/QuEST')
-                    subprocess.run(['wget',
-                                    QuEST_release_link,
-                                    '-o',
-                                    os.path.realpath(__file__)+'/QuEST.tar.gz'],
-                                   check=True)
-                    subprocess.run(['tar',
-                                    '-xzvf',
-                                    os.path.realpath(__file__)+'/QuEST.tar.gz',
-                                    '-C',
-                                    os.path.realpath(__file__)+'/QuEST/',
-                                    '--strip-components=1'],
-                                   check=True)
-                else:
-                    raise RuntimeError(
-                        'Could not update QuEST submodule but QuEST folder exists so can not download')
-            
+            # try:
+            #repo = git.Repo()
+            #repo.submodule_update(init=True, recursive=True)
+            #    subprocess.run(['git', 'submodule', 'update', '--init', '--recursive'], check=True)
+            # except Exception:
+            if not os.path.exists((os.path.realpath(__file__)+'/QuEST')):
+                os.makedirs(os.path.realpath(__file__)+'/QuEST')
+                subprocess.run(['wget',
+                                QuEST_release_link,
+                                '-o',
+                                os.path.realpath(__file__)+'/QuEST.tar.gz'],
+                               check=True)
+                subprocess.run(['tar',
+                                '-xzvf',
+                                os.path.realpath(__file__)+'/QuEST.tar.gz',
+                                '-C',
+                                os.path.realpath(__file__)+'/QuEST/',
+                                '--strip-components=1'],
+                               check=True)
+                # else:
+                #    raise RuntimeError(
+                #        'Could not update QuEST submodule but QuEST folder exists so can not download')
+
             os.chdir(src_path+'/pyquest_cffi/questlib/')
             subprocess.run(['make'], check=True)
             subprocess.run(['python', 'build_quest.py'], check=True)
