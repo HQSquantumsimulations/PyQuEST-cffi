@@ -1,11 +1,11 @@
 pyQuEST
 =======
 
-.. automodule:: pyquest
+.. automodule:: pyquest_cffi
 
 .. toctree::
    :hidden:
 
-   pyquest.ops.rst
-   pyquest.utils.rst
-   pyquest.cheat.rst
+   pyquest_cffi.ops.rst
+   pyquest_cffi.utils.rst
+   pyquest_cffi.cheat.rst

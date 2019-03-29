@@ -1,7 +1,7 @@
 Cheat
 =====
 
-.. automodule:: pyquest.cheat
+.. automodule:: pyquest_cffi.cheat
     :members:
     :undoc-members:
     :show-inheritance:
@@ -9,7 +9,7 @@ Cheat
 Measurement
 -----------
 
-.. automodule:: pyquest.cheat.measurement
+.. automodule:: pyquest_cffi.cheat.measurement
     :members:
     :undoc-members:
     :show-inheritance:
@@ -17,7 +17,7 @@ Measurement
 Initialization
 --------------
 
-.. automodule:: pyquest.cheat.initialization
+.. automodule:: pyquest_cffi.cheat.initialization
     :members:
     :undoc-members:
     :show-inheritance:

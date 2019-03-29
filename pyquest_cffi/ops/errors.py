@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pyquest.questlib import quest, _PYQUEST, ffi_quest, tqureg
+from pyquest_cffi.questlib import quest, _PYQUEST, ffi_quest, tqureg
 import numpy as np
 from typing import Sequence, Optional, Union, Tuple, List
 from time import time

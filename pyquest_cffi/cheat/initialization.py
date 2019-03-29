@@ -14,7 +14,7 @@
 
 import typing
 import numpy as np
-from pyquest.questlib import quest, _PYQUEST, tqureg
+from pyquest_cffi.questlib import quest, _PYQUEST, tqureg
 import warnings
 from typing import Union, List
 import uuid

@@ -202,7 +202,7 @@
    
 INCLUDED CODE: pyQuEST includes code not licensed under Apache 2.0
 
-   pyquest includes code from QuEST, which is licensed under the MIT license:
+   pyquest_cffi includes code from QuEST, which is licensed under the MIT license:
 
     Copyright (c) 2019 Vanilla Heisenberg
     

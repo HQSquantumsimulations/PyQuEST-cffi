@@ -12,15 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Provides a python interface for QuEST.
+"""Utilities to create and destroy environment etc.
 
 .. autosummary::
     :toctree: generated/
 
-    pyquest.ops
-    pyquest.cheat
-    pyquest.utils
+    pyquest_cffi.utils.dataoperation
+    pyquest_cffi.utils.reporting
+    pyquest_cffi.utils.compilation_utils
 
 """
-from pyquest.questlib import quest
-from pyquest import ops, cheat, utils
+
+from pyquest_cffi.utils.dataoperation import (
+    createQureg,
+    createDensityQureg,
+    createQuestEnv,
+    destroyQureg,
+    destroyQuestEnv
+)
+from pyquest_cffi.utils.reporting import (
+    reportQuESTEnv,
+    reportQuregParams,
+    reportStateToScreen
+)
+from pyquest_cffi.utils.compilation_utils import (
+    defineVariable,
+    createProgrammPreamble,
+    createProgrammEnd,
+    QuESTCompiler,
+    write_code_to_disk,
+    callCompiledQuestProgramm
+)

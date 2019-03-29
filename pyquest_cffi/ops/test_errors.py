@@ -16,9 +16,9 @@ import pytest
 import sys
 import numpy as np
 import numpy.testing as npt
-from pyquest import ops
-from pyquest import cheat
-from pyquest import utils
+from pyquest_cffi import ops
+from pyquest_cffi import cheat
+from pyquest_cffi import utils
 
 @pytest.mark.parametrize("prob", list(np.arange(0, 1, 0.05)))
 @pytest.mark.parametrize("gate_def", [(ops.applyOneQubitDampingError, 1),

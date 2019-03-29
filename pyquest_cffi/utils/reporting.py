@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import typing
-from pyquest.questlib import quest, _PYQUEST, tquestenv, tqureg
+from pyquest_cffi.questlib import quest, _PYQUEST, tquestenv, tqureg
 
 
 class reportQuESTEnv(_PYQUEST):

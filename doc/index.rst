@@ -3,9 +3,9 @@
 Welcome to pyQuEST's documentation!
 ======================================
 
-PyQuEST is a python interface to QuEST(https://github.com/QuEST-Kit/QuEST) based on cffi(https://cffi.readthedocs.io/en/latest/index.html) developed by HQS Quantum Simulations. QuEST is an open source toolkit for the simulation of quantum circuits (quantum computers). 
+PyQuEST-cffi is a python interface to QuEST(https://github.com/QuEST-Kit/QuEST) based on cffi(https://cffi.readthedocs.io/en/latest/index.html) developed by HQS Quantum Simulations. QuEST is an open source toolkit for the simulation of quantum circuits (quantum computers). 
 
-PyQuEST provides two main functionalities:
+PyQuEST-cffi provides two main functionalities:
 
 1. An interactive python to QuEST interface based on cffi, mapping QuEST functions to python and executing them during runtime.
 
@@ -18,7 +18,7 @@ Note
 
 Please note, pyQuEST is currently in the alpha stage and not an official QuEST project.
 
-PyQuEST currently depends on a forked version of the development branch of QuEST. We plan to move dependency to the official QuEST master and bring pyQuEST to beta stage after the next official QuEST release.
+PyQuEST-cffi currently depends on a forked version of the development branch of QuEST. We plan to move dependency to the official QuEST master and bring pyQuEST to beta stage after the next official QuEST release.
 
 In the developing branches of QuEST the QuEST project has implemented a ctypes-based python interface QuestPy(https://github.com/QuEST-Kit/QuEST/tree/PythonTesting/tests/QuESTPy) for unit testing.
 

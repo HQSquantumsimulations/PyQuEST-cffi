@@ -16,6 +16,6 @@
 import os
 lib_path = os.path.dirname(os.path.realpath(__file__))
 os.environ['LD_LIBRARY_PATH'] = lib_path
-from pyquest.questlib._abstract import _PYQUEST, tquestenv, tqureg
+from pyquest_cffi.questlib._abstract import _PYQUEST, tquestenv, tqureg
 from ._quest import lib as quest
 from ._quest import ffi as ffi_quest
