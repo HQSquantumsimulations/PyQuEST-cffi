@@ -9,9 +9,9 @@ from pyquest_cffi.utils import reporting
 def run_example_interactive():
     """
     Running the exact same Example QuEST provides in the QuEST git repository
-    with the interactive python interface of pyQuEST
+    with the interactive python interface of PyQuEST-cffi
     """
-    print('pyQuEST tutorial based on QuEST tutorial')
+    print('PyQuEST-cffi tutorial based on QuEST tutorial')
     print('     Basic 3 qubit circuit')
 
     # creating environment
