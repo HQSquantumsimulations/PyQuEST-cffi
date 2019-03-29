@@ -22,7 +22,12 @@ Do not assume that any bugs occuring using PyQuEST-cffi are QuEST bugs unless th
 
 ## Installation
 
-At the moment we do not provide PyPi packages. The recommended way to install PyQuEST-cffi is
+We do provide a PyPi source packages. The recommended way to install PyQuEST-cffi is
+
+```shell
+pip install pyquest_cffi
+```
+If you want to install PyQuEST-cffi in development mode we recommend
 ```shell
 # PyQuEST-cffi add QuEST as a git submodule
 git clone --recurse-submodules https://github.com/HQSquantumsimulations/pyquest_cffi.git
