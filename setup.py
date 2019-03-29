@@ -47,28 +47,21 @@ class CustomBuild(build_ext):
             src_path = os.path.dirname(os.path.realpath(__file__))
             os.chdir(src_path)
             QuEST_release_link = 'https://github.com/HQSquantumsimulations/QuEST/archive/develop_damping_v0.1.tar.gz'
-            # try:
-            #repo = git.Repo()
-            #repo.submodule_update(init=True, recursive=True)
-            #    subprocess.run(['git', 'submodule', 'update', '--init', '--recursive'], check=True)
-            # except Exception:
-            if not os.path.exists((os.path.realpath(__file__)+'/QuEST')):
-                os.makedirs(os.path.realpath(__file__)+'/QuEST')
+
+            if not os.path.exists((src_path+'/QuEST')):
+                os.makedirs(src_path+'/QuEST/')
                 subprocess.run(['wget',
                                 QuEST_release_link,
-                                '-o',
-                                os.path.realpath(__file__)+'/QuEST.tar.gz'],
+                                '-O',
+                                src_path+'/QuEST.tar.gz'],
                                check=True)
                 subprocess.run(['tar',
                                 '-xzvf',
-                                os.path.realpath(__file__)+'/QuEST.tar.gz',
+                                src_path+'/QuEST.tar.gz',
                                 '-C',
-                                os.path.realpath(__file__)+'/QuEST/',
+                                src_path+'/QuEST/',
                                 '--strip-components=1'],
                                check=True)
-                # else:
-                #    raise RuntimeError(
-                #        'Could not update QuEST submodule but QuEST folder exists so can not download')
 
             os.chdir(src_path+'/pyquest_cffi/questlib/')
             subprocess.run(['make'], check=True)
@@ -115,7 +108,8 @@ def setup_packages():
                   'install_requires': install_requires,
                   'setup_requires': ['cffi'],
                   'include_package_data': True,
-                  'package_data': {'pyquest_cffi': ['test', 'questlib/*', 'questlib/*.so']},
+                  'package_data': {'pyquest_cffi': ['questlib/*', 'questlib/*.so']},
+                  'data_files': [("", ["LICENSE", "pyquest_cffi/questlib/makefile"])],
                   'ext_modules': [CustomExtension('questlib')],
                   # add custom build_ext command
                   'cmdclass': {'build_ext': CustomBuild,
