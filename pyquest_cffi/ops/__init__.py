@@ -17,12 +17,12 @@
 .. autosummary::
     :toctree: generated/
 
-    pyquest.ops.ops
-    pyquest.ops.errors
+    pyquest_cffi.ops.ops
+    pyquest_cffi.ops.errors
 
 """
 
-from pyquest.ops.ops import (
+from pyquest_cffi.ops.ops import (
     hadamard,
     sGate,
     tGate,
@@ -37,7 +37,7 @@ from pyquest.ops.ops import (
     rotateAroundSphericalAxis,
     compactUnitary,
     unitary)
-from pyquest.ops.ops import (
+from pyquest_cffi.ops.ops import (
     controlledPhaseFlip,
     controlledPhaseShift,
     controlledNot,
@@ -48,12 +48,12 @@ from pyquest.ops.ops import (
     controlledRotateAroundAxis,
     controlledCompactUnitary,
     controlledUnitary)
-from pyquest.ops.ops import (
+from pyquest_cffi.ops.ops import (
     multiControlledPhaseFlip,
     multiControlledPhaseShift,
     multiControlledUnitary)
-from pyquest.ops.ops import measure
-from pyquest.ops.errors import(
+from pyquest_cffi.ops.ops import measure
+from pyquest_cffi.ops.errors import(
     applyOneQubitDephaseError,
     applyOneQubitDepolariseError,
     applyOneQubitDampingError,

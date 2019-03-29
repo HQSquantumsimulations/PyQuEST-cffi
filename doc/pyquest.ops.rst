@@ -1,7 +1,7 @@
 Operators
 =========
 
-.. automodule:: pyquest.ops
+.. automodule:: pyquest_cffi.ops
     :members:
     :undoc-members:
     :show-inheritance:
@@ -9,7 +9,7 @@ Operators
 Unitary
 -------
 
-.. automodule:: pyquest.ops.ops
+.. automodule:: pyquest_cffi.ops.ops
     :members:
     :undoc-members:
     :show-inheritance:
@@ -17,7 +17,7 @@ Unitary
 Errors
 ------
 
-.. automodule:: pyquest.ops.errors
+.. automodule:: pyquest_cffi.ops.errors
     :members:
     :undoc-members:
     :show-inheritance:

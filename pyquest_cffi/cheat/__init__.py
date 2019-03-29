@@ -17,12 +17,12 @@
 .. autosummary::
     :toctree: generated/
 
-    pyquest.cheat.measurement
-    pyquest.cheat.initialization
+    pyquest_cffi.cheat.measurement
+    pyquest_cffi.cheat.initialization
 
 """
 
-from pyquest.cheat.measurement import (
+from pyquest_cffi.cheat.measurement import (
     calcFidelity,
     calcInnerProduct,
     calcProbOfOutcome,
@@ -42,7 +42,7 @@ from pyquest.cheat.measurement import (
     getOccupationProbability,
     getExpectationValue,
     getRepeatedMeasurement)
-from pyquest.cheat.initialization import (
+from pyquest_cffi.cheat.initialization import (
     initClassicalState,
     initPlusState,
     initPureState,

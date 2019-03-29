@@ -42,7 +42,7 @@ extensions = ['sphinx.ext.autodoc',
               'recommonmark'
               ]
 
-autodoc_mock_imports = ["cirqprojectq", "pyquest.questlib._quest"]
+autodoc_mock_imports = ["cirqprojectq", "pyquest_cffi.questlib._quest"]
 autoclass_content = 'both'
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -163,7 +163,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'pyquest', 'pyQuEST Documentation',
+    (master_doc, 'pyquest_cffi', 'pyQuEST Documentation',
      [author], 1)
 ]
 

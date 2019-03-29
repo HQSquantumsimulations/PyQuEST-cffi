@@ -1,7 +1,7 @@
 Utils
 =====
 
-.. automodule:: pyquest.utils
+.. automodule:: pyquest_cffi.utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -9,7 +9,7 @@ Utils
 Dataoperation
 -------------
 
-.. automodule:: pyquest.utils.dataoperation
+.. automodule:: pyquest_cffi.utils.dataoperation
     :members:
     :undoc-members:
     :show-inheritance:
@@ -17,7 +17,7 @@ Dataoperation
 Reporting
 ---------
 
-.. automodule:: pyquest.utils.reporting
+.. automodule:: pyquest_cffi.utils.reporting
     :members:
     :undoc-members:
     :show-inheritance:
@@ -25,7 +25,7 @@ Reporting
 Compilation
 -----------
 
-.. automodule:: pyquest.utils.compilation_utils
+.. automodule:: pyquest_cffi.utils.compilation_utils
     :members:
     :undoc-members:
     :show-inheritance:

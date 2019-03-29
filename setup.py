@@ -70,7 +70,7 @@ class CustomBuild(build_ext):
                     raise RuntimeError(
                         'Could not update QuEST submodule but QuEST folder exists so can not download')
             
-            os.chdir(src_path+'/pyquest/questlib/')
+            os.chdir(src_path+'/pyquest_cffi/questlib/')
             subprocess.run(['make'], check=True)
             subprocess.run(['python', 'build_quest.py'], check=True)
             os.chdir(old_path)
@@ -100,13 +100,13 @@ def setup_packages():
     ]
     packages = find_packages(exclude=('docs'))
 
-    setup_args = {'name': 'pyquest',
+    setup_args = {'name': 'pyquest_cffi',
                   'description': ('Provides: Interactive python interface to QuEST quantum simulation toolkit;'
                                   + '  Compile functionality, create, build and import valid QuEST source code from python'),
                   'version': '0.0.1',
                   'long_description': readme,
                   'packages': packages,
-                  # 'package_dir': {'': 'pyquest'},
+                  # 'package_dir': {'': 'pyquest_cffi'},
                   'author': 'HQS Quantum Simulations: Sebastian Zanker, Nicolas Vogt',
                   'author_email': 'info@quantumsimulations.de',
                   'url': '',
@@ -115,7 +115,7 @@ def setup_packages():
                   'install_requires': install_requires,
                   'setup_requires': ['cffi'],
                   'include_package_data': True,
-                  'package_data': {'pyquest': ['test', 'questlib/*', 'questlib/*.so']},
+                  'package_data': {'pyquest_cffi': ['test', 'questlib/*', 'questlib/*.so']},
                   'ext_modules': [CustomExtension('questlib')],
                   # add custom build_ext command
                   'cmdclass': {'build_ext': CustomBuild,

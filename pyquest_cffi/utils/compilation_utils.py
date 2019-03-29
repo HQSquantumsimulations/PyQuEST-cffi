@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import typing
-from pyquest.questlib import _PYQUEST
+from pyquest_cffi.questlib import _PYQUEST
 from typing import Union, Optional, List, Tuple
 import ctypes
 from cffi import FFI
@@ -287,7 +287,7 @@ class QuESTCompiler():
 class callCompiledQuestProgramm(_PYQUEST):
     """
     Class providing the interface to the  compiled cffi QuEST prgramm.
-    Provided __call__ magic function like all other pyquest gate classes
+    Provided __call__ magic function like all other pyquest_cffi gate classes
 
     Args:
         compiled_module_name: The name of the  cffi module compiled fromt the QuEST programm

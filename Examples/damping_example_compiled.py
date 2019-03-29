@@ -1,9 +1,9 @@
 import sys
 import numpy as np
-from pyquest import ops
-from pyquest import cheat
-from pyquest import utils
-from pyquest.utils import reporting
+from pyquest_cffi import ops
+from pyquest_cffi import cheat
+from pyquest_cffi import utils
+from pyquest_cffi.utils import reporting
 
 
 def run_example_compiled():

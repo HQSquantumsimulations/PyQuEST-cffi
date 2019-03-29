@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pyquest.questlib import quest, _PYQUEST, ffi_quest
+from pyquest_cffi.questlib import quest, _PYQUEST, ffi_quest
 import numpy as np
 from typing import Sequence, Optional, Union, List
 import uuid
