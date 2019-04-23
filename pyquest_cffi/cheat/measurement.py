@@ -495,7 +495,7 @@ class getOccupationProbability(_PYQUEST):
         if qureg.isDensityMatrix:
             for index in range(2**N):
                 prob_vec[index] = (
-                    np.abs(getDensityMatrixatRowColumn()(qureg, index, index))**2
+                    (getDensityMatrixatRowColumn()(qureg, index, index))
                 )
         else:
             for index in range(2**N):
