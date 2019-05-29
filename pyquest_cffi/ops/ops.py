@@ -1,11 +1,11 @@
 # Copyright 2019 HQS Quantum Simulations GmbH
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,13 @@ import numpy as np
 from typing import Sequence, Optional, Union, List
 import uuid
 import warnings
+
+
+class PiModuloWarning(RuntimeWarning):
+    pass
+
+
+warnings.filterwarnings("ignore", category=PiModuloWarning)
 
 
 class hadamard(_PYQUEST):
@@ -340,7 +347,7 @@ class phaseShift(_PYQUEST):
         if not (0 <= theta and theta <= 2*np.pi):
             theta = np.mod(theta, 2*np.pi)
             warnings.warn('choose rotation angle between 0 and 2 pi '
-                          + ' applying modulo 2*pi', RuntimeWarning)
+                          + ' applying modulo 2*pi', PiModuloWarning)
         quest.phaseShift(qureg, qubit, theta)
 
     def call_static(self, qureg: str, qubit: Union[str, int], theta: Union[str, float]) -> List[str]:
@@ -391,7 +398,7 @@ class rotateAroundAxis(_PYQUEST):
         if not (0 <= theta and theta <= 4*np.pi):
             theta = np.mod(theta, 4*np.pi)
             warnings.warn('choose rotation angle between 0 and 4*pi (is devided by 2) '
-                          + ' applying modulo 4*pi', RuntimeWarning)
+                          + ' applying modulo 4*pi', PiModuloWarning)
         if not (vector.shape == (3,) and np.isclose(np.linalg.norm(vector), 1)):
             raise RuntimeError("vector needs to be a three component numpy array and unit-vector")
         else:
@@ -474,7 +481,7 @@ class rotateAroundSphericalAxis(_PYQUEST):
         if not (0 <= theta and theta <= 4*np.pi):
             theta = np.mod(theta, 4*np.pi)
             warnings.warn('choose rotation angle between 0 and 4*pi (is devided by 2) '
-                          + ' applying modulo 4*pi', RuntimeWarning)
+                          + ' applying modulo 4*pi', PiModuloWarning)
 
         vec = ffi_quest.new("Vector *")
         vec.x = np.sin(spherical_theta)*np.cos(spherical_phi)
@@ -556,7 +563,7 @@ class rotateX(_PYQUEST):
         if not (0 <= theta and theta <= 4*np.pi):
             theta = np.mod(theta, 4*np.pi)
             warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2)'
-                          + ' applying modulo 4*pi', RuntimeWarning)
+                          + ' applying modulo 4*pi', PiModuloWarning)
         quest.rotateX(qureg,
                       qubit,
                       theta)
@@ -610,7 +617,7 @@ class rotateY(_PYQUEST):
         if not (0 <= theta and theta <= 4*np.pi):
             theta = np.mod(theta, 4*np.pi)
             warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2)'
-                          + ' applying modulo 4*pi', RuntimeWarning)
+                          + ' applying modulo 4*pi', PiModuloWarning)
         quest.rotateY(qureg,
                       qubit,
                       theta)
@@ -664,7 +671,7 @@ class rotateZ(_PYQUEST):
         if not (0 <= theta and theta <= 4*np.pi):
             theta = np.mod(theta, 4*np.pi)
             warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2)'
-                          + ' applying modulo 4*pi', RuntimeWarning)
+                          + ' applying modulo 4*pi', PiModuloWarning)
         quest.rotateZ(qureg,
                       qubit,
                       theta)
@@ -749,13 +756,17 @@ class unitary(_PYQUEST):
             t = '{}'.format(uuid.uuid4().hex)
 
             lines.append('ComplexMatrix2 mat_{t};'.format(t=t))
-            lines.append('Complex c_{t}_r0c0; c_{t}_r0c0.real = {x}; c_{t}_r0c0.imag={y};'.format(t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 0])))
+            lines.append('Complex c_{t}_r0c0; c_{t}_r0c0.real = {x}; c_{t}_r0c0.imag={y};'.format(
+                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 0])))
             lines.append('mat_{t}.r0c0 = c_{t}_r0c0{x};'.format(t=t))
-            lines.append('Complex c_{t}_r0c1; c_{t}_r0c1.real = {x}; c_{t}_r0c1.imag={y};'.format(t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 1])))
+            lines.append('Complex c_{t}_r0c1; c_{t}_r0c1.real = {x}; c_{t}_r0c1.imag={y};'.format(
+                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 1])))
             lines.append('mat_{t}.r0c1 = c_{t}_r0c1{x};'.format(t=t))
-            lines.append('Complex c_{t}_r1c0; c_{t}_r1c0.real = {x}; c_{t}_r1c0.imag={y};'.format(t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 0])))
+            lines.append('Complex c_{t}_r1c0; c_{t}_r1c0.real = {x}; c_{t}_r1c0.imag={y};'.format(
+                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 0])))
             lines.append('mat_{t}.r1c0 = c_{t}_r1c0;'.format(t=t))
-            lines.append('Complex c_{t}_r1c1; c_{t}_r1c1.real = {x}; c_{t}_r1c1.imag={y};'.format(t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 1])))
+            lines.append('Complex c_{t}_r1c1; c_{t}_r1c1.real = {x}; c_{t}_r1c1.imag={y};'.format(
+                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 1])))
             lines.append('mat_{t}.r1c1 = c_{t}_r1c1;'.format(t=t))
             lines.append("unitary({qureg:s}, {qubit}, {matrix});".format(
                 qureg=qureg, qubit=qubit,
@@ -1008,7 +1019,7 @@ class controlledPhaseShift(_PYQUEST):
         if not (0 <= theta and theta <= 2*np.pi):
             theta = np.mod(theta, 2*np.pi)
             warnings.warn('choose rotation angle between 0 and 2 pi '
-                          + ' applying modulo 2*pi', RuntimeWarning)
+                          + ' applying modulo 2*pi', PiModuloWarning)
         quest.controlledPhaseShift(qureg, control, qubit, theta)
 
     def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
@@ -1069,7 +1080,7 @@ class controlledRotateAroundAxis(_PYQUEST):
         if not (0 <= theta and theta <= 4*np.pi):
             theta = np.mod(theta, 4*np.pi)
             warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2!)'
-                          + ' applying modulo 4*pi', RuntimeWarning)
+                          + ' applying modulo 4*pi', PiModuloWarning)
         if not (vector.shape == (3,) and np.isclose(np.linalg.norm(vector), 1)):
             raise RuntimeError("vector needs to be a three component numpy array and unit-vector")
         else:
@@ -1158,7 +1169,7 @@ class controlledRotateX(_PYQUEST):
         if not (0 <= theta and theta <= 4*np.pi):
             theta = np.mod(theta, 4*np.pi)
             warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2)'
-                          + ' applying modulo 4*pi', RuntimeWarning)
+                          + ' applying modulo 4*pi', PiModuloWarning)
         quest.controlledRotateX(qureg, control,
                                 qubit,
                                 theta)
@@ -1223,7 +1234,7 @@ class controlledRotateY(_PYQUEST):
         if not (0 <= theta and theta <= 4*np.pi):
             theta = np.mod(theta, 4*np.pi)
             warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2)'
-                          + ' applying modulo 4*pi', RuntimeWarning)
+                          + ' applying modulo 4*pi', PiModuloWarning)
         quest.controlledRotateY(qureg, control,
                                 qubit,
                                 theta)
@@ -1288,7 +1299,7 @@ class controlledRotateZ(_PYQUEST):
         if not (0 <= theta and theta <= 4*np.pi):
             theta = np.mod(theta, 4*np.pi)
             warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2)'
-                          + ' applying modulo 4*pi', RuntimeWarning)
+                          + ' applying modulo 4*pi', PiModuloWarning)
         quest.controlledRotateZ(qureg, control,
                                 qubit,
                                 theta)
@@ -1382,13 +1393,17 @@ class controlledUnitary(_PYQUEST):
             t = '{}'.format(uuid.uuid4().hex)
 
             lines.append('ComplexMatrix2 mat_{t};'.format(t=t))
-            lines.append('Complex c_{t}_r0c0; c_{t}_r0c0.real = {x}; c_{t}_r0c0.imag={y};'.format(t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 0])))
+            lines.append('Complex c_{t}_r0c0; c_{t}_r0c0.real = {x}; c_{t}_r0c0.imag={y};'.format(
+                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 0])))
             lines.append('mat_{t}.r0c0 = c_{t}_r0c0{x};'.format(t=t))
-            lines.append('Complex c_{t}_r0c1; c_{t}_r0c1.real = {x}; c_{t}_r0c1.imag={y};'.format(t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 1])))
+            lines.append('Complex c_{t}_r0c1; c_{t}_r0c1.real = {x}; c_{t}_r0c1.imag={y};'.format(
+                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 1])))
             lines.append('mat_{t}.r0c1 = c_{t}_r0c1{x};'.format(t=t))
-            lines.append('Complex c_{t}_r1c0; c_{t}_r1c0.real = {x}; c_{t}_r1c0.imag={y};'.format(t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 0])))
+            lines.append('Complex c_{t}_r1c0; c_{t}_r1c0.real = {x}; c_{t}_r1c0.imag={y};'.format(
+                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 0])))
             lines.append('mat_{t}.r1c0 = c_{t}_r1c0;'.format(t=t))
-            lines.append('Complex c_{t}_r1c1; c_{t}_r1c1.real = {x}; c_{t}_r1c1.imag={y};'.format(t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 1])))
+            lines.append('Complex c_{t}_r1c1; c_{t}_r1c1.real = {x}; c_{t}_r1c1.imag={y};'.format(
+                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 1])))
             lines.append('mat_{t}.r1c1 = c_{t}_r1c1;'.format(t=t))
             lines.append("controlledUnitary({qureg:s}, {control}, {qubit}, {matrix});".format(
                 qureg=qureg, control=control, qubit=qubit,
@@ -1470,7 +1485,7 @@ class multiControlledPhaseShift(_PYQUEST):
         if not (0 <= theta and theta <= 4*np.pi):
             theta = np.mod(theta, 4*np.pi)
             warnings.warn('choose rotation angle between 0 and 4 pi '
-                          + ' applying modulo 4*pi', RuntimeWarning)
+                          + ' applying modulo 4*pi', PiModuloWarning)
         pointer = ffi_quest.new("int[{}]".format(len(controls)))
         for co, control in enumerate(controls):
             pointer[co] = control
@@ -1569,13 +1584,17 @@ class multiControlledUnitary(_PYQUEST):
             t = '{}'.format(uuid.uuid4().hex)
 
             lines.append('ComplexMatrix2 mat_{t};'.format(t=t))
-            lines.append('Complex c_{t}_r0c0; c_{t}_r0c0.real = {x}; c_{t}_r0c0.imag={y};'.format(t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 0])))
+            lines.append('Complex c_{t}_r0c0; c_{t}_r0c0.real = {x}; c_{t}_r0c0.imag={y};'.format(
+                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 0])))
             lines.append('mat_{t}.r0c0 = c_{t}_r0c0{x};'.format(t=t))
-            lines.append('Complex c_{t}_r0c1; c_{t}_r0c1.real = {x}; c_{t}_r0c1.imag={y};'.format(t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 1])))
+            lines.append('Complex c_{t}_r0c1; c_{t}_r0c1.real = {x}; c_{t}_r0c1.imag={y};'.format(
+                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 1])))
             lines.append('mat_{t}.r0c1 = c_{t}_r0c1{x};'.format(t=t))
-            lines.append('Complex c_{t}_r1c0; c_{t}_r1c0.real = {x}; c_{t}_r1c0.imag={y};'.format(t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 0])))
+            lines.append('Complex c_{t}_r1c0; c_{t}_r1c0.real = {x}; c_{t}_r1c0.imag={y};'.format(
+                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 0])))
             lines.append('mat_{t}.r1c0 = c_{t}_r1c0;'.format(t=t))
-            lines.append('Complex c_{t}_r1c1; c_{t}_r1c1.real = {x}; c_{t}_r1c1.imag={y};'.format(t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 1])))
+            lines.append('Complex c_{t}_r1c1; c_{t}_r1c1.real = {x}; c_{t}_r1c1.imag={y};'.format(
+                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 1])))
             lines.append('mat_{t}.r1c1 = c_{t}_r1c1;'.format(t=t))
             lines.append("multiControlledUnitary({qureg:s}, {controls}, {qubit}, {matrix});".format(
                 qureg=qureg, controls=control, qubit=qubit,
