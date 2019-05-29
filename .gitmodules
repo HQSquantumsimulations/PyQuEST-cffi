@@ -1,4 +1,3 @@
 [submodule "QuEST"]
 	path = QuEST
-	url = https://github.com/HQSquantumsimulations/QuEST.git
-	branch = develop_damping
+	url = https://github.com/QuEST-Kit/QuEST.git

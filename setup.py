@@ -46,7 +46,7 @@ class CustomBuild(build_ext):
             # os.path.dirname(os.path.abspath(sys.argv[0]))
             src_path = os.path.dirname(os.path.realpath(__file__))
             os.chdir(src_path)
-            QuEST_release_link = 'https://github.com/HQSquantumsimulations/QuEST/archive/develop_damping_v0.1.tar.gz'
+            QuEST_release_link = 'https://github.com/QuEST-Kit/QuEST/archive/2.1.0.tar.gz'
             try:
                 #repo = git.Repo()
                 #repo.submodule_update(init=True, recursive=True)
@@ -103,7 +103,7 @@ def setup_packages():
     setup_args = {'name': 'pyquest_cffi',
                   'description': ('Provides: Interactive python interface to QuEST quantum simulation toolkit;'
                                   + '  Compile functionality, create, build and import valid QuEST source code from python'),
-                  'version': '0.0.1',
+                  'version': '0.1',
                   'long_description': readme,
                   'packages': packages,
                   # 'package_dir': {'': 'pyquest_cffi'},
