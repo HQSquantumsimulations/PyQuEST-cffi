@@ -96,7 +96,7 @@ def setup_packages():
     setup_args = {'name': 'pyquest_cffi',
                   'description': ('Provides: Interactive python interface to QuEST quantum simulation toolkit;'
                                   + '  Compile functionality, create, build and import valid QuEST source code from python'),
-                  'version': '0.0.1',
+                  'version': '0.0.2',
                   'long_description': readme,
                   'packages': packages,
                   # 'package_dir': {'': 'pyquest_cffi'},
