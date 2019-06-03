@@ -1650,3 +1650,57 @@ class measure(_PYQUEST):
                 call = "{readout:s}[{readout_index}] = measure({qureg:s}, {qubit})".format(
                     readout=readout, readout_index=readout_index, qureg=qureg, qubit=qubit)
         return [call]
+
+# Extra gates:
+
+
+class MolmerSorensenXX(_PYQUEST):
+    r"""
+    Implements a fixed phase MolmerSorensen XX gate (http://arxiv.org/abs/1705.02771)
+    Uses decomposition according to http://arxiv.org/abs/quant-ph/0507171
+
+    .. math::
+        U = \frac{1}{\sqrt{2}} \begin{pmatrix}
+            1 & 0 & 0 & i\\
+        0 & 1 & i & 0\\
+        0 & i & 1 & 0\\
+        i & 0 & 0 & 1
+        \end{pmatrix}
+
+    Args:
+        qureg: quantum register
+        control: qubit that controls the application of the unitary
+        qubit: qubit the unitary gate is applied to
+    """
+
+    def call_interactive(self, qureg, control: int, qubit: int):
+        quest.rotateY(qureg, control, np.pi/2)
+        quest.controlledNot(qureg, control, qubit)
+        quest.rotateZ(qureg, control, np.pi/2)
+        quest.rotateX(qureg, qubit, np.pi/2)
+        quest.rotateY(qureg, control, -np.pi/2)
+
+    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
+                    ) -> List[str]:
+        call_list = list()
+        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=control, theta=np.pi/4))
+        call_list.append("controlledNot({qureg:s}, {control}, {qubit});".format(
+            qureg=qureg, control=control, qubit=qubit))
+        call_list.append("rotateZ({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=control, theta=np.pi/4))
+        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=qubit, theta=np.pi/4))
+        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=control, theta=-np.pi/4))
+        return call_list
+
+    def matrix(self, **kwargs) -> np.ndarray:
+        """
+        The definition of the gate as a unitary matrix
+        """
+        matrix = np.array([[1, 0, 0, 1j],
+                           [0, 1, 1j, 0],
+                           [0, 1j, 1, 0],
+                           [1j, 0, 0, 1]], dtype=np.complex)*(1-1j)/2
+        return matrix
