@@ -48,7 +48,8 @@ from pyquest_cffi.ops.ops import (
     controlledRotateAroundAxis,
     controlledCompactUnitary,
     controlledUnitary,
-    PiModuloWarning)
+    PiModuloWarning,
+    MolmerSorensenXX)
 from pyquest_cffi.ops.ops import (
     multiControlledPhaseFlip,
     multiControlledPhaseShift,
