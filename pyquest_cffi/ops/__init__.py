@@ -49,7 +49,9 @@ from pyquest_cffi.ops.ops import (
     controlledCompactUnitary,
     controlledUnitary,
     PiModuloWarning,
-    MolmerSorensenXX)
+    MolmerSorensenXX,
+    sqrtISwap,
+    invSqrtISwap)
 from pyquest_cffi.ops.ops import (
     multiControlledPhaseFlip,
     multiControlledPhaseShift,
