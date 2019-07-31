@@ -995,6 +995,128 @@ class controlledPhaseFlip(_PYQUEST):
         return matrix
 
 
+class sqrtISwap(_PYQUEST):
+    r"""
+    Implements a square root ISwap gate
+
+    .. math::
+        U = \begin{pmatrix}
+            1 & 0 & 0 & 0\\
+        0 & \frac{1}{\sqrt{2}} & \frac{i}{\sqrt{2}} & 0\\
+        0 & \frac{i}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0\\
+        0 & 0 & 0 & 1
+        \end{pmatrix}
+
+    Args:
+        qureg: quantum register
+        control: qubit that controls the application of the unitary
+        qubit: qubit the unitary gate is applied to
+    """
+
+    def call_interactive(self, qureg, control: int, qubit: int):
+
+        quest.rotateY(qureg, qubit, -np.pi/2)
+        quest.rotateX(qureg, control, np.pi/2)
+        quest.controlledPhaseFlip(qureg, control, qubit)
+        quest.rotateY(qureg, qubit, -np.pi/4)
+        quest.rotateX(qureg, control, -np.pi/4)
+        quest.controlledPhaseFlip(qureg, control, qubit)
+        quest.rotateY(qureg, qubit, np.pi/2)
+        quest.rotateX(qureg, control, -np.pi/2)
+
+    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
+                    ) -> List[str]:
+        call_list = list()
+        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=qubit, theta=-np.pi/2))
+        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=control, theta=np.pi/2))
+        call_list.append("controlledPhaseFlip({qureg:s}, {control}, {qubit});".format(
+            qureg=qureg, control=control, qubit=qubit))
+        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=qubit, theta=-np.pi/4))
+        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=control, theta=-np.pi/4))
+        call_list.append("controlledPhaseFlip({qureg:s}, {control}, {qubit});".format(
+            qureg=qureg, control=control, qubit=qubit))
+        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=qubit, theta=np.pi/2))
+        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=control, theta=-np.pi/2))
+        return call_list
+
+    def matrix(self, **kwargs) -> np.ndarray:
+        """
+        The definition of the gate as a unitary matrix
+        """
+        matrix = np.array([[1, 0, 0, 0],
+                           [0, 1/np.sqrt(2), 1j/np.sqrt(2), 0],
+                           [0, 1j/np.sqrt(2), 1/np.sqrt(2), 0],
+                           [0, 0, 0, 1]], dtype=np.complex)
+        return matrix
+
+
+class invSqrtISwap(_PYQUEST):
+    r"""
+    Implements inverse square root ISwap gate
+
+    .. math::
+        U = \begin{pmatrix}
+            1 & 0 & 0 & 0\\
+        0 & \frac{1}{\sqrt{2}} & \frac{-i}{\sqrt{2}} & 0\\
+        0 & \frac{-i}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0\\
+        0 & 0 & 0 & 1
+        \end{pmatrix}
+
+    Args:
+        qureg: quantum register
+        control: qubit that controls the application of the unitary
+        qubit: qubit the unitary gate is applied to
+    """
+
+    def call_interactive(self, qureg, control: int, qubit: int):
+
+        quest.rotateY(qureg, qubit, -np.pi/2)
+        quest.rotateX(qureg, control, np.pi/2)
+        quest.controlledPhaseFlip(qureg, control, qubit)
+        quest.rotateY(qureg, qubit, np.pi/4)
+        quest.rotateX(qureg, control, np.pi/4)
+        quest.controlledPhaseFlip(qureg, control, qubit)
+        quest.rotateY(qureg, qubit, np.pi/2)
+        quest.rotateX(qureg, control, -np.pi/2)
+
+    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
+                    ) -> List[str]:
+        call_list = list()
+        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=qubit, theta=-np.pi/2))
+        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=control, theta=np.pi/2))
+        call_list.append("controlledPhaseFlip({qureg:s}, {control}, {qubit});".format(
+            qureg=qureg, control=control, qubit=qubit))
+        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=qubit, theta=np.pi/4))
+        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=control, theta=np.pi/4))
+        call_list.append("controlledPhaseFlip({qureg:s}, {control}, {qubit});".format(
+            qureg=qureg, control=control, qubit=qubit))
+        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=qubit, theta=np.pi/2))
+        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
+            qureg=qureg, qubit=control, theta=-np.pi/2))
+        return call_list
+
+    def matrix(self, **kwargs) -> np.ndarray:
+        """
+        The definition of the gate as a unitary matrix
+        """
+        matrix = np.array([[1, 0, 0, 0],
+                           [0, 1/np.sqrt(2), -1j/np.sqrt(2), 0],
+                           [0, -1j/np.sqrt(2), 1/np.sqrt(2), 0],
+                           [0, 0, 0, 1]], dtype=np.complex)
+        return matrix
+
+
 class controlledPhaseShift(_PYQUEST):
     r"""
     Implements a controlled phase flip shift also known as controlled Z power gate
