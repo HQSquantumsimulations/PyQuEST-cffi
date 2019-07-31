@@ -34,6 +34,9 @@ import os
                                   ops.controlledNot,
                                   ops.controlledPhaseFlip,
                                   ops.controlledPauliY,
+                                  ops.MolmerSorensenXX,
+                                  ops.sqrtISwap,
+                                  ops.invSqrtISwap
                                   ])
 def test_simple_gate_matrices(gate, compile):
     matrix_gate = gate().matrix()
