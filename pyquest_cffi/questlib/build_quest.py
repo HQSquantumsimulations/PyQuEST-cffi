@@ -1,11 +1,12 @@
+"""Building the Quest backend from C code"""
 # Copyright 2019 HQS Quantum Simulations GmbH
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +42,8 @@ del(QuESTPrecFunc)
 with open(os.path.join(include[0], "QuEST.h"), "r") as f:
     lines = [line for line in f]
 
-lines += ["void statevec_setAmps(Qureg qureg, long long int startInd, qreal* reals, qreal* imags, long long int numAmps);"]
+lines += ["void statevec_setAmps(Qureg qureg, long long int startInd,"
+          + " qreal* reals, qreal* imags, long long int numAmps);"]
 lines += ["qreal densmatr_calcProbOfOutcome(Qureg qureg, const int measureQubit, int outcome);"]
 lines += ["qreal statevec_calcProbOfOutcome(Qureg qureg, const int measureQubit, int outcome);"]
 lines += ["int generateMeasurementOutcome(qreal zeroProb, qreal *outcomeProb);"]
@@ -69,6 +71,6 @@ ffibuilder.set_source(
     include_dirs=include,
     library_dirs=[lib_path],
     extra_link_args=['-Wl,-rpath,$ORIGIN'],
-    #extra_link_args=['-Wl,-rpath={}'.format(lib_path)],
+    # extra_link_args=['-Wl,-rpath={}'.format(lib_path)],
 )
 ffibuilder.compile(verbose=True)
