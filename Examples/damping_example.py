@@ -1,5 +1,4 @@
-import sys
-import numpy as np
+"""Usage example for PyQuest-cffi damping simulation"""
 from pyquest_cffi import ops
 from pyquest_cffi import cheat
 from pyquest_cffi import utils
@@ -7,10 +6,7 @@ from pyquest_cffi.utils import reporting
 
 
 def run_example_interactive():
-    """
-    Running a damping example to demonstrate decoherence in PyQuEST-cffi
-    """
-
+    """Running a damping example to demonstrate decoherence in PyQuEST-cffi"""
     # creating environment
     env = utils.createQuestEnv()()
     # allocating qubit register

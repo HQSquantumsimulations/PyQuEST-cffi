@@ -1,18 +1,18 @@
+"""Compilation utilities for static compilation"""
 # Copyright 2019 HQS Quantum Simulations GmbH
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import typing
 from pyquest_cffi.questlib import _PYQUEST
 from typing import Union, Optional, List, Tuple
 import ctypes
@@ -35,21 +35,18 @@ class defineVariable(_PYQUEST):
         name: the name of the variable that is defined
         start_value: optional start value
         local: is the variable only declared locally or not
+
     """
 
     def call_interactive(self) -> None:
-        """
-        Not implemented: No need to define variables in interactive mode
-        """
+        """Not implemented: No need to define variables in interactive mode"""
         raise NotImplementedError
 
     def call_static(self, vartype: str, name: str,
                     length: Optional[int] = None,
                     start_value: Optional[Union[float, str]] = None,
                     local: bool = True) -> List[str]:
-        """
-        Defined variables can be used in the code after this has been called
-        """
+        """Defined variables can be used in the code after this has been called"""
         if local:
             call = "{vartype}".format(vartype=vartype)
             call += " {name}".format(name=name)
@@ -70,27 +67,29 @@ class defineVariable(_PYQUEST):
 
 
 class createProgrammPreamble(_PYQUEST):
-    """
-    Create preamble (include statements, function definition and input arguments) for a compiled QuEST programm
+    """Create preamble
+
+    Create preamble (include statements,
+     function definition and input arguments) for a compiled QuEST programm
 
     Args:
         return_type: the return type of the function
         function_name: the name of the function
-        arguments: A list of tuples definting the arguments of the function, 
+        arguments: A list of tuples definting the arguments of the function,
                     with the type as the first element in each tuple
                      and the name as the second element (assumes pointers)
+
     """
 
     def call_interactive(self) -> None:
-        """
-        Not implemented: No need to create preamble in interactive mode
-        """
+        """Not implemented: No need to create preamble in interactive mode"""
         raise NotImplementedError
 
     def call_static(self,
                     return_type: str = 'Complex',
                     function_name: str = 'tmp_QuEST_function',
                     arguments: Optional[List[Tuple[str, str]]] = None) -> List[str]:
+        """Static call of PyQuest-cffi"""
         call_list = list()
         call_list.append('#include <stdlib.h>')
         call_list.append("#include <stdio.h>")
@@ -107,37 +106,35 @@ class createProgrammPreamble(_PYQUEST):
         return call_list
 
 
-
 def write_code_to_disk(lines=List[str], file_name: str = 'tmp_QuEST_code.c'):
-    """
-    Write the QuEST c-programm to file
+    """Write the QuEST c-programm to file
 
     Args:
         lines: Lines of code in the .c file
         file_name: Name of .c file
+
     """
     with open(file_name, "w") as f:
         for line in lines:
-            f.write(line+'\n')
+            f.write(line + '\n')
 
 
 class createProgrammEnd(_PYQUEST):
-    """
-    Create return statement at end of QuEST Programm
+    """Create return statement at end of QuEST Programm
 
     Args:
         return_name: the name of the Complex return register
+
     """
 
     def call_interactive(self) -> None:
-        """
-        Not implemented: No need to create return statement in interactive mode
-        """
+        """Not implemented: No need to create return statement in interactive mode"""
         raise NotImplementedError
 
     def call_static(self,
                     return_name: str = 'readout',
                     ) -> List[str]:
+        """Static call to create program end"""
         call_list = list()
         call_list.append("return {return_name};".format(return_name=return_name))
         call_list.append("}")
@@ -156,9 +153,10 @@ class QuESTCompiler():
                     if this is set, file_name is ignored
         return_type: the return type of the function
         function_name: the name of the function
-        arguments: A list of tuples definting the arguments of the function, 
+        arguments: A list of tuples definting the arguments of the function,
                     with the type as the first element in each tuple
                      and the name as the second element (assumes pointers)
+
     """
 
     def __init__(self,
@@ -169,7 +167,7 @@ class QuESTCompiler():
                  function_name: str = 'tmp_QuEST_function',
                  arguments: Optional[List[Tuple[str, str]]] = None,
                  ) -> None:
-
+        """Initialising compiler"""
         self._destination_directory = destination_directory
         self.lib_path = os.path.dirname(os.path.realpath(__file__))
         quest_path = os.path.join(self.lib_path, "../../QuEST/QuEST")
@@ -196,8 +194,8 @@ class QuESTCompiler():
 
         with open(os.path.join(self.include[0], "QuEST.h"), "r") as f:
             def_lines = [line for line in f]
-        def_lines += [
-            "void statevec_setAmps(Qureg qureg, long long int startInd, qreal* reals, qreal* imags, long long int numAmps);"]
+        def_lines += [("void statevec_setAmps(Qureg qureg, long long int startInd,"
+                       + "qreal* reals, qreal* imags, long long int numAmps);")]
         def_lines += [
             "qreal densmatr_calcProbOfOutcome(Qureg qureg, const int measureQubit, int outcome);"]
         def_lines += [
@@ -212,14 +210,14 @@ class QuESTCompiler():
 
         _lines = []
         no_def = True
-        for l in lines:
-            l += '\n'
-            if not l.find("getEnvironmentString") >= 0:
-                if no_def and not l.startswith("#"):
-                    _lines.append(l)
-                elif l.startswith("#ifdef"):
+        for li in lines:
+            li += '\n'
+            if not li.find("getEnvironmentString") >= 0:
+                if no_def and not li.startswith("#"):
+                    _lines.append(li)
+                elif li.startswith("#ifdef"):
                     no_def = False
-                elif l.startswith("#endif"):
+                elif li.startswith("#endif"):
                     no_def = True
         _lines = "".join(_lines).replace('qreal', qreal)
 
@@ -253,8 +251,10 @@ class QuESTCompiler():
         Starts the actual cffi compilation
 
         Args:
-            compiled_module_name: Name of the compiled module. The same compiled_module_name can not be used twice
+            compiled_module_name: Name of the compiled module.
+                                  The same compiled_module_name can not be used twice
             when being imported (even at different times) in one python module or package
+
         """
         current_directory = os.getcwd()
 
@@ -268,7 +268,7 @@ class QuESTCompiler():
         shutil.copy2(self.questlib, os.getcwd())
         ffibuilder = FFI()
         ffibuilder.cdef(self.def_lines)
-        source = '# include <QuEST.h>\n'+'# include <stdio.h>\n'+'# include <stdlib.h>\n'
+        source = '# include <QuEST.h>\n' + '# include <stdio.h>\n' + '# include <stdlib.h>\n'
         # for line in self.lines:
         #    source += line+'\n'
         source += self.lines
@@ -285,17 +285,20 @@ class QuESTCompiler():
 
 
 class callCompiledQuestProgramm(_PYQUEST):
-    """
+    """Call compiled quest program
+
     Class providing the interface to the  compiled cffi QuEST prgramm.
     Provided __call__ magic function like all other pyquest_cffi gate classes
 
     Args:
         compiled_module_name: The name of the  cffi module compiled fromt the QuEST programm
+
     """
 
     def __init__(self,
                  compiled_module_name: str = '_compiled_tmp_quest_programm',
                  **kwargs):
+        """Initialize callCompiledQuestProgram"""
         self._compiled_module_name = compiled_module_name
         super().__init__(**kwargs)
         try:
@@ -317,14 +320,16 @@ class callCompiledQuestProgramm(_PYQUEST):
             function_name: The name of the function called in the compiled programm.
             length_result: The length of the Complex array returned by the compiled QuEST programm
             kwargs: The arguments passed to the compiled function
+
         """
         function = getattr(self._compiled_module.lib, function_name)
         result = function(*[kwargs[key] for key in kwargs.keys()])
         output = np.zeros((length_result,), dtype=np.complex)
         for co in range(length_result):
-            output[co] = result[co].real+1j*result[co].imag
+            output[co] = result[co].real + 1j * result[co].imag
         return output
 
     def call_static(self) -> None:
+        """Static call of PyQuest-cffi"""
         raise RuntimeError(
             "This class only provides calls to already compiled function. Can't be compiled again")

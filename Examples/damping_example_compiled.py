@@ -1,5 +1,4 @@
-import sys
-import numpy as np
+"""Usage example for PyQuest-cffi static damping simulation"""
 from pyquest_cffi import ops
 from pyquest_cffi import cheat
 from pyquest_cffi import utils
@@ -7,9 +6,7 @@ from pyquest_cffi.utils import reporting
 
 
 def run_example_compiled():
-    """
-    Running a damping example to demonstrate decoherence in PyQuEST-cffi
-    """
+    """Running a damping example to demonstrate decoherence in PyQuEST-cffi"""
     lines = list()
     preamble = utils.createProgrammPreamble(interactive=False)(return_type='Complex',
                                                                function_name='tmp_QuEST_function',

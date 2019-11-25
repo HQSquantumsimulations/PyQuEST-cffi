@@ -21,6 +21,8 @@ import warnings
 
 
 class PiModuloWarning(RuntimeWarning):
+    """Warning argument is folded back into [0, 2pi]"""
+
     pass
 
 
@@ -98,16 +100,13 @@ class pauliX(_PYQUEST):
         return [call]
 
     def matrix(self, **kwargs) -> np.ndarray:
-        """
-        The definition of the gate as a unitary matrix
-        """
+        """The definition of the gate as a unitary matrix"""
         matrix = np.array([[0, 1], [1, 0]], dtype=np.complex)
         return matrix
 
 
 class pauliY(_PYQUEST):
-    r"""
-    Implements Pauli Y gate
+    r"""Implements Pauli Y gate
 
     .. math::
         U =  \begin{pmatrix}
@@ -118,6 +117,7 @@ class pauliY(_PYQUEST):
     Args:
         qureg: quantum register
         qubit: qubit the unitary gate is applied to
+
     """
 
     def call_interactive(self, qureg, qubit: int):
@@ -139,9 +139,7 @@ class pauliY(_PYQUEST):
         return [call]
 
     def matrix(self, **kwargs) -> np.ndarray:
-        """
-        The definition of the gate as a unitary matrix
-        """
+        """The definition of the gate as a unitary matrix"""
         matrix = np.array([[0, -1j], [1j, 0]], dtype=np.complex)
         return matrix
 
@@ -159,6 +157,7 @@ class pauliZ(_PYQUEST):
     Args:
         qureg: quantum register
         qubit: qubit the unitary gate is applied to
+
     """
 
     def call_interactive(self, qureg, qubit: int):
@@ -180,16 +179,13 @@ class pauliZ(_PYQUEST):
         return [call]
 
     def matrix(self, **kwargs) -> np.ndarray:
-        """
-        The definition of the gate as a unitary matrix
-        """
+        """The definition of the gate as a unitary matrix"""
         matrix = np.array([[1, 0], [0, -1]], dtype=np.complex)
         return matrix
 
 
 class sGate(_PYQUEST):
-    r"""
-    Implements S gate
+    r"""Implements S gate
 
     .. math::
         U =  \begin{pmatrix}
@@ -200,6 +196,7 @@ class sGate(_PYQUEST):
     Args:
         qureg: quantum register
         qubit: qubit the unitary gate is applied to
+
     """
 
     def call_interactive(self, qureg, qubit: int):
@@ -226,8 +223,7 @@ class sGate(_PYQUEST):
 
 
 class tGate(_PYQUEST):
-    r"""
-    Implements T gate
+    r"""Implements T gate
 
     .. math::
         U =  \begin{pmatrix}
@@ -238,6 +234,7 @@ class tGate(_PYQUEST):
     Args:
         qureg: quantum register
         qubit: qubit the unitary gate is applied to
+
     """
 
     def call_interactive(self, qureg, qubit: int):
@@ -885,6 +882,7 @@ class controlledNot(_PYQUEST):
 
     def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
                     ) -> List[str]:
+        """Static call"""
         call = "controlledNot({qureg:s}, {control}, {qubit});".format(
             qureg=qureg, control=control, qubit=qubit)
         return [call]
@@ -977,6 +975,7 @@ class controlledPhaseFlip(_PYQUEST):
                     if string must be the name of previously defined C-variable of type int
             control: The control in the quantum register, if int value is used directly,
                     if string must be the name of previously defined C-variable of type int
+
         """
         call = "controlledPhaseFlip({qureg:s}, {control}, {qubit});".format(
             qureg=qureg, control=control, qubit=qubit)
@@ -1455,6 +1454,7 @@ class controlledUnitary(_PYQUEST):
         control: qubit that controls the unitary
         qubit: qubit the unitary gate is applied to
         matrix: Unitary matrix of the one qubit gate
+
     """
 
     def call_interactive(self, qureg, control, qubit: int, matrix: np.ndarray):
@@ -1535,7 +1535,8 @@ class controlledUnitary(_PYQUEST):
 
 
 class multiControlledPhaseFlip(_PYQUEST):
-    r"""
+    r"""Phase Flip controlled by multipe qubits
+
     Implements a multi controlled phase flip gate also known as controlled Z gate.
     If all qubits in the controls are :math:`\left|1\right\rangle` the sign is flipped.
     No change occurs otherwise
@@ -1544,6 +1545,7 @@ class multiControlledPhaseFlip(_PYQUEST):
         qureg: quantum register
         controls: qubits that control the application of the unitary
         number_controls: number of the control qubits
+
     """
 
     def call_interactive(self, qureg, controls: Sequence[int], number_controls: int):
@@ -1555,8 +1557,7 @@ class multiControlledPhaseFlip(_PYQUEST):
 
     def call_static(self, qureg: str, controls: str, number_controls: Union[str, int],
                     ) -> List[str]:
-        """
-        Static call of mulitControlledPhaseFlip
+        """Static call of mulitControlledPhaseFlip
 
         Args:
             qureg: The name of the previously created quantum register as a string
@@ -1566,20 +1567,20 @@ class multiControlledPhaseFlip(_PYQUEST):
                      must be the name of previously defined C-point to array of type int
             number_controls: The variable numer_controls, if int value is used directly,
                     if string must be the name of previously defined C-variable of type int
+
         """
         call = "multiControlledPhaseFlip({qureg:s}, {controls}, { number_controls});".format(
             qureg=qureg, controls=controls, number_controls=number_controls)
         return [call]
 
     def matrix(self, **kwargs) -> np.ndarray:
-        """
-        The definition of the gate as a unitary matrix
-        """
+        """The definition of the gate as a unitary matrix"""
         raise NotImplementedError
 
 
 class multiControlledPhaseShift(_PYQUEST):
-    r"""
+    r"""Phase Shift controlled by multiple qubits
+
     Implements a mulit controlled phase flip gate also known as controlled Z power gate.
     If all qubits in the controls are :math:`\left|1\right\rangle` the phase is shifter by theta.
     No change occurs otherwise
@@ -1589,6 +1590,7 @@ class multiControlledPhaseShift(_PYQUEST):
         controls: qubits that control the application of the unitary
         number_controls: number of the control qubits
         theta: Angle of the rotation around Z-axis
+
     """
 
     def call_interactive(self, qureg, controls: Sequence[int], number_controls: int, theta: float):
@@ -1604,8 +1606,7 @@ class multiControlledPhaseShift(_PYQUEST):
 
     def call_static(self, qureg: str, controls: Union[str], number_controls: Union[str, int],
                     theta: Union[str, float]) -> List[str]:
-        """
-        Static call of mulitControlledPhaseShift
+        """Static call of mulitControlledPhaseShift
 
         Args:
             qureg: The name of the previously created quantum register as a string
@@ -1617,6 +1618,7 @@ class multiControlledPhaseShift(_PYQUEST):
                     if string must be the name of previously defined C-variable of type int
             theta: The variable theta, if float value is used directly,
                     if string must be the name of previously defined C-variable of type qreal
+
         """
         call = (
             "multiControlledPhaseShift({qureg:s}, {controls}, { number_controls}, {theta});".format(
@@ -1624,14 +1626,13 @@ class multiControlledPhaseShift(_PYQUEST):
         return [call]
 
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
-        """
-        The definition of the gate as a unitary matrix
-        """
+        """The definition of the gate as a unitary matrix"""
         raise NotImplementedError
 
 
 class multiControlledUnitary(_PYQUEST):
-    r"""
+    r"""Generic unitary gate controlled by multiple qubits
+
     Implements a mulit-controlled arbitraty one-qubit gate given by a unitary matrix
 
     Args:
@@ -1639,6 +1640,7 @@ class multiControlledUnitary(_PYQUEST):
         controls: qubits that control the application of the unitary
         qubit: qubit the unitary gate is applied to
         matrix: Unitary matrix of the one qubit gate
+
     """
 
     def call_interactive(self, qureg,
@@ -1691,6 +1693,7 @@ class multiControlledUnitary(_PYQUEST):
                     if string must be the name of previously defined C-variable of type int
             matrix: The unitary matrix, if np.ndarray, values are used directly
                 if string must be the name of previously defined C-variable of type ComplexMatrix2
+
         """
         lines = []
         if isinstance(matrix, str):
@@ -1719,23 +1722,21 @@ class multiControlledUnitary(_PYQUEST):
         return lines
 
     def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
-        """
-        The definition of the gate as a unitary matrix
-        """
+        """The definition of the gate as a unitary matrix"""
         raise NotImplementedError
 
 # measurement
 
 
 class measure(_PYQUEST):
-    r"""
-    Implements a one-qubit Measurement operation
+    r"""Implements a one-qubit Measurement operation
 
     Args:
         qureg: quantum register
         qubit: the measured qubit
         readout: The readout register for static compilation
         readout_index: The index in the readout register for static compilation
+
     """
 
     def call_interactive(self, qureg, qubit: int) -> int:
@@ -1745,8 +1746,7 @@ class measure(_PYQUEST):
     def call_static(self, qureg: str, qubit: Union[int, str],
                     readout: Optional[str] = None,
                     readout_index: Optional[Union[int, str]] = None) -> List[str]:
-        """
-        Static call of measure
+        """Static call of measure
 
         Args:
             qureg: The name of the previously created quantum register as a string
@@ -1755,6 +1755,7 @@ class measure(_PYQUEST):
             readout_index: Index in the readout register, if int value is used directly,
                     if string must be the name of previously defined C-variable of type int
             readout: The name of the previously created C-variable of type qreal
+
         """
         if readout is None:
             raise RuntimeError(
@@ -1773,7 +1774,8 @@ class measure(_PYQUEST):
 
 
 class MolmerSorensenXX(_PYQUEST):
-    r"""
+    r"""Molmer Sorensen gate
+
     Implements a fixed phase MolmerSorensen XX gate (http://arxiv.org/abs/1705.02771)
     Uses decomposition according to http://arxiv.org/abs/quant-ph/0507171
 
@@ -1789,6 +1791,7 @@ class MolmerSorensenXX(_PYQUEST):
         qureg: quantum register
         control: qubit that controls the application of the unitary
         qubit: qubit the unitary gate is applied to
+
     """
 
     def call_interactive(self, qureg, control: int, qubit: int):
@@ -1816,9 +1819,7 @@ class MolmerSorensenXX(_PYQUEST):
         return call_list
 
     def matrix(self, **kwargs) -> np.ndarray:
-        """
-        The definition of the gate as a unitary matrix
-        """
+        """The definition of the gate as a unitary matrix"""
         matrix = np.array([[1, 0, 0, 1j],
                            [0, 1, 1j, 0],
                            [0, 1j, 1, 0],
