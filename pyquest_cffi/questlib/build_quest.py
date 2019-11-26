@@ -51,9 +51,15 @@ lines += ["int generateMeasurementOutcome(qreal zeroProb, qreal *outcomeProb);"]
 
 _lines = []
 no_def = True
+skip = False
 for l in lines:
     if not l.find("getEnvironmentString") >= 0:
-        if no_def and not l.startswith("#"):
+        if skip:
+            if l.startswith('#endif'):
+                skip = False
+        elif l.startswith('#ifndef __cplusplus'):
+            skip = True
+        elif no_def and not l.startswith("#"):
             _lines.append(l)
         elif l.startswith("#ifdef"):
             no_def = False
