@@ -25,7 +25,10 @@ from pyquest_cffi import utils
 @pytest.mark.parametrize("prob", list(np.arange(0, 1, 0.05)))
 @pytest.mark.parametrize("gate_def", [(ops.applyOneQubitDampingError, 1),
                                       (ops.applyOneQubitDephaseError, 1 / 2),
-                                      (ops.applyOneQubitDepolariseError, 3 / 4)])
+                                      (ops.applyOneQubitDepolariseError, 3 / 4),
+                                      (ops.mixDamping, 1),
+                                      (ops.mixDephasing, 1 / 2),
+                                      (ops.mixDepolarising, 3 / 4)])
 def test_one_qubit_errors(prob, gate_def) -> None:
     """Testing one qubit errors"""
     op = gate_def[0]

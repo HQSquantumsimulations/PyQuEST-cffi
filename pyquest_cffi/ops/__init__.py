@@ -58,6 +58,11 @@ from pyquest_cffi.ops.ops import (
     multiControlledUnitary)
 from pyquest_cffi.ops.ops import measure
 from pyquest_cffi.ops.errors import (
+    mixDamping,
+    mixDephasing,
+    mixDepolarising,
+    mixTwoQubitDephasing,
+    mixTwoQubitDepolarising,
     applyOneQubitDephaseError,
     applyOneQubitDepolariseError,
     applyOneQubitDampingError,

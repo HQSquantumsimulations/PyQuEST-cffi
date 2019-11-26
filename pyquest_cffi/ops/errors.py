@@ -20,7 +20,7 @@ from typing import Tuple
 import warnings
 
 
-class applyOneQubitDephaseError(_PYQUEST):
+class mixDephasing(_PYQUEST):
     r"""OneQubitDephasing
 
     Apply the dephasing :math:`\sigma^z` operator to a qubit q with probability p
@@ -52,7 +52,7 @@ class applyOneQubitDephaseError(_PYQUEST):
             raise RuntimeError(
                 "probability of twoQubitDepolariseErrors needs to be smaller that 1/2")
         if qureg.isDensityMatrix:
-            return quest.applyOneQubitDephaseError(qureg, qubit, probability)
+            return quest.mixDephasing(qureg, qubit, probability)
         else:
             warnings.warn('qureg1 has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
@@ -83,7 +83,7 @@ class applyOneQubitDephaseError(_PYQUEST):
         return matrix
 
 
-class applyOneQubitDepolariseError(_PYQUEST):
+class mixDepolarising(_PYQUEST):
     r"""One qubit depolarisation error
 
     Apply the depolarisation operators :math:`\sigma^x`, :math:`\sigma^y` and :math:`\sigma^z`
@@ -109,7 +109,7 @@ class applyOneQubitDepolariseError(_PYQUEST):
             raise RuntimeError(
                 "probability of twoQubitDepolariseErrors needs to be smaller that 3/4")
         if qureg.isDensityMatrix:
-            return quest.applyOneQubitDepolariseError(qureg, qubit, probability)
+            return quest.mixDepolarising(qureg, qubit, probability)
         else:
             warnings.warn('qureg1 has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
@@ -149,7 +149,7 @@ class applyOneQubitDepolariseError(_PYQUEST):
         return matrix
 
 
-class applyOneQubitDampingError(_PYQUEST):
+class mixDamping(_PYQUEST):
     r"""One qubit damping error
 
     Apply a pure damping error corresponding to zero temperature environments
@@ -169,7 +169,7 @@ class applyOneQubitDampingError(_PYQUEST):
                          probability: float) -> None:
         """Interactive call of QuEST function"""
         if qureg.isDensityMatrix:
-            return quest.applyOneQubitDampingError(qureg, qubit, probability)
+            return quest.mixDamping(qureg, qubit, probability)
         else:
             warnings.warn('qureg1 has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
@@ -202,7 +202,7 @@ class applyOneQubitDampingError(_PYQUEST):
         return matrix
 
 
-class applyTwoQubitDepolariseError(_PYQUEST):
+class mixTwoQubitDepolarising(_PYQUEST):
     r"""Two qubit depolarisation
 
     Apply any tensor product of two operators :math:`U` :math:`\sigma^x`, :math:`\sigma^y`
@@ -231,7 +231,7 @@ class applyTwoQubitDepolariseError(_PYQUEST):
             raise RuntimeError(
                 "probability of twoQubitDepolariseErrors needs to be smaller that 15/16")
         if qureg.isDensityMatrix:
-            return quest.applyTwoQubitDeolariseError(qureg, qubit1, qubit2, probability)
+            return quest.mixTwoQubitDepolarising(qureg, qubit1, qubit2, probability)
         else:
             warnings.warn('qureg has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
@@ -258,7 +258,7 @@ class applyTwoQubitDepolariseError(_PYQUEST):
         return matrix
 
 
-class applyTwoQubitDephaseError(_PYQUEST):
+class mixTwoQubitDephasing(_PYQUEST):
     r"""Two qubit dephasing error
 
     Apply the dephasing :math:`\sigma^z` operator to two qubits q1 and q2 with probability p
@@ -288,7 +288,7 @@ class applyTwoQubitDephaseError(_PYQUEST):
             raise RuntimeError(
                 "probability of twoQubitDepolariseErrors needs to be smaller that 3/4")
         if qureg.isDensityMatrix:
-            return quest.applyTwoQubitDephaseError(qureg, qubit1, qubit2, probability)
+            return quest.mixTwoQubitDephasing(qureg, qubit1, qubit2, probability)
         else:
             warnings.warn('qureg has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
@@ -330,3 +330,59 @@ class applyTwoQubitDephaseError(_PYQUEST):
         for ci in range(0, 16):
             matrix[ci, ci] = 1 if (ci % 4) == 1 else 1 - 2(probability)
         return matrix
+
+
+class applyOneQubitDephaseError(mixDephasing):
+    """One Qubit Dephasing"""
+
+    def __init__(self, *args, **kwargs):
+        """Initialisation"""
+        warnings.warn(
+            "applyOneQubitDephaseError will be removed in future versions, use mixDephasing",
+            DeprecationWarning)
+        super().__init__(*args, **kwargs)
+
+
+class applyOneQubitDepolariseError(mixDepolarising):
+    """One Qubit Depolarisation"""
+
+    def __init__(self, *args, **kwargs):
+        """Initialisation"""
+        warnings.warn(
+            "applyOneQubitDepolariseError will be removed in future versions, use mixDepolarising",
+            DeprecationWarning)
+        super().__init__(*args, **kwargs)
+
+
+class applyOneQubitDampingError(mixDamping):
+    """One Qubit Damping"""
+
+    def __init__(self, *args, **kwargs):
+        """Initialisation"""
+        warnings.warn(
+            "applyOneQubitDampingError will be removed in future versions, use mixDamping",
+            DeprecationWarning)
+        super().__init__(*args, **kwargs)
+
+
+class applyTwoQubitDephaseError(mixDephasing):
+    """Two Qubit Dephasing"""
+
+    def __init__(self, *args, **kwargs):
+        """Initialisation"""
+        warnings.warn(
+            "applyTwoQubitDephaseError will be removed in future versions, use mixTwoQubitDephasing",
+            DeprecationWarning)
+        super().__init__(*args, **kwargs)
+
+
+class applyTwoQubitDepolariseError(mixDepolarising):
+    """Two Qubit Depolarisation"""
+
+    def __init__(self, *args, **kwargs):
+        """Initialisation"""
+        warnings.warn(
+            "applyTwoQubitDepolariseError will be removed in future versions,"
+            + " use mixTwoQubitDepolarising",
+            DeprecationWarning)
+        super().__init__(*args, **kwargs)
