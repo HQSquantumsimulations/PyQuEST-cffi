@@ -24,20 +24,13 @@ tqureg = typing.TypeVar("Qureg")
 class _PYQUEST(abc.ABC):
 
     def __init__(self, interactive: bool = True):
-        self._interactive = interactive
+        self._interactive = True
 
     def __call__(self, *args, **kwargs):
-        if self.interactive:
-            return self.call_interactive(*args, **kwargs)
-        else:
-            return self.call_static(*args, **kwargs)
+        return self.call_interactive(*args, **kwargs)
 
     @abc.abstractmethod
     def call_interactive(self, *args, **kwargs):
-        pass
-
-    @abc.abstractmethod
-    def call_static(self, *args, **kwargs):
         pass
 
     @property

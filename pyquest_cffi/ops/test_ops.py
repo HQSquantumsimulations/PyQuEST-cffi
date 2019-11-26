@@ -20,12 +20,8 @@ import numpy.testing as npt
 from pyquest_cffi import ops
 from pyquest_cffi import cheat
 from pyquest_cffi import utils
-import uuid
-import glob
-import os
 
 
-@pytest.mark.parametrize("compile", [False, True])
 @pytest.mark.parametrize("gate", [ops.hadamard,
                                   ops.sGate,
                                   ops.tGate,
@@ -39,17 +35,16 @@ import os
                                   ops.sqrtISwap,
                                   ops.invSqrtISwap
                                   ])
-def test_simple_gate_matrices(gate, compile):
+def test_simple_gate_matrices(gate):
     """Testing gates without parameters"""
     matrix_gate = gate().matrix()
     if matrix_gate.shape == (2, 2):
-        matrix_reconstructed = build_one_qubit_matrix(gate, {}, compile)
+        matrix_reconstructed = build_one_qubit_matrix(gate, {})
     elif matrix_gate.shape == (4, 4):
         matrix_reconstructed = build_two_qubit_matrix(gate, {})
     npt.assert_array_almost_equal(matrix_gate, matrix_reconstructed)
 
 
-@pytest.mark.parametrize("compile", [False, True])
 @pytest.mark.parametrize("gate", [ops.rotateX,
                                   ops.rotateY,
                                   ops.rotateY,
@@ -60,42 +55,40 @@ def test_simple_gate_matrices(gate, compile):
                                   ops.controlledPhaseShift,
                                   ])
 @pytest.mark.parametrize("theta", list(np.arange(0, 2 * np.pi, 2 * np.pi / 10)))
-def test_single_parameter_gate_matrices(gate, theta, compile) -> None:
+def test_single_parameter_gate_matrices(gate, theta) -> None:
     """Testing gates with one parameter"""
     matrix_gate = gate().matrix(theta=theta)
     if matrix_gate.shape == (2, 2):
-        matrix_reconstructed = build_one_qubit_matrix(gate, {'theta': theta}, compile)
+        matrix_reconstructed = build_one_qubit_matrix(gate, {'theta': theta})
     elif matrix_gate.shape == (4, 4):
         matrix_reconstructed = build_two_qubit_matrix(gate, {'theta': theta})
     npt.assert_array_almost_equal(matrix_gate, matrix_reconstructed)
 
 
-@pytest.mark.parametrize("compile", [False, True])
 @pytest.mark.parametrize("gate", [ops.compactUnitary,
                                   ops.controlledCompactUnitary
                                   ])
 @pytest.mark.parametrize("alpha", list(np.arange(0, 1, 1 / 3)))
 @pytest.mark.parametrize("phase", list(np.arange(0, 2 * np.pi, 2 * np.pi / 3)))
-def test_compact_unitary_gate_matrices(gate, alpha, phase, compile) -> None:
+def test_compact_unitary_gate_matrices(gate, alpha, phase) -> None:
     """Testing compact unitary gate"""
     matrix_gate = gate().matrix(alpha=alpha, beta=np.sqrt(1 - alpha**2) * np.exp(1j * phase))
     if matrix_gate.shape == (2, 2):
         matrix_reconstructed = build_one_qubit_matrix(
-            gate, {'alpha': alpha, 'beta': np.sqrt(1 - alpha**2) * np.exp(1j * phase)}, compile)
+            gate, {'alpha': alpha, 'beta': np.sqrt(1 - alpha**2) * np.exp(1j * phase)})
     elif matrix_gate.shape == (4, 4):
         matrix_reconstructed = build_two_qubit_matrix(
             gate, {'alpha': alpha, 'beta': np.sqrt(1 - alpha**2) * np.exp(1j * phase)})
     npt.assert_array_almost_equal(matrix_gate, matrix_reconstructed)
 
 
-@pytest.mark.parametrize("compile", [False, True])
 @pytest.mark.parametrize("gate", [ops.rotateAroundAxis,
                                   ops.controlledRotateAroundAxis
                                   ])
 @pytest.mark.parametrize("theta", list(np.arange(0, 2 * np.pi, 2 * np.pi / 3)))
 @pytest.mark.parametrize("phi", list(np.arange(0, 2 * np.pi, 2 * np.pi / 3)))
 @pytest.mark.parametrize("theta_s", list(np.arange(0, np.pi, np.pi / 3)))
-def test_axis_rotation_gate_matrices(gate, theta, phi, theta_s, compile) -> None:
+def test_axis_rotation_gate_matrices(gate, theta, phi, theta_s) -> None:
     """Testing axis rotation"""
     vector = np.zeros((3,))
     vector[0] = np.sin(theta_s) * np.cos(phi)
@@ -104,7 +97,7 @@ def test_axis_rotation_gate_matrices(gate, theta, phi, theta_s, compile) -> None
     matrix_gate = gate().matrix(vector=vector, theta=theta)
     if matrix_gate.shape == (2, 2):
         matrix_reconstructed = build_one_qubit_matrix(
-            gate, {'theta': theta, 'vector': vector}, compile)
+            gate, {'theta': theta, 'vector': vector})
     elif matrix_gate.shape == (4, 4):
         matrix_reconstructed = build_two_qubit_matrix(
             gate, {'theta': theta, 'vector': vector})
@@ -130,67 +123,18 @@ def test_unitary_gate_matrices(gate, alpha, phase) -> None:
     npt.assert_array_almost_equal(matrix_gate, matrix_reconstructed)
 
 
-def build_one_qubit_matrix(gate, gate_args, compile=False):
+def build_one_qubit_matrix(gate, gate_args):
     """Build one qubit matrix for tests"""
     matrix = np.zeros((2, 2), dtype=complex)
-    if compile:
-        for co, state in enumerate([np.array([1, 0]),
-                                    np.array([0, 1])]):
-            t = '{}'.format(uuid.uuid4().hex)
-            lines = []
-            lines.extend(
-                utils.createProgrammPreamble(
-                    interactive=False)(return_type='Complex',
-                                       function_name='tmp_QuEST_function_{}'.format(t),
-                                       arguments=None))
-
-            lines.extend(utils.defineVariable(interactive=False)(
-                vartype='Complex', name='readout', length=2, local=False))
-            lines.extend(
-                utils.createQuestEnv(interactive=False)(env_name='env'))
-            lines.extend(
-                utils.createQureg(interactive=False)(num_qubits=1, env='env', qureg_name='qubits'))
-            lines.extend(
-                cheat.initStateFromAmps(interactive=False)(
-                    'qubits', np.real(state), np.imag(state)))
-            lines.extend(
-                gate(interactive=False)(qureg='qubits', qubit=0, **gate_args))
-            for i in range(0, 2):
-                lines.extend(
-                    cheat.getAmp(interactive=False)(
-                        qureg='qubits', index=i, readout='readout[{}]'.format(i)))
-            lines.extend(
-                utils.createProgrammEnd(interactive=False)(return_name='readout'))
-
-            compiler = utils.QuESTCompiler(
-                code_lines=lines,
-                return_type='Complex',
-                function_name='tmp_QuEST_function_{}'.format(t),
-                arguments=None)
-
-            compiler.compile(compiled_module_name="_compiled_tmp_quest_programm_{}".format(t))
-
-            output = utils.callCompiledQuestProgramm(
-                compiled_module_name='_compiled_tmp_quest_programm_{}'.format(t))(
-                function_name='tmp_QuEST_function_{}'.format(t), length_result=2,)
-            for i in range(0, 2):
-                cComplex = output[i]
-                matrix[i, co] = cComplex.real + 1j * cComplex.imag
-            for ending in ['o', 'so', 'c']:
-                remove_list = glob.glob('{a}*.{b}'.format(
-                    a='_compiled_tmp_quest_programm_{}'.format(t), b=ending))
-                for file in remove_list:
-                    os.remove(file)
-    else:
-        for co, state in enumerate([np.array([1, 0]),
-                                    np.array([0, 1])]):
-            env = utils.createQuestEnv()()
-            qubits = utils.createQureg()(1, env)
-            cheat.initStateFromAmps()(qubits, np.real(state), np.imag(state))
-            gate()(qureg=qubits, qubit=0, **gate_args)
-            for i in range(0, 2):
-                cComplex = cheat.getAmp()(qureg=qubits, index=i)
-                matrix[i, co] = cComplex.real + 1j * cComplex.imag
+    for co, state in enumerate([np.array([1, 0]),
+                                np.array([0, 1])]):
+        env = utils.createQuestEnv()()
+        qubits = utils.createQureg()(1, env)
+        cheat.initStateFromAmps()(qubits, np.real(state), np.imag(state))
+        gate()(qureg=qubits, qubit=0, **gate_args)
+        for i in range(0, 2):
+            cComplex = cheat.getAmp()(qureg=qubits, index=i)
+            matrix[i, co] = cComplex.real + 1j * cComplex.imag
     return matrix
 
 

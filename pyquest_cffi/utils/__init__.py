@@ -34,11 +34,3 @@ from pyquest_cffi.utils.reporting import (
     reportQuregParams,
     reportStateToScreen
 )
-from pyquest_cffi.utils.compilation_utils import (
-    defineVariable,
-    createProgrammPreamble,
-    createProgrammEnd,
-    QuESTCompiler,
-    write_code_to_disk,
-    callCompiledQuestProgramm
-)

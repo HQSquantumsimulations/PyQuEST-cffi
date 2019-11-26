@@ -1,3 +1,4 @@
+"""Setup for PyQuest-cffi"""
 # Copyright 2019 HQS Quantum Simulations GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,29 +17,34 @@ from setuptools import find_packages, setup, Extension
 from setuptools.command.build_ext import build_ext
 from setuptools.command import build_py
 import subprocess
-import sys
 import os
-#import git
 
 
 class CustomExtension(Extension):
+    """Custom Extension class"""
+
     def __init__(self, name, sourcedir=''):
+        """Initialise custom extension"""
         Extension.__init__(self, name, sources=[])
         self.sourcedir = os.path.abspath(sourcedir)
 
 
 class CustomBuild(build_ext):
+    """Custom C builder"""
+
     def run(self):
+        """Run custom build function"""
         try:
             subprocess.run(['make', '--version'], check=True)
         except OSError:
             raise RuntimeError(
-                "Make must be installed to build the following extensions: " +
-                ", ".join(e.name for e in self.extensions))
+                "Make must be installed to build the following extensions: "
+                + ", ".join(e.name for e in self.extensions))
         for ext in self.extensions:
             self.build_extension(ext)
 
     def build_extension(self, ext):
+        """Build extension"""
         if not ext.name == 'questlib':
             pass
         else:
@@ -48,21 +54,21 @@ class CustomBuild(build_ext):
             os.chdir(src_path)
             QuEST_release_link = 'https://github.com/QuEST-Kit/QuEST/archive/2.1.0.tar.gz'
 
-            if not os.path.exists((src_path+'/QuEST')):
-                os.makedirs(src_path+'/QuEST/')
+            if not os.path.exists((src_path + '/QuEST')):
+                os.makedirs(src_path + '/QuEST/')
                 subprocess.run(['wget',
                                 QuEST_release_link,
                                 '-O',
-                                src_path+'/QuEST.tar.gz'],
+                                src_path + '/QuEST.tar.gz'],
                                check=True)
                 subprocess.run(['tar',
                                 '-xzvf',
-                                src_path+'/QuEST.tar.gz',
+                                src_path + '/QuEST.tar.gz',
                                 '-C',
-                                src_path+'/QuEST/',
+                                src_path + '/QuEST/',
                                 '--strip-components=1'],
                                check=True)
-            os.chdir(src_path+'/pyquest_cffi/questlib/')
+            os.chdir(src_path + '/pyquest_cffi/questlib/')
             subprocess.run(['make'], check=True)
             subprocess.run(['python', 'build_quest.py'], check=True)
             os.chdir(old_path)
@@ -72,12 +78,13 @@ class BuildPyCommand(build_py.build_py):
     """Custom build command."""
 
     def run(self):
+        """Run python build"""
         self.run_command('build_ext')
         build_py.build_py.run(self)
 
 
 def setup_packages():
-
+    """Setup method"""
     with open('README.md') as file:
         readme = file.read()
 
@@ -93,8 +100,11 @@ def setup_packages():
     packages = find_packages(exclude=('docs'))
 
     setup_args = {'name': 'pyquest_cffi',
-                  'description': ('Provides: Interactive python interface to QuEST quantum simulation toolkit;'
-                                  + '  Compile functionality, create, build and import valid QuEST source code from python'),
+                  'description': (
+                      'Provides: Interactive python interface'
+                      + ' to QuEST quantum simulation toolkit;'
+                      + '  Compile functionality, create, build and import'
+                      + ' valid QuEST source code from python'),
                   'version': '0.1',
                   'long_description': readme,
                   'packages': packages,

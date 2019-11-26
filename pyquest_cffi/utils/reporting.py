@@ -30,12 +30,6 @@ class reportQuESTEnv(_PYQUEST):
         """Call interactive Pyquest-cffi function"""
         return quest.reportQuESTEnv(env)
 
-    def call_static(self, env: str):
-        """Static call"""
-        call = "reportQuESTEnv({env});".format(
-            env=env)
-        return [call]
-
     @property
     def restype(self) -> str:
         """Return result type"""
@@ -60,12 +54,6 @@ class reportQuregParams(_PYQUEST):
         """Call interactive Pyquest-cffi function"""
         return quest.reportQuregParams(qureg)
 
-    def call_static(self, qureg: str):
-        """Static Call"""
-        call = "reportQuregParams({qureg});".format(
-            qureg=qureg)
-        return [call]
-
     @property
     def restype(self) -> str:
         """Return result type."""
@@ -83,10 +71,6 @@ class reportState(_PYQUEST):
     def call_interactive(self, qureg: tqureg) -> None:
         """Call interactive Pyquest-cffi function"""
         return quest.reportState(qureg)
-
-    def call_static(self):
-        """Static call"""
-        raise NotImplementedError
 
     @property
     def restype(self) -> str:
@@ -112,12 +96,6 @@ class reportStateToScreen(_PYQUEST):
     def call_interactive(self, qureg: tqureg, env: tquestenv, a: int = 0) -> None:
         """Call interactive Pyquest-cffi function"""
         return quest.reportStateToScreen(qureg, env, a)
-
-    def call_static(self, qureg: str, env: str, *args, **kwargs) -> str:
-        """Static call"""
-        call = "reportStateToScreen({qureg}, {env}, 0);".format(
-            qureg=qureg, env=env)
-        return [call]
 
     @property
     def restype(self) -> str:

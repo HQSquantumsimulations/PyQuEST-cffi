@@ -17,8 +17,6 @@ import typing
 import numpy as np
 from pyquest_cffi.questlib import quest, _PYQUEST, tqureg
 import warnings
-from typing import Union, List
-import uuid
 
 
 class initZeroState(_PYQUEST):
@@ -33,17 +31,6 @@ class initZeroState(_PYQUEST):
         """Call interactive Pyquest-cffi function"""
         return quest.initZeroState(qureg)
 
-    def call_static(self, qureg: str):
-        """Static call of initZeroState
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-
-        """
-        call = "initZeroState({qureg});".format(
-            qureg=qureg)
-        return [call]
-
 
 class initPlusState(_PYQUEST):
     """Initialise plus state in quantum register
@@ -56,17 +43,6 @@ class initPlusState(_PYQUEST):
     def call_interactive(self, qureg: tqureg) -> None:
         """Call interactive Pyquest-cffi function"""
         return quest.initPlusState(qureg)
-
-    def call_static(self, qureg: str):
-        """Static call of initPlusState
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-
-        """
-        call = "initPlusState({qureg});".format(
-            qureg=qureg)
-        return [call]
 
 
 class initClassicalState(_PYQUEST):
@@ -84,20 +60,6 @@ class initClassicalState(_PYQUEST):
         """Call interactive Pyquest-cffi function"""
         return quest.initClassicalState(qureg, state)
 
-    def call_static(self, qureg: str, state: Union[int, str]) -> List[str]:
-        """Static call of initClassicalState
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            state: If state is of int type state will be initialised on the quantum register
-                    if state is a string,
-                    it must be the name of a previously defined C-variable of type int
-
-        """
-        call = "initClassicalState({qureg}, {state});".format(
-            qureg=qureg, state=state)
-        return [call]
-
 
 class initPureState(_PYQUEST):
     """Initialize a pure state
@@ -114,19 +76,6 @@ class initPureState(_PYQUEST):
     def call_interactive(self, qureg_a: tqureg, qureg_b: tqureg) -> None:
         """Call interactive Pyquest-cffi function"""
         return quest.initPureState(qureg_a, qureg_b)
-
-    def call_static(self, qureg_a: str, qureg_b: str,) -> List[str]:
-        """
-        Static call of initPureState
-
-        Args:
-            qureg_a: The name of a previously created quantum register as a string
-            qureg_b: The name of a previously created quantum register as a string
-
-        """
-        call = "initPureState({qureg_a}, {qureg_b});".format(
-            qureg_a=qureg_a, qureg_b=qureg_b)
-        return [call]
 
 
 class initStateFromAmps(_PYQUEST):
@@ -159,44 +108,6 @@ class initStateFromAmps(_PYQUEST):
         else:
             return quest.initStateFromAmps(qureg, reals, imags)
 
-    def call_static(self, qureg: str,
-                    reals: Union[str, np.ndarray], imags: Union[str, np.ndarray]) -> List[str]:
-        """
-        Static call of initStateFromAmps
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            reals: If reals is of np.ndarray type,
-                   the real numbers in reals will be initialised on the quantum register
-                   if reals is a string,
-                   it must be the name of a previously defined qreal array in C
-            imags: If imags is of np.ndarray type,
-                   the real numbers in imags will be initialised on the quantum register
-                   if imags is a string,
-                   it must be the name of a previously defined qreal array in C
-
-        """
-        lines = []
-        if not isinstance(reals, str):
-            print(reals)
-            t = '{}'.format(uuid.uuid4().hex)
-            lines.append('qreal reals_{t}[{length}];'.format(t=t, length=len(reals),))
-            for i in range(len(reals)):
-                lines.append('reals_{t}[{index}] = {val};'.format(
-                    t=t, index=i, val=reals[i]))
-            reals = 'reals_{t}'.format(t=t)
-        if not isinstance(imags, str):
-            print(imags)
-            t = '{}'.format(uuid.uuid4().hex)
-            lines.append('qreal imags_{t}[{length}];'.format(t=t, length=len(reals),))
-            for i in range(len(imags)):
-                lines.append('imags_{t}[{index}] = {val};'.format(
-                    t=t, index=i, val=imags[i]))
-            imags = 'imags_{t}'.format(t=t)
-        lines.append("initStateFromAmps({qureg}, {reals}, {imags});".format(
-            qureg=qureg, reals=reals, imags=imags))
-        return lines
-
 
 class initStateDebug(_PYQUEST):
     """Debug class for state initialization"""
@@ -204,12 +115,6 @@ class initStateDebug(_PYQUEST):
     def call_interactive(self, qureg: tqureg) -> None:
         """Call interactive Pyquest-cffi function"""
         return quest.initStateDebug(qureg)
-
-    def call_static(self, qureg: str) -> List[str]:
-        """Call static Pyquest-cffi function"""
-        call = "initStateDebug({qureg});".format(
-            qureg=qureg)
-        return [call]
 
 
 class setAmps(_PYQUEST):
@@ -248,54 +153,6 @@ class setAmps(_PYQUEST):
             return None
         else:
             return quest.setAmps(qureg, startind, reals, imags, numamps)
-
-    def call_static(self, qureg: str,
-                    startind: Union[int, str],
-                    reals: 'str',
-                    imags: 'str',
-                    numamps: Union[int, str]) -> List[str]:
-        """Static call of setAmps
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            startind: if startind is int, the number is used directly as startindex,
-                    if it is a string
-                    it must be the name of a previously defined C-Variable of type int
-            reals: If reals is of np.ndarray type,
-                   the real numbers in reals will be initialised on the quantum register
-                    if reals is a string,
-                    it must be the name of a previously defined qreal array in C
-            imags: If imags is of np.ndarray type,
-                   the real numbers in imags will be initialised on the quantum register
-                    if imags is a string,
-                    it must be the name of a previously defined qreal array in C
-            numamps: if numamps is int, the number is used directly as number of amplitudes,
-                    if it is a string
-                    it must be the name of a previously defined C-Variable of type int
-
-        """
-        lines = []
-        if not isinstance(reals, str):
-            t = '{}'.format(uuid.uuid4().hex)
-            lines.append('qreal reals_{t}[{length}];'.format(t=t, length=len(reals),))
-            for i in range(len(reals)):
-                lines.append('reals_{t}[{index}] = {val};'.format(
-                    t=t, index=i, val=reals[i]))
-            reals = 'reals_{t}'.format(t=t)
-        if not isinstance(imags, str):
-            t = '{}'.format(uuid.uuid4().hex)
-            lines.append('qreal imags_{t}[{length}];'.format(t=t, length=len(reals),))
-            for i in range(len(imags)):
-                lines.append('imags_{t}[{index}] = {val};'.format(
-                    t=t, index=i, val=imags[i]))
-            imags = 'imags_{t}'.format(t=t)
-        lines.append("setAmps({qureg}, {startind},{reals},{imags},{numamps});".format(
-            qureg=qureg,
-            startind=startind,
-            reals=reals,
-            imags=imags,
-            numamps=numamps))
-        return lines
 
 # cant find it in the API
 
@@ -337,51 +194,3 @@ class setDensityAmps(_PYQUEST):
             return None
         else:
             return quest.statevec_setAmps(qureg, startind, reals, imags, numamps)
-
-    def call_static(self, qureg: str,
-                    startind: Union[int, str],
-                    reals: 'str',
-                    imags: 'str',
-                    numamps: Union[int, str]) -> List[str]:
-        """Static call of setDensityAmps
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            startind: if startind is int, the number is used directly as startindex,
-                    if it is a string
-                    it must be the name of a previously defined C-Variable of type int
-            reals: If reals is of np.ndarray type,
-                   the real numbers in reals will be initialised on the quantum register
-                    if reals is a string,
-                    it must be the name of a previously defined qreal array in C
-            imags: If imags is of np.ndarray type,
-                   the real numbers in imags will be initialised on the quantum register
-                    if imags is a string,
-                    it must be the name of a previously defined qreal array in C
-            numamps: if numamps is int, the number is used directly as number of amplitudes,
-                    if it is a string
-                    it must be the name of a previously defined C-Variable of type int
-
-        """
-        lines = []
-        if not isinstance(reals, str):
-            t = '{}'.format(uuid.uuid4().hex)
-            lines.append('qreal reals_{t}[{length}];'.format(t=t, length=len(reals),))
-            for i in range(len(reals)):
-                lines.append('reals_{t}[{index}] = {val};'.format(
-                    t=t, index=i, val=reals[i]))
-            reals = 'reals_{t}'.format(t=t)
-        if not isinstance(imags, str):
-            t = '{}'.format(uuid.uuid4().hex)
-            lines.append('qreal imags_{t}[{length}];'.format(t=t, length=len(reals),))
-            for i in range(len(imags)):
-                lines.append('imags_{t}[{index}] = {val};'.format(
-                    t=t, index=i, val=imags[i]))
-            imags = 'imags_{t}'.format(t=t)
-        lines.append("statevec_setAmps({qureg}, {startind},{reals},{imags},{numamps});".format(
-            qureg=qureg,
-            startind=startind,
-            reals=reals,
-            imags=imags,
-            numamps=numamps))
-        return lines

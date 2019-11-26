@@ -15,9 +15,8 @@
 
 from pyquest_cffi.questlib import quest, _PYQUEST, tqureg
 import numpy as np
-from typing import Sequence, Optional, Union, List
+from typing import Sequence, Optional, Union
 import warnings
-import uuid
 
 
 class calcFidelity(_PYQUEST):
@@ -48,19 +47,6 @@ class calcFidelity(_PYQUEST):
                           + ' but density matrix qureg was used', RuntimeWarning)
             return None
 
-    def call_static(self, qureg: str, qureg_reference: str, readout: str) -> List[str]:
-        """Static call of calcFidelity
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qureg_reference: The name of the previously created quantum register as a string
-            readout: The name of the previously created C-variable of type qreal
-
-        """
-        call = "{readout} = calcFidelity({qureg:s}, {qureg_reference});".format(
-            readout=readout, qureg=qureg, qureg_reference=qureg_reference)
-        return [call]
-
 
 class calcInnerProduct(_PYQUEST):
     r"""Calculate the inner-product/overlap of two wavefunction quregs:
@@ -88,19 +74,6 @@ class calcInnerProduct(_PYQUEST):
         else:
             return quest.calcInnerProduct(qureg1, qureg2)
 
-    def call_static(self, qureg1: str, qureg2: str, readout: str) -> List[str]:
-        """Static call of calcInnerProduct
-
-        Args:
-            qureg1: The name of the previously created quantum register as a string
-            qureg2: The name of the previously created quantum register as a string
-            readout: The name of the previously created C-variable of type qreal
-
-        """
-        call = "{readout} = calcInnerProduct({qureg1:s}, {qureg2:s});".format(
-            readout=readout, qureg1=qureg1, qureg2=qureg2)
-        return [call]
-
 
 class calcProbOfOutcome(_PYQUEST):
     r"""Calculate the probability that qubit #qubit of qureg is measured in state outcome:
@@ -116,26 +89,6 @@ class calcProbOfOutcome(_PYQUEST):
     def call_interactive(self, qureg: tqureg, qubit: int, outcome: int) -> float:
         """Call interactive PyQuest-cffi"""
         return quest.calcProbOfOutcome(qureg, qubit, outcome)
-
-    def call_static(self, qureg: str, qubit: Union[str, int],
-                    outcome: Union[str, int], readout: str) -> List[str]:
-        """Static call of calcProbOfOutcome
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            outcome: outcome of the measurement, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            readout: The name of the previously created C-variable of type qreal
-
-        """
-        if isinstance(outcome, int) and outcome not in [0, 1]:
-            outcome = bool(outcome)
-            warnings.warn('outcome is not in [0, 1] casting to bool automatically', RuntimeWarning)
-        call = "{readout} = calcProbOfOutcome({qureg:s}, {qubit}, {outcome});".format(
-            readout=readout, qureg=qureg, qubit=qubit, outcome=outcome)
-        return [call]
 
 
 class calcPurity(_PYQUEST):
@@ -159,18 +112,6 @@ class calcPurity(_PYQUEST):
                           + ' but wavefunction qureg was used', RuntimeWarning)
             return None
 
-    def call_static(self, qureg: str, readout: str) -> List[str]:
-        """Static call of calcPutiry
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            readout: The name of the previously created C-variable of type qreal
-
-        """
-        call = "{readout} = calcPurity({qureg:s});".format(
-            readout=readout, qureg=qureg)
-        return [call]
-
 
 class calcTotalProb(_PYQUEST):
     r"""Calculate total probability
@@ -187,18 +128,6 @@ class calcTotalProb(_PYQUEST):
     def call_interactive(self, qureg: tqureg) -> float:
         """Call interactive PyQuest-cffi"""
         return quest.calcTotalProb(qureg)
-
-    def call_static(self, qureg: str, readout: str) -> List[str]:
-        """Static call of calcProbOfOutcome
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            readout: The name of the previously created C-variable of type qreal
-
-        """
-        call = "{readout} =  calcTotalProb({qureg:s});".format(
-            readout=readout, qureg=qureg)
-        return [call]
 
 
 class getStateVectoratIndex(_PYQUEST):
@@ -224,25 +153,6 @@ class getStateVectoratIndex(_PYQUEST):
         else:
             cComplex = quest.getAmp(qureg, index)
             return cComplex.real + 1j * cComplex.imag
-
-    def call_static(self, qureg: str, index: Union[int,
-                                                   str, Sequence[int]], readout: str) -> List[str]:
-        """Static call of getStateVectoratIndex
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            index: The index in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-                    if Sequence of int is assumed to be a basis state
-                    representation and converted to index
-            readout: The name of the previously created C-variable of type qreal
-
-        """
-        if not isinstance(index, str) and hasattr(index, '__len__'):
-            index = basis_state_to_index(index)
-        call = "{readout} =  getAmp({qureg:s}, {index});".format(
-            readout=readout, qureg=qureg, index=index)
-        return [call]
 
 
 getAmp = getStateVectoratIndex
@@ -278,34 +188,6 @@ class getDensityMatrixatRowColumn(_PYQUEST):
                           + ' but wavefunction qureg was used', RuntimeWarning)
             return None
 
-    def call_static(self, qureg: str,
-                    row: Union[int, str, Sequence[int]],
-                    column: Union[int, str, Sequence[int]],
-                    readout: str) -> List[str]:
-        """
-        Static call of getDensityMatrixatRowColumn
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            row: The row in the density matrix, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-                    if Sequence of int
-                    is assumed to be a basis state representation and converted to index
-            column: The column in the density matrix, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-                    if Sequence of int
-                    is assumed to be a basis state representation and converted to index
-            readout: The name of the previously created C-variable of type qreal
-
-        """
-        if not isinstance(row, str) and hasattr(row, '__len__'):
-            row = basis_state_to_index(row)
-        if not isinstance(column, str) and hasattr(column, '__len__'):
-            column = basis_state_to_index(column)
-        call = "{readout} =  getDensityAmp({qureg:s}, {row}, {column});".format(
-            readout=readout, qureg=qureg, row=row, column=column)
-        return [call]
-
 
 getDensityAmp = getDensityMatrixatRowColumn
 
@@ -328,26 +210,6 @@ class getAbsoluteValSquaredatIndex(_PYQUEST):
         if qureg.isDensityMatrix:
             raise RuntimeError('getAbsoluteValSquaredatIndex is only defined for statevector qureg')
         return quest.getProbAmp(qureg, index)
-
-    def call_static(self, qureg: str, index: Union[int,
-                                                   str, Sequence[int]], readout: str) -> List[str]:
-        """
-        Static call of getAbsoluteValSquaredatIndex
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            index: The index in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-                    if Sequence of int
-                    is assumed to be a basis state representation and converted to index
-            readout: The name of the previously created C-variable of type qreal
-
-        """
-        if not isinstance(index, str) and hasattr(index, '__len__'):
-            index = basis_state_to_index(index)
-        call = "{readout} = getProbAmp({qureg:s}, {index});".format(
-            readout=readout, qureg=qureg, index=index)
-        return [call]
 
 
 getProbAmp = getAbsoluteValSquaredatIndex
@@ -374,26 +236,6 @@ class getRealAmp(_PYQUEST):
         else:
             return quest.getRealAmp(qureg, index)
 
-    def call_static(self, qureg: str, index: Union[int,
-                                                   str, Sequence[int]], readout: str) -> List[str]:
-        """
-        Static call of getRealAmp
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            index: The index in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-                    if Sequence of int
-                    is assumed to be a basis state representation and converted to index
-            readout: The name of the previously created C-variable of type qreal
-
-        """
-        if not isinstance(index, str) and hasattr(index, '__len__'):
-            index = basis_state_to_index(index)
-        call = "readout = getRealAmp({qureg:s}, {index});".format(
-            readout=readout, qureg=qureg, index=index)
-        return [call]
-
 
 class getImagAmp(_PYQUEST):
     r"""
@@ -416,26 +258,6 @@ class getImagAmp(_PYQUEST):
         else:
             return quest.getImagAmp(qureg, index)
 
-    def call_static(self, qureg: str, index: Union[int,
-                                                   str, Sequence[int]], readout: str) -> List[str]:
-        """
-        Static call of getImagAmp
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            index: The index in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-                    if Sequence of int
-                    is assumed to be a basis state representation and converted to index
-            readout: The name of the previously created C-variable of type qreal
-
-        """
-        if not isinstance(index, str) and hasattr(index, '__len__'):
-            index = basis_state_to_index(index)
-        call = "{readout} = getImagAmp({qureg:s}, {index});".format(
-            readout=readout, qureg=qureg, index=index)
-        return [call]
-
 
 class getExpectationValue(_PYQUEST):
     r"""Get the expectation value of an operator in matrix form
@@ -452,10 +274,6 @@ class getExpectationValue(_PYQUEST):
         """Call interactive PyQuest-cffi"""
         density_matrix = getDensityMatrix()(qureg)
         return np.trace(operator_matrix @ density_matrix)
-
-    def call_static(self, **kwargs) -> List[str]:
-        """Not implemented"""
-        raise NotImplementedError
 
 
 class getDensityMatrix(_PYQUEST):
@@ -485,35 +303,6 @@ class getDensityMatrix(_PYQUEST):
             density_matrix = state_vec @ state_vec.conj().T
         return density_matrix
 
-    def call_static(self, qureg: str, readout: str,
-                    number_qubits: int, endianness='little') -> List[str]:
-        """
-        Static call of getDensityMatrix
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            readout: The name of the previously created C-variable of type qreal
-            number_qubits: The number of qubits int the density matrix
-            endianness: The endianness of the returned density matrix
-
-        """
-        N = number_qubits
-        lines = []
-        for little_endian_row in range(2**N):
-            for little_endian_column in range(2**N):
-                if endianness == 'big':
-                    row = 2**N - 1 - little_endian_row
-                    column = 2**N - 1 - little_endian_column
-                else:
-                    row = little_endian_row
-                    column = little_endian_column
-                lines.extend(getDensityMatrixatRowColumn(interactive=False)(
-                    qureg,
-                    row=row,
-                    column=column,
-                    readout=readout + '[{}]'.format(row * 2**N + column)))
-        return lines
-
 
 class getOccupationProbability(_PYQUEST):
     r"""
@@ -540,48 +329,6 @@ class getOccupationProbability(_PYQUEST):
             for index in range(2**N):
                 prob_vec[index] = getAbsoluteValSquaredatIndex()(qureg, index)
         return prob_vec
-
-    def call_static(self, qureg: str, readout: str,
-                    number_qubits: int, endianness='little',
-                    is_density_matrix=False) -> List[str]:
-        """
-        Static call of getDensityMatrix
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            readout: The name of the previously created C-variable of type qreal
-            number_qubits: The number of qubits int the density matrix
-            endianness: The endianness of the returned density matrix
-            is_density_matrix: Does the qureg contain density matrix (True)
-                or statvector (False)
-
-        """
-        N = number_qubits
-        lines = []
-        for little_endian_index in range(2**N):
-            t = '{}'.format(uuid.uuid4().hex)
-            if endianness == 'big':
-                index = 2**N - 1 - little_endian_index
-            else:
-                index = little_endian_index
-            if is_density_matrix:
-                temp_readout = 'ro_{}_{}'.format(index, t)
-                lines.append('Complex {}'.format(temp_readout))
-                lines.extend(getDensityMatrixatRowColumn(interactive=False)(
-                    qureg,
-                    row=index,
-                    column=index,
-                    readout=temp_readout))
-                lines.append(
-                    '{readout}[{index}] = {temp_readout}.real*{temp_readout}.real+'
-                    + '{temp_readout}.imag*{temp_readout}.imag'.format(
-                        readout=readout, index=index, temp_readout=temp_readout))
-            else:
-                lines.extend(getAbsoluteValSquaredatIndex(interactive=False)(
-                    qureg,
-                    row=index,
-                    readout=readout + '[{}]'.format(index)))
-        return lines
 
 
 class getRepeatedMeasurement(_PYQUEST):
@@ -626,39 +373,6 @@ class getRepeatedMeasurement(_PYQUEST):
             return_record[:, output_index] = measurement_record[:, index]
         return return_record
 
-    def call_static(self,
-                    qureg: str,
-                    readout: str,
-                    number_qubits: int,
-                    number_measurements: int,
-                    is_density_matrix: bool = False) -> List[str]:
-        """
-        Static call of getRepeatedMeasurement
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            readout: The name of the previously created C-variable of type qreal
-            number_qubits: The number of qubits int the density matrix
-            number_qubits: The number of repeated measurements
-            is_density_matrix: Does Qureg contain density_matrix (True) or state vector (False)
-
-        """
-        call = 'qreal * outcomeprob; qreal = zeroProb;'
-        for cqb in range(number_qubits):
-            for cm in range(number_measurements):
-                if is_density_matrix:
-                    call += (
-                        'zeroProb = densmatr_calcProbOfOutcome({qureg}, {qubit}, 0);'.format(
-                            qureg=qureg, qubit=cqb))
-                else:
-                    call += (
-                        'zeroProb = statevec_calcProbOfOutcome({qureg}, {qubit}, 0);'.format(
-                            qureg=qureg, qubit=cqb))
-                call += (
-                    '{}[{}] = generateMeasurementOutcome(zeroProb, outcomeprob);'.format(
-                        readout, cqb + cm * number_qubits))
-        return [call]
-
 
 class getStateVector(_PYQUEST):
     r"""
@@ -685,31 +399,6 @@ class getStateVector(_PYQUEST):
             for index in range(2**N):
                 state_vec[index] = getStateVectoratIndex()(qureg, index)
         return state_vec
-
-    def call_static(self, qureg: str, readout: str, number_qubits: int,
-                    endianness='little') -> List[str]:
-        """
-        Static call of getStateVector
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            readout: The name of the previously created C-variable of type qreal
-            number_qubits: The number of qubits int the density matrix
-            endianness: The endianness of the returned density matrix
-
-        """
-        N = number_qubits
-        lines = []
-        for little_endian_index in range(2**N):
-            if endianness == 'big':
-                index = 2**N - 1 - little_endian_index
-            else:
-                index = little_endian_index
-            lines.extend(getStateVectoratIndex()(interactive=False)(
-                qureg,
-                index=index,
-                readout=readout + '[{}]'.format(index)))
-        return lines
 
 
 def basis_state_to_index(basis_state, endianness='little'):

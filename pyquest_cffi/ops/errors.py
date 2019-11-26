@@ -16,7 +16,7 @@
 
 from pyquest_cffi.questlib import quest, _PYQUEST, tqureg
 import numpy as np
-from typing import Union, Tuple, List
+from typing import Tuple
 import warnings
 
 
@@ -57,24 +57,6 @@ class applyOneQubitDephaseError(_PYQUEST):
             warnings.warn('qureg1 has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
             return None
-
-    def call_static(self, qureg: tqureg,
-                    qubit: Union[int, str],
-                    probability: Union[float, str]) -> List[str]:
-        """
-        Static call of oneQubitDephaseError
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            probability: probability of dephasing, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = " applyOneQubitDephaseError({qureg:s}, {qubit}, {probability});".format(
-            qureg=qureg, qubit=qubit, probability=probability)
-        return [call]
 
     def Kraus_matrices(self, probability, **kwargs) -> Tuple[np.ndarray]:
         """The definition of the Kraus Operator as a matrix"""
@@ -132,24 +114,6 @@ class applyOneQubitDepolariseError(_PYQUEST):
             warnings.warn('qureg1 has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
             return None
-
-    def call_static(self, qureg: tqureg,
-                    qubit: Union[int, str],
-                    probability: Union[float, str]) -> List[str]:
-        """
-        Static call of applyOneQubitDepolariseError
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            probability: probability of depolarisation, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = " applyOneQubitDepolariseError({qureg:s}, {qubit}, {probability});".format(
-            qureg=qureg, qubit=qubit, probability=probability)
-        return [call]
 
     def Kraus_matrices(self, probability, **kwargs) -> Tuple[np.ndarray]:
         """The definition of the Kraus Operator as a matrix"""
@@ -210,23 +174,6 @@ class applyOneQubitDampingError(_PYQUEST):
             warnings.warn('qureg1 has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
             return None
-
-    def call_static(self, qureg: tqureg,
-                    qubit: Union[int, str],
-                    probability: Union[float, str]) -> List[str]:
-        """Static call of applyOneQubitDampingError
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            probability: probability of damping, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = "applyOneQubitDampingError({qureg:s}, {qubit}, {probability});".format(
-            qureg=qureg, qubit=qubit, probability=probability)
-        return [call]
 
     def Kraus_matrices(self, probability, **kwargs) -> Tuple[np.ndarray]:
         """The definition of the Kraus Operator as a matrix"""
@@ -290,28 +237,6 @@ class applyTwoQubitDepolariseError(_PYQUEST):
                           + ' but wavefunction qureg was used', RuntimeWarning)
             return None
 
-    def call_static(self, qureg: tqureg,
-                    qubit1: Union[int, str],
-                    qubit2: Union[int, str],
-                    probability: Union[float, str]) -> List[str]:
-        """Static call of applyTwoQubitDepolariseError
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit1: The first qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            qubit2: The second qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            probability: probability of depolarisation, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = (
-            " applyOneQubitDepolariseError({qureg:s}, {qubit1}, {qubit2}, {probability});".format(
-                qureg=qureg, qubit1=qubit1, qubit2=qubit2, probability=probability)
-        )
-        return [call]
-
     def superoperator_matrix(self, probability, **kwargs) -> np.ndarray:
         r"""
         The definition of the superoperator acting on the density matrix written as a vector
@@ -368,26 +293,6 @@ class applyTwoQubitDephaseError(_PYQUEST):
             warnings.warn('qureg has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
             return None
-
-    def call_static(self, qureg: tqureg,
-                    qubit1: Union[int, str],
-                    qubit2: Union[int, str],
-                    probability: Union[float, str]) -> List[str]:
-        """Static call of applyTwoQubitDephaseError
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit1: The first qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            qubit2: The second qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            probability: probability of dephasing, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = " applyTwoQubitDephaseError({qureg:s}, {qubit1}, {qubit2}, {probability});".format(
-            qureg=qureg, qubit1=qubit1, qubit2=qubit2, probability=probability)
-        return [call]
 
     def Kraus_matrices(self, probability, **kwargs) -> Tuple[np.ndarray]:
         """The definition of the Kraus Operator as a matrix"""

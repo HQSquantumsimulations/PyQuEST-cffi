@@ -15,8 +15,7 @@
 
 from pyquest_cffi.questlib import quest, _PYQUEST, ffi_quest
 import numpy as np
-from typing import Sequence, Optional, Union, List
-import uuid
+from typing import Sequence
 import warnings
 
 
@@ -48,19 +47,6 @@ class hadamard(_PYQUEST):
         """Interactive call of PyQuest"""
         quest.hadamard(qureg, qubit)
 
-    def call_static(self, qureg: str, qubit: Union[str, int]) -> List[str]:
-        """Static call of hadamard
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-
-        """
-        call = "hadamard({qureg:s}, {qubit});".format(
-            qureg=qureg, qubit=qubit)
-        return [call]
-
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         matrix = 1 / np.sqrt(2) * np.array([[1, 1], [1, -1]], dtype=np.complex)
@@ -86,19 +72,6 @@ class pauliX(_PYQUEST):
         """Interactive call of PyQuest"""
         quest.pauliX(qureg, qubit)
 
-    def call_static(self, qureg: str, qubit: Union[str, int]) -> List[str]:
-        """Static call of pauliX
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-
-        """
-        call = "pauliX({qureg:s}, {qubit});".format(
-            qureg=qureg, qubit=qubit)
-        return [call]
-
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         matrix = np.array([[0, 1], [1, 0]], dtype=np.complex)
@@ -123,20 +96,6 @@ class pauliY(_PYQUEST):
     def call_interactive(self, qureg, qubit: int):
         """Interactive call of PyQuest"""
         quest.pauliY(qureg, qubit)
-
-    def call_static(self, qureg: str, qubit: Union[str, int]) -> List[str]:
-        """
-        Static call of pauliY
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-
-        """
-        call = "pauliY({qureg:s}, {qubit});".format(
-            qureg=qureg, qubit=qubit)
-        return [call]
 
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -164,20 +123,6 @@ class pauliZ(_PYQUEST):
         """Interactive call of PyQuest"""
         quest.pauliZ(qureg, qubit)
 
-    def call_static(self, qureg: str, qubit: Union[str, int]) -> List[str]:
-        """
-        Static call of pauliY
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-
-        """
-        call = "pauliZ({qureg:s}, {qubit});".format(
-            qureg=qureg, qubit=qubit)
-        return [call]
-
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         matrix = np.array([[1, 0], [0, -1]], dtype=np.complex)
@@ -203,19 +148,6 @@ class sGate(_PYQUEST):
         """Interactive call of PyQuest"""
         quest.sGate(qureg, qubit)
 
-    def call_static(self, qureg: str, qubit: Union[str, int]) -> List[str]:
-        """Static call of sGate
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-
-        """
-        call = "sGate({qureg:s}, {qubit});".format(
-            qureg=qureg, qubit=qubit)
-        return [call]
-
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         matrix = np.array([[1, 0], [0, 1j]], dtype=np.complex)
@@ -240,19 +172,6 @@ class tGate(_PYQUEST):
     def call_interactive(self, qureg, qubit: int):
         """Interactive call of PyQuest"""
         quest.tGate(qureg, qubit)
-
-    def call_static(self, qureg: str, qubit: Union[str, int]) -> List[str]:
-        """Static call of tGate
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-
-        """
-        call = "tGate({qureg:s}, {qubit});".format(
-            qureg=qureg, qubit=qubit)
-        return [call]
 
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -290,36 +209,6 @@ class compactUnitary(_PYQUEST):
             cbeta.imag = np.imag(beta)
             quest.compactUnitary(qureg, qubit, calpha[0], cbeta[0])
 
-    def call_static(self, qureg: str, qubit: Union[str, int],
-                    alpha: Union[str, complex], beta: Union[str, complex]) -> List[str]:
-        """Static call of compactUnitary
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            alpha: The variable alpha, if complex value is used directly,
-                    if string must be the name of previously defined C-variable of type Complex
-            beta: The variable beta, if complex value is used directly,
-                    if string must be the name of previously defined C-variable of type Complex
-
-        """
-        if isinstance(alpha, str) and isinstance(beta, str):
-            call = "compactUnitary({qureg:s}, {qubit}, {alpha}, {beta});".format(
-                qureg=qureg, qubit=qubit, alpha=alpha, beta=beta)
-        else:
-            t = '{}'.format(uuid.uuid4().hex)
-            call = ''
-            for ab, ab_val in [('alpha', alpha), ('beta', beta)]:
-                call += 'Complex {ab}_{t};'.format(ab=ab, t=t)
-                call += '{ab}_{t}.real = {r}; {ab}_{t}.imag = {i};'.format(
-                    ab=ab, t=t, r=np.real(ab_val), i=np.imag(ab_val))
-            call += "compactUnitary({qureg:s}, {qubit}, {alpha}, {beta});".format(
-                qureg=qureg, qubit=qubit,
-                alpha='alpha_{t}'.format(t=t),
-                beta='beta_{t}'.format(t=t))
-        return [call]
-
     def matrix(self, alpha: complex, beta: complex, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         matrix = np.array([[alpha, -np.conj(beta)], [beta, np.conj(alpha)]], dtype=np.complex)
@@ -349,22 +238,6 @@ class phaseShift(_PYQUEST):
             warnings.warn('choose rotation angle between 0 and 2 pi '
                           + ' applying modulo 2*pi', PiModuloWarning)
         quest.phaseShift(qureg, qubit, theta)
-
-    def call_static(self, qureg: str, qubit: Union[str, int],
-                    theta: Union[str, float]) -> List[str]:
-        """Static call of phaseShift
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            theta: The variable theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = "phaseShift({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=qubit, theta=theta)
-        return [call]
 
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -410,32 +283,6 @@ class rotateAroundAxis(_PYQUEST):
                                    qubit,
                                    theta,
                                    vec[0])
-
-    def call_static(self, qureg: str, qubit: Union[str, int],
-                    theta: Union[str, float], vector: Union[str, np.ndarray]) -> List[str]:
-        """Static call of rotateAroundAxis
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            theta: The variable theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-            vector: The vector or rotation axis, if 3-element np.ndarray values are used directly,
-                    if string must be the name of previously defined C-variable of type Vector
-
-        """
-        lines = []
-        if not isinstance(vector, str):
-            t = '{}'.format(uuid.uuid4().hex)
-
-            lines.append('Vector vector_{t};'.format(t=t))
-            lines.append('vector_{t}.x = {x}; vector_{t}.y = {y}; vector_{t}.z = {z};'.format(
-                t=t, x=vector[0], y=vector[1], z=vector[2]))
-            vector = 'vector_{t}'.format(t=t)
-        lines.append("rotateAroundAxis({qureg:s}, {qubit}, {theta}, {vector});".format(
-            qureg=qureg, qubit=qubit, theta=theta, vector=vector))
-        return lines
 
     def matrix(self, theta: float, vector: np.ndarray, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -491,40 +338,6 @@ class rotateAroundSphericalAxis(_PYQUEST):
                                theta,
                                vec[0])
 
-    def call_static(self, qureg: str, qubit: Union[str, int],
-                    theta: Union[str, float],
-                    spherical_theta: Union[str, float],
-                    spherical_phi: Union[str, float],) -> List[str]:
-        """Static call of rotateAroundSphericalAxis
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            theta: The variable theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-            spherical_theta: The variable spherical_theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-            spherical_phi: The variable spherical_theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        lines = []
-        if isinstance(spherical_phi, str) or isinstance(spherical_theta, str):
-            raise NotImplementedError()
-        else:
-            t = '{}'.format(uuid.uuid4().hex)
-            lines.append('Vector vector_{t};'.format(t=t))
-            lines.append('vector_{t}.x = {x}; vector_{t}.y = {y}; vector_{t}.z = {z};'.format(
-                t=t, x=np.sin(spherical_theta) * np.cos(spherical_phi),
-                y=np.sin(spherical_theta) * np.sin(spherical_phi),
-                z=np.cos(spherical_theta)))
-            lines.append("compactUnitary({qureg:s}, {qubit}, {vector});".format(
-                qureg=qureg, qubit=qubit,
-                vector='vector_{t}'.format(t=t),
-            ))
-        return lines
-
     def matrix(self, theta: float, vector: np.ndarray, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         c = np.cos(theta / 2)
@@ -567,22 +380,6 @@ class rotateX(_PYQUEST):
                       qubit,
                       theta)
 
-    def call_static(self, qureg: str, qubit: Union[str, int],
-                    theta: Union[str, float]) -> List[str]:
-        """Static call of rotateX
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            theta: The variable theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = "rotateX({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=qubit, theta=theta)
-        return [call]
-
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         c = np.cos(theta / 2)
@@ -621,22 +418,6 @@ class rotateY(_PYQUEST):
                       qubit,
                       theta)
 
-    def call_static(self, qureg: str, qubit: Union[str, int],
-                    theta: Union[str, float]) -> List[str]:
-        """Static call of rotateY
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            theta: The variable theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = "rotateY({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=qubit, theta=theta)
-        return [call]
-
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         c = np.cos(theta / 2)
@@ -674,22 +455,6 @@ class rotateZ(_PYQUEST):
         quest.rotateZ(qureg,
                       qubit,
                       theta)
-
-    def call_static(self, qureg: str, qubit: Union[str, int],
-                    theta: Union[str, float]) -> List[str]:
-        """Static call of rotateZ
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            theta: The variable theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = "rotateZ({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=qubit, theta=theta)
-        return [call]
 
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -735,44 +500,6 @@ class unitary(_PYQUEST):
                           qubit,
                           mat[0])
 
-    def call_static(self, qureg: str, qubit: Union[str, int],
-                    matrix: Union[str, np.ndarray]) -> List[str]:
-        """Static call of unitary
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            matrix: The unitary matrix, if np.ndarray, values are used directly
-                if string must be the name of previously defined C-variable of type ComplexMatrix2
-
-        """
-        lines = []
-        if isinstance(matrix, str):
-            lines.append("controlledUnitary({qureg:s}, {qubit}, {matrix});".format(
-                qureg=qureg, qubit=qubit, matrix=matrix))
-        else:
-            t = '{}'.format(uuid.uuid4().hex)
-
-            lines.append('ComplexMatrix2 mat_{t};'.format(t=t))
-            lines.append('Complex c_{t}_r0c0; c_{t}_r0c0.real = {x}; c_{t}_r0c0.imag={y};'.format(
-                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 0])))
-            lines.append('mat_{t}.r0c0 = c_{t}_r0c0{x};'.format(t=t))
-            lines.append('Complex c_{t}_r0c1; c_{t}_r0c1.real = {x}; c_{t}_r0c1.imag={y};'.format(
-                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 1])))
-            lines.append('mat_{t}.r0c1 = c_{t}_r0c1{x};'.format(t=t))
-            lines.append('Complex c_{t}_r1c0; c_{t}_r1c0.real = {x}; c_{t}_r1c0.imag={y};'.format(
-                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 0])))
-            lines.append('mat_{t}.r1c0 = c_{t}_r1c0;'.format(t=t))
-            lines.append('Complex c_{t}_r1c1; c_{t}_r1c1.real = {x}; c_{t}_r1c1.imag={y};'.format(
-                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 1])))
-            lines.append('mat_{t}.r1c1 = c_{t}_r1c1;'.format(t=t))
-            lines.append("unitary({qureg:s}, {qubit}, {matrix});".format(
-                qureg=qureg, qubit=qubit,
-                matrix='mat_{t}'.format(t=t),
-            ))
-        return lines
-
     def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         return matrix
@@ -813,42 +540,6 @@ class controlledCompactUnitary(_PYQUEST):
             cbeta.imag = np.imag(beta)
             quest.controlledCompactUnitary(qureg, control, qubit, calpha[0], cbeta[0])
 
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    alpha: Union[str, complex], beta: Union[str, complex]) -> List[str]:
-        """Static call of controlledCompactUnitary
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            control: The control in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            alpha: The variable alpha, if complex value is used directly,
-                    if string must be the name of previously defined C-variable of type Complex
-            beta: The variable beta, if complex value is used directly,
-                    if string must be the name of previously defined C-variable of type Complex
-
-        """
-        if isinstance(alpha, str) and isinstance(beta, str):
-            call = (
-                "controlledCompactUnitary(({qureg:s}, {control}, {qubit}, {alpha}, {beta})".format(
-                    qureg=qureg, control=control, qubit=qubit, alpha=alpha, beta=beta)
-            )
-        else:
-            t = '{}'.format(uuid.uuid4().hex)
-            call = ''
-            for ab, ab_val in [('alpha', alpha), ('beta', beta)]:
-                call += 'Complex {ab}_{t};'.format(ab=ab, t=t)
-                call += '{ab}_{t}.real = {r}; {ab}_{t}.imag = {i};'.format(
-                    ab=ab, t=t, r=np.real(ab_val), i=np.imag(ab_val))
-            call += (
-                "controlledCompactUnitary(({qureg:s}, {control} ,{qubit}, {alpha}, {beta})".format(
-                    qureg=qureg, control=control, qubit=qubit,
-                    alpha='alpha_{t}'.format(t=t),
-                    beta='beta_{t}'.format(t=t))
-            )
-        return [call]
-
     def matrix(self, alpha: complex, beta: complex, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         matrix = np.array([[1, 0, 0, 0],
@@ -879,13 +570,6 @@ class controlledNot(_PYQUEST):
     def call_interactive(self, qureg, control: int, qubit: int):
         """Interactive call of PyQuest"""
         quest.controlledNot(qureg, control, qubit)
-
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    ) -> List[str]:
-        """Static call"""
-        call = "controlledNot({qureg:s}, {control}, {qubit});".format(
-            qureg=qureg, control=control, qubit=qubit)
-        return [call]
 
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -918,22 +602,6 @@ class controlledPauliY(_PYQUEST):
         """Interactive call of PyQuest"""
         quest.controlledPauliY(qureg, control, qubit)
 
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    ) -> List[str]:
-        """Static call of controlledPauliY
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            control: The control in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-
-        """
-        call = "controlledPauliY({qureg:s}, {control}, {qubit});".format(
-            qureg=qureg, control=control, qubit=qubit)
-        return [call]
-
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         matrix = np.array([[1, 0, 0, 0],
@@ -964,22 +632,6 @@ class controlledPhaseFlip(_PYQUEST):
     def call_interactive(self, qureg, control: int, qubit: int):
         """Interactive call of PyQuest"""
         quest.controlledPhaseFlip(qureg, control, qubit)
-
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    ) -> List[str]:
-        """Static call of controlledPhaseFlip
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            control: The control in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-
-        """
-        call = "controlledPhaseFlip({qureg:s}, {control}, {qubit});".format(
-            qureg=qureg, control=control, qubit=qubit)
-        return [call]
 
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -1019,28 +671,6 @@ class sqrtISwap(_PYQUEST):
         quest.rotateY(qureg, qubit, np.pi / 2)
         quest.rotateX(qureg, control, -np.pi / 2)
 
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    ) -> List[str]:
-        """Call static PyQuest backend, returns compilable c-code using quest"""
-        call_list = list()
-        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=qubit, theta=-np.pi / 2))
-        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=control, theta=np.pi / 2))
-        call_list.append("controlledPhaseFlip({qureg:s}, {control}, {qubit});".format(
-            qureg=qureg, control=control, qubit=qubit))
-        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=qubit, theta=-np.pi / 4))
-        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=control, theta=-np.pi / 4))
-        call_list.append("controlledPhaseFlip({qureg:s}, {control}, {qubit});".format(
-            qureg=qureg, control=control, qubit=qubit))
-        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=qubit, theta=np.pi / 2))
-        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=control, theta=-np.pi / 2))
-        return call_list
-
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         matrix = np.array([[1, 0, 0, 0],
@@ -1079,28 +709,6 @@ class invSqrtISwap(_PYQUEST):
         quest.rotateY(qureg, qubit, np.pi / 2)
         quest.rotateX(qureg, control, -np.pi / 2)
 
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    ) -> List[str]:
-        """Call static PyQuest backend, returns compilable c-code using quest"""
-        call_list = list()
-        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=qubit, theta=-np.pi / 2))
-        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=control, theta=np.pi / 2))
-        call_list.append("controlledPhaseFlip({qureg:s}, {control}, {qubit});".format(
-            qureg=qureg, control=control, qubit=qubit))
-        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=qubit, theta=np.pi / 4))
-        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=control, theta=np.pi / 4))
-        call_list.append("controlledPhaseFlip({qureg:s}, {control}, {qubit});".format(
-            qureg=qureg, control=control, qubit=qubit))
-        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=qubit, theta=np.pi / 2))
-        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=control, theta=-np.pi / 2))
-        return call_list
-
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         matrix = np.array([[1, 0, 0, 0],
@@ -1136,22 +744,6 @@ class controlledPhaseShift(_PYQUEST):
             warnings.warn('choose rotation angle between 0 and 2 pi '
                           + ' applying modulo 2*pi', PiModuloWarning)
         quest.controlledPhaseShift(qureg, control, qubit, theta)
-
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    theta: Union[str, int]) -> List[str]:
-        """Static call of controlledNot
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            control: The control in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-
-        """
-        call = "controlledNot({qureg:s}, {control}, {qubit}, {theta});".format(
-            qureg=qureg, control=control, qubit=qubit, theta=theta)
-        return [call]
 
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -1209,37 +801,6 @@ class controlledRotateAroundAxis(_PYQUEST):
                                              theta,
                                              vec[0])
 
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    theta: Union[str, float], vector: Union[str, np.ndarray]) -> List[str]:
-        """Static call of controlledRotateAroundAxis
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            control: The control in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            theta: The variable theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-            vector: The vector or rotation axis, if 3-element np.ndarray values are used directly,
-                    if string must be the name of previously defined C-variable of type Vector
-
-        """
-        if isinstance(vector, str):
-            call = "phaseShift({qureg:s}, {control}, {qubit}, {theta}, {vector});".format(
-                qureg=qureg, control=control, qubit=qubit, theta=theta, vector=vector)
-        else:
-            t = '{}'.format(uuid.uuid4().hex)
-            call = ''
-            call += 'Vector vector_{t};'.format(t=t)
-            call += 'vector_{t}.x = {x}; vector_{t}.y = {y}; vector_{t}.z = {z};'.format(
-                t=t, x=vector[0], y=vector[1], z=vector[2])
-            call += "compactUnitary({qureg:s}, {qubit}, {vector});".format(
-                qureg=qureg, control=control, qubit=qubit,
-                vector='vector_{t}'.format(t=t),
-            )
-        return [call]
-
     def matrix(self, theta: float, vector: np.ndarray, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         c = np.cos(theta / 2)
@@ -1289,24 +850,6 @@ class controlledRotateX(_PYQUEST):
                                 qubit,
                                 theta)
 
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    theta: Union[str, float]) -> List[str]:
-        """Static call of controlledRotateX
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            control: The control in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            theta: The variable theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = "controlledRotateX({qureg:s}, {control}, {qubit}, {theta});".format(
-            qureg=qureg, control=control, qubit=qubit, theta=theta)
-        return [call]
-
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         c = np.cos(theta / 2)
@@ -1353,24 +896,6 @@ class controlledRotateY(_PYQUEST):
                                 qubit,
                                 theta)
 
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    theta: Union[str, float]) -> List[str]:
-        """Static call of controlledRotateY
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            control: The control in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            theta: The variable theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = "controlledRotateY({qureg:s}, {control}, {qubit}, {theta});".format(
-            qureg=qureg, control=control, qubit=qubit, theta=theta)
-        return [call]
-
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         c = np.cos(theta / 2)
@@ -1416,24 +941,6 @@ class controlledRotateZ(_PYQUEST):
         quest.controlledRotateZ(qureg, control,
                                 qubit,
                                 theta)
-
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    theta: Union[str, float]) -> List[str]:
-        """Static call of controlledRotateZ
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            control: The control in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            theta: The variable theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = "controlledRotateZ({qureg:s}, {control}, {qubit}, {theta});".format(
-            qureg=qureg, control=control, qubit=qubit, theta=theta)
-        return [call]
 
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -1483,46 +990,6 @@ class controlledUnitary(_PYQUEST):
                                     qubit,
                                     mat[0])
 
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    matrix: Union[str, np.ndarray]) -> List[str]:
-        """Static call of controlledUnitary
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            control: The control in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            matrix: The unitary matrix, if np.ndarray, values are used directly
-                if string must be the name of previously defined C-variable of type ComplexMatrix2
-
-        """
-        lines = []
-        if isinstance(matrix, str):
-            lines = ["controlledUnitary({qureg:s}, {control}, {qubit}, {matrix});".format(
-                qureg=qureg, control=control, qubit=qubit, matrix=matrix)]
-        else:
-            t = '{}'.format(uuid.uuid4().hex)
-
-            lines.append('ComplexMatrix2 mat_{t};'.format(t=t))
-            lines.append('Complex c_{t}_r0c0; c_{t}_r0c0.real = {x}; c_{t}_r0c0.imag={y};'.format(
-                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 0])))
-            lines.append('mat_{t}.r0c0 = c_{t}_r0c0{x};'.format(t=t))
-            lines.append('Complex c_{t}_r0c1; c_{t}_r0c1.real = {x}; c_{t}_r0c1.imag={y};'.format(
-                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 1])))
-            lines.append('mat_{t}.r0c1 = c_{t}_r0c1{x};'.format(t=t))
-            lines.append('Complex c_{t}_r1c0; c_{t}_r1c0.real = {x}; c_{t}_r1c0.imag={y};'.format(
-                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 0])))
-            lines.append('mat_{t}.r1c0 = c_{t}_r1c0;'.format(t=t))
-            lines.append('Complex c_{t}_r1c1; c_{t}_r1c1.real = {x}; c_{t}_r1c1.imag={y};'.format(
-                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 1])))
-            lines.append('mat_{t}.r1c1 = c_{t}_r1c1;'.format(t=t))
-            lines.append("controlledUnitary({qureg:s}, {control}, {qubit}, {matrix});".format(
-                qureg=qureg, control=control, qubit=qubit,
-                matrix='mat_{t}'.format(t=t),
-            ))
-        return lines
-
     def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         mat = np.array([[1, 0, 0, 0],
@@ -1555,24 +1022,6 @@ class multiControlledPhaseFlip(_PYQUEST):
             pointer[co] = control
         quest.multiControlledPhaseFlip(qureg, pointer, number_controls)
 
-    def call_static(self, qureg: str, controls: str, number_controls: Union[str, int],
-                    ) -> List[str]:
-        """Static call of mulitControlledPhaseFlip
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            controls: the control in the quantum register,
-                     must be the name of previously defined C-point to array of type int
-            number_controls: The variable numer_controls, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-
-        """
-        call = "multiControlledPhaseFlip({qureg:s}, {controls}, { number_controls});".format(
-            qureg=qureg, controls=controls, number_controls=number_controls)
-        return [call]
-
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         raise NotImplementedError
@@ -1603,27 +1052,6 @@ class multiControlledPhaseShift(_PYQUEST):
         for co, control in enumerate(controls):
             pointer[co] = control
         quest.multiControlledPhaseShift(qureg, pointer, number_controls, theta)
-
-    def call_static(self, qureg: str, controls: Union[str], number_controls: Union[str, int],
-                    theta: Union[str, float]) -> List[str]:
-        """Static call of mulitControlledPhaseShift
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            controls: the control in the quantum register,
-                     must be the name of previously defined C-pointer of to array of int
-            numer_controls: The variable numer_controls, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            theta: The variable theta, if float value is used directly,
-                    if string must be the name of previously defined C-variable of type qreal
-
-        """
-        call = (
-            "multiControlledPhaseShift({qureg:s}, {controls}, { number_controls}, {theta});".format(
-                qureg=qureg, controls=controls, number_controls=number_controls, theta=theta))
-        return [call]
 
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -1675,52 +1103,6 @@ class multiControlledUnitary(_PYQUEST):
                                          qubit,
                                          mat[0])
 
-    def call_static(self, qureg: str,
-                    controls: Union[str, Sequence[int]],
-                    number_controls: Union[str, int],
-                    qubit: Union[str, int],
-                    matrix: Union[str, float]):
-        """
-        Static call of mulitControlledUnitary
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            controls: the control in the quantum register,
-                     must be the name of previously defined C-pointer to array of type int of
-            number_controls: The variable numer_controls, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            matrix: The unitary matrix, if np.ndarray, values are used directly
-                if string must be the name of previously defined C-variable of type ComplexMatrix2
-
-        """
-        lines = []
-        if isinstance(matrix, str):
-            lines.append("controlledUnitary({qureg:s}, {control}, {qubit}, {matrix});".format(
-                qureg=qureg, controls=controls, qubit=qubit, matrix=matrix))
-        else:
-            t = '{}'.format(uuid.uuid4().hex)
-
-            lines.append('ComplexMatrix2 mat_{t};'.format(t=t))
-            lines.append('Complex c_{t}_r0c0; c_{t}_r0c0.real = {x}; c_{t}_r0c0.imag={y};'.format(
-                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 0])))
-            lines.append('mat_{t}.r0c0 = c_{t}_r0c0{x};'.format(t=t))
-            lines.append('Complex c_{t}_r0c1; c_{t}_r0c1.real = {x}; c_{t}_r0c1.imag={y};'.format(
-                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[0, 1])))
-            lines.append('mat_{t}.r0c1 = c_{t}_r0c1{x};'.format(t=t))
-            lines.append('Complex c_{t}_r1c0; c_{t}_r1c0.real = {x}; c_{t}_r1c0.imag={y};'.format(
-                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 0])))
-            lines.append('mat_{t}.r1c0 = c_{t}_r1c0;'.format(t=t))
-            lines.append('Complex c_{t}_r1c1; c_{t}_r1c1.real = {x}; c_{t}_r1c1.imag={y};'.format(
-                t=t, x=np.real(matrix[0, 0]), y=np.imag(matrix[1, 1])))
-            lines.append('mat_{t}.r1c1 = c_{t}_r1c1;'.format(t=t))
-            lines.append("multiControlledUnitary({qureg:s}, {controls}, {qubit}, {matrix});".format(
-                qureg=qureg, controls=controls, qubit=qubit,
-                matrix='mat_{t}'.format(t=t),
-            ))
-        return lines
-
     def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
         raise NotImplementedError
@@ -1743,32 +1125,6 @@ class measure(_PYQUEST):
         """Interactive call of PyQuest"""
         return quest.measure(qureg, qubit)
 
-    def call_static(self, qureg: str, qubit: Union[int, str],
-                    readout: Optional[str] = None,
-                    readout_index: Optional[Union[int, str]] = None) -> List[str]:
-        """Static call of measure
-
-        Args:
-            qureg: The name of the previously created quantum register as a string
-            qubit: The qubit in the quantum register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            readout_index: Index in the readout register, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-            readout: The name of the previously created C-variable of type qreal
-
-        """
-        if readout is None:
-            raise RuntimeError(
-                'Static measuremente needs a readout register name (readout)'
-                + 'to know where to save the measurement result')
-        else:
-            if readout_index is None:
-                call = "{readout:s} = measure({qureg:s}, {qubit})".format(
-                    readout=readout, qureg=qureg, qubit=qubit)
-            else:
-                call = "{readout:s}[{readout_index}] = measure({qureg:s}, {qubit})".format(
-                    readout=readout, readout_index=readout_index, qureg=qureg, qubit=qubit)
-        return [call]
 
 # Extra gates:
 
@@ -1801,22 +1157,6 @@ class MolmerSorensenXX(_PYQUEST):
         quest.rotateZ(qureg, control, np.pi / 2)
         quest.rotateX(qureg, qubit, np.pi / 2)
         quest.rotateY(qureg, control, -np.pi / 2)
-
-    def call_static(self, qureg: str, control: Union[str, int], qubit: Union[str, int],
-                    ) -> List[str]:
-        """Call static PyQuest backend, returns compilable c-code using quest"""
-        call_list = list()
-        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=control, theta=np.pi / 4))
-        call_list.append("controlledNot({qureg:s}, {control}, {qubit});".format(
-            qureg=qureg, control=control, qubit=qubit))
-        call_list.append("rotateZ({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=control, theta=np.pi / 4))
-        call_list.append("rotateX({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=qubit, theta=np.pi / 4))
-        call_list.append("rotateY({qureg:s}, {qubit}, {theta});".format(
-            qureg=qureg, qubit=control, theta=-np.pi / 4))
-        return call_list
 
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
