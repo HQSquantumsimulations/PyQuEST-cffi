@@ -480,22 +480,10 @@ class unitary(_PYQUEST):
             raise RuntimeError("matrix needs to be a (2, 2) unitary numpy array")
         else:
             mat = ffi_quest.new("ComplexMatrix2 *")
-            cComplex = ffi_quest.new("Complex *")
-            cComplex.real = np.real(matrix[0, 0])
-            cComplex.imag = np.imag(matrix[0, 0])
-            mat.r0c0 = cComplex[0]
-            cComplex = ffi_quest.new("Complex *")
-            cComplex.real = np.real(matrix[0, 1])
-            cComplex.imag = np.imag(matrix[0, 1])
-            mat.r0c1 = cComplex[0]
-            cComplex = ffi_quest.new("Complex *")
-            cComplex.real = np.real(matrix[1, 0])
-            cComplex.imag = np.imag(matrix[1, 0])
-            mat.r1c0 = cComplex[0]
-            cComplex = ffi_quest.new("Complex *")
-            cComplex.real = np.real(matrix[1, 1])
-            cComplex.imag = np.imag(matrix[1, 1])
-            mat.r1c1 = cComplex[0]
+            for i in range(2):
+                for j in range(2):
+                    mat.real[i][j] = np.real(matrix[i,j])
+                    mat.imag[i][j] = np.imag(matrix[i,j])
             quest.unitary(qureg,
                           qubit,
                           mat[0])
@@ -970,22 +958,10 @@ class controlledUnitary(_PYQUEST):
             raise RuntimeError("vector needs to be a (2, 2) unitary numpy array")
         else:
             mat = ffi_quest.new("ComplexMatrix2 *")
-            cComplex = ffi_quest.new("Complex *")
-            cComplex.real = np.real(matrix[0, 0])
-            cComplex.imag = np.imag(matrix[0, 0])
-            mat.r0c0 = cComplex[0]
-            cComplex = ffi_quest.new("Complex *")
-            cComplex.real = np.real(matrix[0, 1])
-            cComplex.imag = np.imag(matrix[0, 1])
-            mat.r0c1 = cComplex[0]
-            cComplex = ffi_quest.new("Complex *")
-            cComplex.real = np.real(matrix[1, 0])
-            cComplex.imag = np.imag(matrix[1, 0])
-            mat.r1c0 = cComplex[0]
-            cComplex = ffi_quest.new("Complex *")
-            cComplex.real = np.real(matrix[1, 1])
-            cComplex.imag = np.imag(matrix[1, 1])
-            mat.r1c1 = cComplex[0]
+            for i in range(2):
+                for j in range(2):
+                    mat.real[i][j] = np.real(matrix[i,j])
+                    mat.imag[i][j] = np.imag(matrix[i,j])
             quest.controlledUnitary(qureg, control,
                                     qubit,
                                     mat[0])
@@ -1079,22 +1055,10 @@ class multiControlledUnitary(_PYQUEST):
             raise RuntimeError("vector needs to be a (2, 2) unitary numpy array")
         else:
             mat = ffi_quest.new("ComplexMatrix2 *")
-            cComplex = ffi_quest.new("Complex *")
-            cComplex.real = np.real(matrix[0, 0])
-            cComplex.imag = np.imag(matrix[0, 0])
-            mat.r0c0 = cComplex[0]
-            cComplex = ffi_quest.new("Complex *")
-            cComplex.real = np.real(matrix[0, 1])
-            cComplex.imag = np.imag(matrix[0, 1])
-            mat.r0c1 = cComplex[0]
-            cComplex = ffi_quest.new("Complex *")
-            cComplex.real = np.real(matrix[1, 0])
-            cComplex.imag = np.imag(matrix[1, 0])
-            mat.r1c0 = cComplex[0]
-            cComplex = ffi_quest.new("Complex *")
-            cComplex.real = np.real(matrix[1, 1])
-            cComplex.imag = np.imag(matrix[1, 1])
-            mat.r1c1 = cComplex[0]
+            for i in range(2):
+                for j in range(2):
+                    mat.real[i][j] = np.real(matrix[i,j])
+                    mat.imag[i][j] = np.imag(matrix[i,j])
             pointer = ffi_quest.new("int[{}]".format(len(controls)))
             for co, control in enumerate(controls):
                 pointer[co] = control
