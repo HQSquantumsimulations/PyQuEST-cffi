@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pyquest_cffi.questlib import quest, _PYQUEST, tqureg
+from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, ffi_quest, qreal
 import numpy as np
 from typing import Sequence, Optional, Union
 import warnings
@@ -399,6 +399,135 @@ class getStateVector(_PYQUEST):
             for index in range(2**N):
                 state_vec[index] = getStateVectoratIndex()(qureg, index)
         return state_vec
+
+
+class calcExpecPauliSum(_PYQUEST):
+    r"""Get the expectation value of a sum of products of Pauli operators
+
+    A sum of products of Pauli operators (including Identity) is measured.
+    For each qubit a Pauli operator must be given in each sum term (can be identity)
+
+    Args:
+        qureg: quantum register that is measured
+        paulis: List of Lists of Pauli operators in each product
+                encoded as int via IDENTITY=0, PAULI_X=1, PAULI_Y=2, PAULI_Z=3
+        coefficients: coefficients of the sum
+        workspace: A qureg of same type and size as input qureg, is used as temporary
+                   work qureg
+
+    Returns:
+        Expectation value of Pauli Sum
+
+    """
+
+    def call_interactive(self,
+                         qureg,
+                         paulis: Sequence[Sequence[int]],
+                         coefficients: Sequence[float],
+                         workspace
+                         ) -> float:
+        """Interactive call of PyQuest"""
+        flat_list = [p for product in paulis for p in product]
+        pointer_paulis = ffi_quest.new("enum pauliOpType[{}]".format(len(flat_list)))
+        for co, p in enumerate(flat_list):
+            pointer_paulis[co] = p
+        pointer = ffi_quest.new("{}[{}]".format(qreal, len(coefficients)))
+        for co, c in enumerate(coefficients):
+            pointer[co] = c
+        return quest.calcExpecPauliSum(qureg,
+                                       pointer_paulis,
+                                       pointer,
+                                       len(coefficients),
+                                       workspace
+                                       )
+
+
+class calcExpecPauliProd(_PYQUEST):
+    r"""Get the expectation value of a product of Pauli operators
+
+    A product of Pauli operators (including Identity) is measured.
+    For each qubit in qubits a Pauli operator must be given in each sum term (can be identity)
+
+    Args:
+        qureg: quantum register that is measured
+        qubits: target qubits
+        paulis: List of Pauli operators in the product
+                encoded as int via IDENTITY=0, PAULI_X=1, PAULI_Y=2, PAULI_Z=3
+        coefficients: coefficients of the sum
+        workspace: A qureg of same type and size as input qureg, is used as temporary
+                   work qureg
+
+    Returns:
+        Expectation value of Pauli Sum
+
+    """
+
+    def call_interactive(self,
+                         qureg,
+                         qubits: Sequence[int],
+                         paulis: Sequence[Sequence[int]],
+                         workspace
+                         ) -> float:
+        """Interactive call of PyQuest"""
+        if not len(qubits) == len(paulis):
+            raise RuntimeError("")
+        flat_list = [p for product in paulis for p in product]
+        pointer_paulis = ffi_quest.new("enum pauliOpType[{}]".format(len(flat_list)))
+        for co, p in enumerate(flat_list):
+            pointer_paulis[co] = p
+        pointer_q = ffi_quest.new("int[{}]".format(len(qubits)))
+        for co, q in enumerate(qubits):
+            pointer_q[co] = q
+        return quest.calcExpecPauliProd(qureg,
+                                        pointer_q,
+                                        pointer_paulis,
+                                        len(qubits),
+                                        workspace
+                                        )
+
+
+class calcHilberSchmidtDistance(_PYQUEST):
+    r"""Calculate the Hilbert-Schmidt distance between two density matrix quregs
+
+    Args:
+        qureg1: first quantum register
+        qureg2: first quantum register
+
+    Returns:
+        Hilbert-Schmidt distance
+
+    """
+
+    def call_interactive(self,
+                         qureg1,
+                         qureg2
+                         ) -> float:
+        """Interactive call of PyQuest"""
+        return quest.calcHilbertSchmidtDistance(qureg1,
+                                                qureg2
+                                                )
+
+
+class calcDensityInnerProduct(_PYQUEST):
+    r"""Calculate the Frobenius inner matrix product between two density matrix quregs
+
+    Args:
+        qureg1: first quantum register
+        qureg2: first quantum register
+
+    Returns:
+        Hilbert-Schmidt distance
+
+    """
+
+    def call_interactive(self,
+                         qureg1,
+                         qureg2
+                         ) -> float:
+        """Interactive call of PyQuest"""
+        return quest.calcDensityInnerProduct(qureg1,
+                                             qureg2
+                                             )
 
 
 def basis_state_to_index(basis_state, endianness='little'):

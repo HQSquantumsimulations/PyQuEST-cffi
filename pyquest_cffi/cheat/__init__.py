@@ -41,7 +41,11 @@ from pyquest_cffi.cheat.measurement import (
     getDensityMatrix,
     getOccupationProbability,
     getExpectationValue,
-    getRepeatedMeasurement)
+    getRepeatedMeasurement,
+    calcDensityInnerProduct,
+    calcExpecPauliProd,
+    calcExpecPauliSum,
+    calcHilberSchmidtDistance)
 from pyquest_cffi.cheat.initialization import (
     initClassicalState,
     initPlusState,
@@ -50,5 +54,7 @@ from pyquest_cffi.cheat.initialization import (
     initStateFromAmps,
     initZeroState,
     setAmps,
-    setDensityAmps
+    setDensityAmps,
+    initBlankState,
+    setWeightedQureg
 )

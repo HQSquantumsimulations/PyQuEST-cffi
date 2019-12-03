@@ -194,3 +194,46 @@ class setDensityAmps(_PYQUEST):
             return None
         else:
             return quest.statevec_setAmps(qureg, startind, reals, imags, numamps)
+
+
+class setWeightedQureg(_PYQUEST):
+    """Class setting a qureg as a weighted sum of two quregs
+
+    Set the values of elements of the vector representation
+    of the density matrix in a quantum register
+
+    Args:
+        fac1: prefactor of first qureg in sum
+        qureg1:  first qureg in sum
+        fac2: prefactor of second qureg in sum
+        qureg1:  second qureg in sum
+        facout: prefactor of output qureg
+        quregout:  output qureg
+
+    """
+
+    def call_interactive(self,
+                         fac1: float,
+                         qureg1: tqureg,
+                         fac2: float,
+                         qureg2: tqureg,
+                         facout: float,
+                         quregout: tqureg
+                         ) -> None:
+        """Call interactive Pyquest-cffi function"""
+        quest.setWeightedQureg(fac1, qureg1, fac2, qureg2, facout, quregout)
+
+
+class initBlankState(_PYQUEST):
+    """Initialise classical zero state
+
+    Args:
+        qureg: qureg that is set to zero
+
+    """
+
+    def call_interactive(self,
+                         qureg: tqureg,
+                         ) -> None:
+        """Call interactive Pyquest-cffi function"""
+        quest.initBlankState(qureg)
