@@ -482,8 +482,8 @@ class unitary(_PYQUEST):
             mat = ffi_quest.new("ComplexMatrix2 *")
             for i in range(2):
                 for j in range(2):
-                    mat.real[i][j] = np.real(matrix[i,j])
-                    mat.imag[i][j] = np.imag(matrix[i,j])
+                    mat.real[i][j] = np.real(matrix[i, j])
+                    mat.imag[i][j] = np.imag(matrix[i, j])
             quest.unitary(qureg,
                           qubit,
                           mat[0])
@@ -529,7 +529,11 @@ class controlledCompactUnitary(_PYQUEST):
             quest.controlledCompactUnitary(qureg, control, qubit, calpha[0], cbeta[0])
 
     def matrix(self, alpha: complex, beta: complex, **kwargs) -> np.ndarray:
-        """The definition of the gate as a unitary matrix"""
+        """The definition of the gate as a unitary matrix
+
+        The control qubit is always assumed to be the most relevant
+        qubit |0xy> -> |0>|x> |1x> -> |1> U |x>
+        """
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, alpha, -np.conj(beta)],
@@ -560,7 +564,11 @@ class controlledNot(_PYQUEST):
         quest.controlledNot(qureg, control, qubit)
 
     def matrix(self, **kwargs) -> np.ndarray:
-        """The definition of the gate as a unitary matrix"""
+        """The definition of the gate as a unitary matrix
+
+        The control qubit is always assumed to be the most relevant
+        qubit |0x> -> |0>|x> |1x> -> |1> NOT |x>
+        """
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, 0, 1],
@@ -591,7 +599,11 @@ class controlledPauliY(_PYQUEST):
         quest.controlledPauliY(qureg, control, qubit)
 
     def matrix(self, **kwargs) -> np.ndarray:
-        """The definition of the gate as a unitary matrix"""
+        """The definition of the gate as a unitary matrix
+
+        The control qubit is always assumed to be the most relevant
+        qubit |0xy> -> |0>|x> |1x> -> |1> U |x>
+        """
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, 0, -1j],
@@ -622,11 +634,83 @@ class controlledPhaseFlip(_PYQUEST):
         quest.controlledPhaseFlip(qureg, control, qubit)
 
     def matrix(self, **kwargs) -> np.ndarray:
-        """The definition of the gate as a unitary matrix"""
+        """The definition of the gate as a unitary matrix
+
+        The control qubit is always assumed to be the most relevant
+        qubit |0xy> -> |0>|x> |1x> -> |1> U |x>
+        """
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, 1, 0],
                            [0, 0, 0, -1]], dtype=np.complex)
+        return matrix
+
+
+class swapGate(_PYQUEST):
+    r"""Implements a SWAP gate
+
+    .. math::
+        U = \begin{pmatrix}
+            1 & 0 & 0 & 0\\
+        0 & 0 & 1 & 0\\
+        0 & 1 & 0 & 0\\
+        0 & 0 & 0 & 1
+        \end{pmatrix}
+
+    Args:
+        qureg: quantum register
+        control: qubit that controls the application of the unitary
+        qubit: qubit the unitary gate is applied to
+
+    """
+
+    def call_interactive(self, qureg, control: int, qubit: int):
+        """Interactive call of PyQuest"""
+        quest.swapGate(qureg,
+                       control,
+                       qubit,
+                       )
+
+    def matrix(self, **kwargs) -> np.ndarray:
+        """The definition of the gate as a unitary matrix"""
+        matrix = np.array([[1, 0, 0, 0],
+                           [0, 0, 1, 0],
+                           [0, 1, 0, 0],
+                           [0, 0, 0, 1]], dtype=np.complex)
+        return matrix
+
+
+class sqrtSwapGate(_PYQUEST):
+    r"""Implements a square root SWAP gate
+
+    .. math::
+        U = \begin{pmatrix}
+            1 & 0 & 0 & 0\\
+        0 & \frac{1}{2}(1+i) & \frac{1}{2}(1-i) & 0\\
+        0 & \frac{1}{2}(1-i) & \frac{1}{2}(1+i) & 0\\
+        0 & 0 & 0 & 1
+        \end{pmatrix}
+
+    Args:
+        qureg: quantum register
+        control: qubit that controls the application of the unitary
+        qubit: qubit the unitary gate is applied to
+
+    """
+
+    def call_interactive(self, qureg, control: int, qubit: int):
+        """Interactive call of PyQuest"""
+        quest.sqrtSwapGate(qureg,
+                           control,
+                           qubit,
+                           )
+
+    def matrix(self, **kwargs) -> np.ndarray:
+        """The definition of the gate as a unitary matrix"""
+        matrix = np.array([[1, 0, 0, 0],
+                           [0, (1 + 1j) / 2, (1 - 1j) / 2, 0],
+                           [0, (1 - 1j) / 2, (1 + 1j) / 2, 0],
+                           [0, 0, 0, 1]], dtype=np.complex)
         return matrix
 
 
@@ -650,14 +734,16 @@ class sqrtISwap(_PYQUEST):
 
     def call_interactive(self, qureg, control: int, qubit: int):
         """Interactive call of PyQuest"""
-        quest.rotateY(qureg, qubit, -np.pi / 2)
-        quest.rotateX(qureg, control, np.pi / 2)
-        quest.controlledPhaseFlip(qureg, control, qubit)
-        quest.rotateY(qureg, qubit, -np.pi / 4)
-        quest.rotateX(qureg, control, -np.pi / 4)
-        quest.controlledPhaseFlip(qureg, control, qubit)
-        quest.rotateY(qureg, qubit, np.pi / 2)
-        quest.rotateX(qureg, control, -np.pi / 2)
+        matrix = self.matrix()
+        mat = ffi_quest.new("ComplexMatrix4 *")
+        for i in range(4):
+            for j in range(4):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        quest.twoQubitUnitary(qureg,
+                              control,
+                              qubit,
+                              mat[0])
 
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -688,14 +774,16 @@ class invSqrtISwap(_PYQUEST):
 
     def call_interactive(self, qureg, control: int, qubit: int):
         """Interactive call of PyQuest"""
-        quest.rotateY(qureg, qubit, -np.pi / 2)
-        quest.rotateX(qureg, control, np.pi / 2)
-        quest.controlledPhaseFlip(qureg, control, qubit)
-        quest.rotateY(qureg, qubit, np.pi / 4)
-        quest.rotateX(qureg, control, np.pi / 4)
-        quest.controlledPhaseFlip(qureg, control, qubit)
-        quest.rotateY(qureg, qubit, np.pi / 2)
-        quest.rotateX(qureg, control, -np.pi / 2)
+        matrix = self.matrix()
+        mat = ffi_quest.new("ComplexMatrix4 *")
+        for i in range(4):
+            for j in range(4):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        quest.twoQubitUnitary(qureg,
+                              control,
+                              qubit,
+                              mat[0])
 
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -734,7 +822,11 @@ class controlledPhaseShift(_PYQUEST):
         quest.controlledPhaseShift(qureg, control, qubit, theta)
 
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
-        """The definition of the gate as a unitary matrix"""
+        """The definition of the gate as a unitary matrix
+
+        The control qubit is always assumed to be the most relevant
+        qubit |0xy> -> |0>|x> |1x> -> |1> U |x>
+        """
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, 1, 0],
@@ -790,7 +882,11 @@ class controlledRotateAroundAxis(_PYQUEST):
                                              vec[0])
 
     def matrix(self, theta: float, vector: np.ndarray, **kwargs) -> np.ndarray:
-        """The definition of the gate as a unitary matrix"""
+        """The definition of the gate as a unitary matrix
+
+        The control qubit is always assumed to be the most relevant
+        qubit |0xy> -> |0>|x> |1x> -> |1> U |x>
+        """
         c = np.cos(theta / 2)
         s = np.sin(theta / 2)
         vx = vector[0]
@@ -839,7 +935,11 @@ class controlledRotateX(_PYQUEST):
                                 theta)
 
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
-        """The definition of the gate as a unitary matrix"""
+        """The definition of the gate as a unitary matrix
+
+        The control qubit is always assumed to be the most relevant
+        qubit |0xy> -> |0>|x> |1x> -> |1> U |x>
+        """
         c = np.cos(theta / 2)
         s = np.sin(theta / 2)
         matrix = np.array([[1, 0, 0, 0],
@@ -885,7 +985,11 @@ class controlledRotateY(_PYQUEST):
                                 theta)
 
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
-        """The definition of the gate as a unitary matrix"""
+        """The definition of the gate as a unitary matrix
+
+        The control qubit is always assumed to be the most relevant
+        qubit |0xy> -> |0>|x> |1x> -> |1> U |x>
+        """
         c = np.cos(theta / 2)
         s = np.sin(theta / 2)
         matrix = np.array([[1, 0, 0, 0],
@@ -931,7 +1035,11 @@ class controlledRotateZ(_PYQUEST):
                                 theta)
 
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
-        """The definition of the gate as a unitary matrix"""
+        """The definition of the gate as a unitary matrix
+
+        The control qubit is always assumed to be the most relevant
+        qubit |0xy> -> |0>|x> |1x> -> |1> U |x>
+        """
         c = np.cos(theta / 2)
         s = np.sin(theta / 2)
         matrix = np.array([[1, 0, 0, 0],
@@ -960,14 +1068,18 @@ class controlledUnitary(_PYQUEST):
             mat = ffi_quest.new("ComplexMatrix2 *")
             for i in range(2):
                 for j in range(2):
-                    mat.real[i][j] = np.real(matrix[i,j])
-                    mat.imag[i][j] = np.imag(matrix[i,j])
+                    mat.real[i][j] = np.real(matrix[i, j])
+                    mat.imag[i][j] = np.imag(matrix[i, j])
             quest.controlledUnitary(qureg, control,
                                     qubit,
                                     mat[0])
 
     def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
-        """The definition of the gate as a unitary matrix"""
+        """The definition of the gate as a unitary matrix
+
+        The control qubit is always assumed to be the most relevant
+        qubit |0xy> -> |0>|x> |1x> -> |1> U |x>
+        """
         mat = np.array([[1, 0, 0, 0],
                         [0, 1, 0, 0],
                         [0, 0, matrix[0, 0], matrix[0, 1]],
@@ -991,7 +1103,10 @@ class multiControlledPhaseFlip(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg, controls: Sequence[int], number_controls: int):
+    def call_interactive(self,
+                         qureg,
+                         controls: Sequence[int],
+                         number_controls: int):
         """Interactive call of PyQuest"""
         pointer = ffi_quest.new("int[{}]".format(len(controls)))
         for co, control in enumerate(controls):
@@ -1057,8 +1172,8 @@ class multiControlledUnitary(_PYQUEST):
             mat = ffi_quest.new("ComplexMatrix2 *")
             for i in range(2):
                 for j in range(2):
-                    mat.real[i][j] = np.real(matrix[i,j])
-                    mat.imag[i][j] = np.imag(matrix[i,j])
+                    mat.real[i][j] = np.real(matrix[i, j])
+                    mat.imag[i][j] = np.imag(matrix[i, j])
             pointer = ffi_quest.new("int[{}]".format(len(controls)))
             for co, control in enumerate(controls):
                 pointer[co] = control
@@ -1116,11 +1231,16 @@ class MolmerSorensenXX(_PYQUEST):
 
     def call_interactive(self, qureg, control: int, qubit: int):
         """Interactive call of PyQuest"""
-        quest.rotateY(qureg, control, np.pi / 2)
-        quest.controlledNot(qureg, control, qubit)
-        quest.rotateZ(qureg, control, np.pi / 2)
-        quest.rotateX(qureg, qubit, np.pi / 2)
-        quest.rotateY(qureg, control, -np.pi / 2)
+        matrix = self.matrix()
+        mat = ffi_quest.new("ComplexMatrix4 *")
+        for i in range(4):
+            for j in range(4):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        quest.twoQubitUnitary(qureg,
+                              control,
+                              qubit,
+                              mat[0])
 
     def matrix(self, **kwargs) -> np.ndarray:
         """The definition of the gate as a unitary matrix"""
@@ -1129,3 +1249,437 @@ class MolmerSorensenXX(_PYQUEST):
                            [0, 1j, 1, 0],
                            [1j, 0, 0, 1]], dtype=np.complex) * (1 - 1j) / 2
         return matrix
+
+
+class twoQubitUnitary(_PYQUEST):
+    r"""General two qubit unitary gate
+
+    Implements a general two-qubit gate defined by a matrix
+    If the matrix basis states are given by 0=|00>  1=|01> 2=|10> 3=|11>
+    the least significant qubit is the right qubit and the most
+    significant qubit is the left qubit
+
+    Args:
+        qureg: quantum register
+        target_qubit_1: least significant qubit
+        target_qubit_2: most sifnificant qubit
+        matrix: 4 by 4 matrix that defines the two qubit gate
+
+    """
+
+    def call_interactive(self, qureg, target_qubit_1: int, target_qubit_2: int, matrix: np.ndarray):
+        """Interactive call of PyQuest"""
+        mat = ffi_quest.new("ComplexMatrix4 *")
+        for i in range(4):
+            for j in range(4):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        quest.twoQubitUnitary(qureg,
+                              target_qubit_1,
+                              target_qubit_2,
+                              mat[0])
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        """The definition of the gate as a unitary matrix"""
+        return matrix
+
+
+class controlledTwoQubitUnitary(_PYQUEST):
+    r"""Controlled two qubit unitary gate
+
+    Implements a general two-qubit gate defined by a matrix controlled by a third qubit
+    If the matrix basis states are given by 0=|00>  1=|01> 2=|10> 3=|11>
+    the least significant qubit is the right qubit and the most
+    significant qubit is the left qubit
+
+    Args:
+        qureg: quantum register
+        control: controll qubit
+        target_qubit_1: least significant qubit
+        target_qubit_2: most sifnificant qubit
+        matrix: 4 by 4 matrix that defines the two qubit gate
+
+    """
+
+    def call_interactive(self,
+                         qureg, control: int,
+                         target_qubit_1: int,
+                         target_qubit_2: int,
+                         matrix: np.ndarray):
+        """Interactive call of PyQuest"""
+        mat = ffi_quest.new("ComplexMatrix4 *")
+        for i in range(4):
+            for j in range(4):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        quest.controlledTwoQubitUnitary(qureg,
+                                        control,
+                                        target_qubit_1,
+                                        target_qubit_2,
+                                        mat[0])
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        """The definition of the gate as a unitary matrix
+
+        The control qubit is always assumed to be the most relevant
+        qubit |0xy> -> |0>|xy> |1xy> -> |1> U |xy>
+        """
+        dim = matrix.shape[0]
+        return np.block([[np.eye(dim), np.zeros((dim, dim))],
+                         [np.zeros((dim, dim)), matrix]])
+
+
+class multiControlledTwoQubitUnitary(_PYQUEST):
+    r"""Two qubit unitary gate controlled by multiple qubits
+
+    Implements a general two-qubit gate defined by a matrix controlled by multipe qubits
+    If the matrix basis states are given by 0=|00>  1=|01> 2=|10> 3=|11>
+    the least significant qubit is the right qubit and the most
+    significant qubit is the left qubit
+
+    Args:
+        qureg: quantum register
+        control: controll qubit
+        target_qubit_1: least significant qubit
+        target_qubit_2: most sifnificant qubit
+        matrix: 4 by 4 matrix that defines the two qubit gate
+
+    """
+
+    def call_interactive(self,
+                         qureg,
+                         controls: Sequence[int],
+                         target_qubit_1: int,
+                         target_qubit_2: int,
+                         matrix: np.ndarray):
+        """Interactive call of PyQuest"""
+        mat = ffi_quest.new("ComplexMatrix4 *")
+        for i in range(4):
+            for j in range(4):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        pointer = ffi_quest.new("int[{}]".format(len(controls)))
+        number_controls = len(controls)
+        for co, control in enumerate(controls):
+            pointer[co] = control
+        quest.multiControlledTwoQubitUnitary(qureg,
+                                             pointer,
+                                             number_controls,
+                                             target_qubit_1,
+                                             target_qubit_2,
+                                             mat[0])
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        """The definition of the gatecontrols: Sequence[int],  as a unitary matrix"""
+        raise NotImplementedError()
+
+
+class multiQubitUnitary(_PYQUEST):
+    r"""General unitary gate acting on N qubits
+
+    Implements a general N-qubit gate defined by a matrix
+    If the matrix basis states are given by 0=|00>  1=|01> 2=|10> 3=|11>
+    the least significant qubit is the right qubit and the most
+    significant qubit is the left qubit
+
+    Args:
+        qureg: quantum register
+        targets: list of target qubits of the N qubit gate
+                 the first qubit in targets is treated as the least significant one
+                 the second as the second least significant one etc.
+        matrix: N by N matrix that defines the N qubit gate
+
+    """
+
+    def call_interactive(self, qureg, targets: Sequence[int], matrix: np.ndarray):
+        """Interactive call of PyQuest"""
+        if len(targets) != matrix.shape[0] or len(targets) != matrix.shape[1]:
+            raise RuntimeError("Shape of matrix and length of targets are different")
+        dim = matrix.shape[0]
+        mat = quest.getStaticComplexMatrixN(dim)
+        for i in range(dim):
+            for j in range(dim):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        pointer = ffi_quest.new("int[{}]".format(len(targets)))
+        for co, target in enumerate(targets):
+            pointer[co] = target
+        quest.multiQubitUnitary(qureg,
+                                pointer,
+                                dim,
+                                mat)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        """The definition of the gate as a unitary matrix"""
+        return matrix
+
+
+class controlledMulitQubitUnitary(_PYQUEST):
+    r"""Controlled general unitary gate acting on N qubits
+
+    Implements a general N-qubit gate defined by a matrix and controlled by a third qubit
+    If the matrix basis states are given by 0=|00>  1=|01> 2=|10> 3=|11>
+    the least significant qubit is the right qubit and the most
+    significant qubit is the left qubit
+
+    Args:
+        qureg: quantum register
+        control: controll qubit
+        targets: list of target qubits of the N qubit gate
+                 the first qubit in targets is treated as the least significant one
+                 the second as the second least significant one etc.
+        matrix: N by N matrix that defines the N qubit gate
+
+    """
+
+    def call_interactive(self,
+                         qureg, control: int,
+                         targets: Sequence[int],
+                         matrix: np.ndarray):
+        """Interactive call of PyQuest"""
+        if len(targets) != matrix.shape[0] or len(targets) != matrix.shape[1]:
+            raise RuntimeError("Shape of matrix and length of targets are different")
+        dim = matrix.shape[0]
+        mat = quest.getStaticComplexMatrixN(dim)
+        for i in range(dim):
+            for j in range(dim):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        pointer = ffi_quest.new("int[{}]".format(len(targets)))
+        for co, target in enumerate(targets):
+            pointer[co] = target
+        quest.controlledMultiQubitUnitary(qureg,
+                                          control,
+                                          pointer,
+                                          dim,
+                                          mat)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        """The definition of the gate as a unitary matrix
+
+        The control qubit is always assumed to be the most relevant
+        qubit |0xy> -> |0>|xy> |1xy> -> |1> U |xy>
+        """
+        dim = matrix.shape[0]
+        return np.block([[np.eye(dim), np.zeros((dim, dim))],
+                         [np.zeros((dim, dim)), matrix]])
+
+
+class multiControlledMulitQubitUnitary(_PYQUEST):
+    r"""General N-qubit unitary gate controlled by multiple qubits
+
+    Implements a general N-qubit gate defined by a matrix controlled by multipe qubits
+    If the matrix basis states are given by 0=|00>  1=|01> 2=|10> 3=|11>
+    the least significant qubit is the right qubit and the most
+    significant qubit is the left qubit
+
+    Args:
+        qureg: quantum register
+        controls: controll qubits
+        targets: list of target qubits of the N qubit gate
+                 the first qubit in targets is treated as the least significant one
+                 the second as the second least significant one etc.
+        matrix: N by N matrix that defines the N qubit gate
+
+    """
+
+    def call_interactive(self,
+                         qureg,
+                         controls: Sequence[int],
+                         targets: Sequence[int],
+                         matrix: np.ndarray):
+        """Interactive call of PyQuest"""
+        if len(targets) != matrix.shape[0] or len(targets) != matrix.shape[1]:
+            raise RuntimeError("Shape of matrix and length of targets are different")
+        dim = matrix.shape[0]
+        mat = quest.getStaticComplexMatrixN(dim)
+        for i in range(dim):
+            for j in range(dim):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        pointer_c = ffi_quest.new("int[{}]".format(len(controls)))
+        for co, control in enumerate(controls):
+            pointer_c[co] = control
+        number_controls = len(controls)
+        pointer = ffi_quest.new("int[{}]".format(len(controls)))
+        for co, control in enumerate(controls):
+            pointer[co] = control
+        quest.multiControlledMultiQubitUnitary(qureg,
+                                               pointer_c,
+                                               number_controls,
+                                               pointer,
+                                               dim,
+                                               mat)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        """The definition of the gatecontrols: Sequence[int],  as a unitary matrix"""
+        raise NotImplementedError()
+
+
+class multiRotateZ(_PYQUEST):
+    r"""Applying a Z-Rotation to multiple qubits
+
+    A Z-Rotation with a given angle is applyied to multiple qubits
+
+    Args:
+        qureg: quantum register
+        qubits: target qubits
+        targets: list of target qubits of the N qubit gate
+                 the first qubit in targets is treated as the least significant one
+                 the second as the second least significant one etc.
+        matrix: N by N matrix that defines the N qubit gate
+
+    """
+
+    def call_interactive(self,
+                         qureg,
+                         qubits: Sequence[int],
+                         angle: float):
+        """Interactive call of PyQuest"""
+        number_qubits = len(qubits)
+        pointer = ffi_quest.new("int[{}]".format(len(qubits)))
+        for co, q in enumerate(qubits):
+            pointer[co] = q
+        quest.multiRotateZ(qureg,
+                           pointer,
+                           number_qubits,
+                           angle)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        """The definition of the gatecontrols: Sequence[int],  as a unitary matrix"""
+        raise NotImplementedError()
+
+
+class multiRotatePauli(_PYQUEST):
+    r"""Applying a set of different Pauli rotations to multiple qubits
+
+    A set of Pauli rotations with a given angle is applied to multiple qubits
+
+    Args:
+        qureg: quantum register
+        qubits: target qubits
+        paulis: Pauli operators encoded as int via IDENTITY=0, PAULI_X=1, PAULI_Y=2, PAULI_Z=3
+        matrix: N by N matrix that defines the N qubit gate
+
+    """
+
+    def call_interactive(self,
+                         qureg,
+                         qubits: Sequence[int],
+                         paulis: Sequence[int],
+                         angle: float):
+        """Interactive call of PyQuest"""
+        if len(qubits) != len(paulis):
+            raise RuntimeError("Number of qubits different from number of applied Paulis")
+        number_qubits = len(qubits)
+        pointer = ffi_quest.new("int[{}]".format(len(qubits)))
+        for co, q in enumerate(qubits):
+            pointer[co] = q
+        pointer_paulis = ffi_quest.new("enum pauliOpType[{}]".format(len(qubits)))
+        for co, p in enumerate(paulis):
+            pointer_paulis[co] = p
+        quest.multiRotatePauli(qureg,
+                               pointer,
+                               pointer_paulis,
+                               number_qubits,
+                               angle)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        """The definition of the gatecontrols: Sequence[int],  as a unitary matrix"""
+        raise NotImplementedError()
+
+
+class multiStateControlledUnitary(_PYQUEST):
+    r"""One qubit unitary controlled by multiple states
+
+    Implements a general one-qubit gate defined by a matrix controlled by 
+    the state of multiple qubits
+    Contrary to the mulitControlled function the unitary operation here can be executed
+    either when the controlling qubit is in state |0> or in state |1> depending
+    on the control_states
+
+    Args:
+        qureg: quantum register
+        controls: controll qubits
+        controll_states: list of ints defining if the controlling gate acts like a 
+                        a normal control or anti-control (unitary is applied when state is |0>)
+                        For each entry: 1 -> normal controlled, 0 -> anti-controlled
+        qubit: The qubit the unitary is acting on
+        matrix: 2 by 2 matrix that defines the one qubit gate
+
+    """
+
+    def call_interactive(self,
+                         qureg,
+                         controls: Sequence[int],
+                         control_states: Sequence[int],
+                         qubit: int,
+                         matrix: np.ndarray):
+        """Interactive call of PyQuest"""
+        if len(controls) != len(control_states):
+            raise RuntimeError("Different Number of controls and control states")
+        mat = ffi_quest.new("ComplexMatrix2 *")
+        for i in range(2):
+            for j in range(2):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        pointer_controls = ffi_quest.new("int[{}]".format(len(controls)))
+        for co, control in enumerate(controls):
+            pointer_controls[co] = control
+        number_controls = len(controls)
+        pointer_states = ffi_quest.new("int[{}]".format(len(control_states)))
+        for co, state in enumerate(control_states):
+            pointer_states[co] = state
+        quest.multiStateControlledUnitary(qureg,
+                                          pointer_controls,
+                                          pointer_states,
+                                          number_controls,
+                                          qubit,
+                                          mat)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        """The definition of the gatecontrols: Sequence[int],  as a unitary matrix"""
+        raise NotImplementedError()
+
+
+class applyPauliSum(_PYQUEST):
+    r"""Applying a set of different Pauli rotations to multiple qubits
+
+    A set of Pauli rotations with a given angle is applied to multiple qubits
+
+    Args:
+        qureg: quantum register
+        qubits: target qubits
+        paulis: Pauli operators encoded as int via IDENTITY=0, PAULI_X=1, PAULI_Y=2, PAULI_Z=3
+        matrix: N by N matrix that defines the N qubit gate
+
+    Warning:
+        After applyPauliSum der quantum register is in general no longer normalised 
+        and does no longer represent a physical valid state without normalisation.
+
+    """
+
+    def call_interactive(self,
+                         qureg,
+                         qubits: Sequence[int],
+                         paulis: Sequence[int],
+                         angle: float):
+        """Interactive call of PyQuest"""
+        if len(qubits) != len(paulis):
+            raise RuntimeError("Number of qubits different from number of applied Paulis")
+        number_qubits = len(qubits)
+        pointer = ffi_quest.new("int[{}]".format(len(qubits)))
+        for co, q in enumerate(qubits):
+            pointer[co] = q
+        pointer_paulis = ffi_quest.new("enum pauliOpType[{}]".format(len(qubits)))
+        for co, p in enumerate(paulis):
+            pointer_paulis[co] = p
+        quest.multiRotatePauli(qureg,
+                               pointer,
+                               pointer_paulis,
+                               number_qubits,
+                               angle)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        """The definition of the gatecontrols: Sequence[int],  as a unitary matrix"""
+        raise NotImplementedError()

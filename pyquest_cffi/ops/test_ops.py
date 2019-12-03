@@ -33,7 +33,9 @@ from pyquest_cffi import utils
                                   ops.controlledPauliY,
                                   ops.MolmerSorensenXX,
                                   ops.sqrtISwap,
-                                  ops.invSqrtISwap
+                                  ops.invSqrtISwap,
+                                  ops.swapGate,
+                                  ops.sqrtSwapGate
                                   ])
 def test_simple_gate_matrices(gate):
     """Testing gates without parameters"""
@@ -121,6 +123,14 @@ def test_unitary_gate_matrices(gate, alpha, phase) -> None:
         matrix_reconstructed = build_two_qubit_matrix(
             gate, {'matrix': matrix})
     npt.assert_array_almost_equal(matrix_gate, matrix_reconstructed)
+
+
+def test_multiRotatePauli():
+    """Testing multiRotatePauli"""
+    env = utils.createQuestEnv()()
+    qureg = utils.createQureg()(3, env=env)
+    a = ops.multiRotatePauli()
+    a(qureg, [0, 1, 2], [1, 2, 3], 0.35)
 
 
 def build_one_qubit_matrix(gate, gate_args):

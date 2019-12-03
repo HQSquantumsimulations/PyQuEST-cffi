@@ -51,11 +51,21 @@ from pyquest_cffi.ops.ops import (
     PiModuloWarning,
     MolmerSorensenXX,
     sqrtISwap,
-    invSqrtISwap)
+    invSqrtISwap,
+    swapGate,
+    sqrtSwapGate,
+    twoQubitUnitary,
+    controlledTwoQubitUnitary,
+    multiQubitUnitary,
+    controlledMulitQubitUnitary)
 from pyquest_cffi.ops.ops import (
     multiControlledPhaseFlip,
     multiControlledPhaseShift,
-    multiControlledUnitary)
+    multiControlledUnitary,
+    multiControlledTwoQubitUnitary,
+    multiControlledMulitQubitUnitary,
+    multiRotateZ,
+    multiRotatePauli)
 from pyquest_cffi.ops.ops import measure
 from pyquest_cffi.ops.errors import (
     mixDamping,
