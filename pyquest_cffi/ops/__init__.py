@@ -57,13 +57,15 @@ from pyquest_cffi.ops.ops import (
     twoQubitUnitary,
     controlledTwoQubitUnitary,
     multiQubitUnitary,
-    controlledMulitQubitUnitary)
+    controlledMultiQubitUnitary,
+    multiStateControlledUnitary,
+    applyPauliSum)
 from pyquest_cffi.ops.ops import (
     multiControlledPhaseFlip,
     multiControlledPhaseShift,
     multiControlledUnitary,
     multiControlledTwoQubitUnitary,
-    multiControlledMulitQubitUnitary,
+    multiControlledMultiQubitUnitary,
     multiRotateZ,
     multiRotatePauli)
 from pyquest_cffi.ops.ops import measure
@@ -77,5 +79,9 @@ from pyquest_cffi.ops.errors import (
     applyOneQubitDepolariseError,
     applyOneQubitDampingError,
     applyTwoQubitDephaseError,
-    applyTwoQubitDepolariseError
+    applyTwoQubitDepolariseError,
+    mixPauli,
+    mixKrausMap,
+    mixTwoQubitKrausMap,
+    mixMultiQubitKrausMap
 )

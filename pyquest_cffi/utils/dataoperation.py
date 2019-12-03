@@ -74,3 +74,20 @@ class destroyQureg(_PYQUEST):
     def call_interactive(self, qubits, env: tquestenv) -> None:
         """Call interactive Pyquest-cffi function"""
         quest.destroyQureg(qubits, env)
+
+
+class createCloneQureg(_PYQUEST):
+    """Create a clone of the qureg in a certain environment
+
+    Args:
+        qureg: Qureg to be cloned
+        env: QuEST environment the clone is created in
+
+    Returns:
+        cloned qureg
+
+    """
+
+    def call_interactive(self, qureg, env: tquestenv) -> None:
+        """Call interactive Pyquest-cffi function"""
+        return quest.createCloneQureg(qureg, env)

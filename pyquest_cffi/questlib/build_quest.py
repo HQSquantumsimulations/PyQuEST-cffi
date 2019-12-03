@@ -47,6 +47,7 @@ lines += ["void statevec_setAmps(Qureg qureg, long long int startInd,"
 lines += ["qreal densmatr_calcProbOfOutcome(Qureg qureg, const int measureQubit, int outcome);"]
 lines += ["qreal statevec_calcProbOfOutcome(Qureg qureg, const int measureQubit, int outcome);"]
 lines += ["int generateMeasurementOutcome(qreal zeroProb, qreal *outcomeProb);"]
+lines += ["int getQuEST_PREC(void);"]
 
 
 _lines = []
