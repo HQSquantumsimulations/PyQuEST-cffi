@@ -453,7 +453,6 @@ class calcExpecPauliProd(_PYQUEST):
         qubits: target qubits
         paulis: List of Pauli operators in the product
                 encoded as int via IDENTITY=0, PAULI_X=1, PAULI_Y=2, PAULI_Z=3
-        coefficients: coefficients of the sum
         workspace: A qureg of same type and size as input qureg, is used as temporary
                    work qureg
 
@@ -471,7 +470,7 @@ class calcExpecPauliProd(_PYQUEST):
         """Interactive call of PyQuest"""
         if not len(qubits) == len(paulis):
             raise RuntimeError("")
-        flat_list = [p for product in paulis for p in product]
+        flat_list = [p for p in paulis]
         pointer_paulis = ffi_quest.new("enum pauliOpType[{}]".format(len(flat_list)))
         for co, p in enumerate(flat_list):
             pointer_paulis[co] = p
