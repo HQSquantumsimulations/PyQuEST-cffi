@@ -48,20 +48,6 @@ def test_calc_Expec_Pauli_Sum():
     print(a)
 
 
-def test_calc_Expec_Pauli_Prod():
-    """Test calculating the expectation value of a pauli product"""
-    env = utils.createQuestEnv()()
-    qubits = utils.createQureg()(4, env)
-    workspace = utils.createQureg()(4, env)
-    a = cheat.calcExpecPauliProd()(
-        qureg=qubits,
-        qubits=[0, 1],
-        paulis=[[0, 1], [3, 2]],
-        workspace=workspace,
-    )
-    print(a)
-
-
 def test_calc_Hilbert_Schmidt_distance():
     """Test calculating the Hilbert Schmidt distance"""
     env = utils.createQuestEnv()()
@@ -93,8 +79,8 @@ def test_calc_Expec_Pauli_Prod():
     workspace = utils.createQureg()(4, env)
     a = cheat.calcExpecPauliProd()(
         qureg=qubits,
-        qubits=[0, 1],
-        paulis=[[0, 1], [3, 2]],
+        qubits=[0, 1, 2, 3],
+        paulis=[0, 1, 3, 2],
         workspace=workspace,
     )
     print(a)
