@@ -16,16 +16,6 @@
 from pyquest_cffi.questlib import quest, _PYQUEST, ffi_quest, qreal
 import numpy as np
 from typing import Sequence, Optional
-import warnings
-
-
-class PiModuloWarning(RuntimeWarning):
-    """Warning argument is folded back into [0, 2pi]"""
-
-    pass
-
-
-warnings.filterwarnings("ignore", category=PiModuloWarning)
 
 
 class hadamard(_PYQUEST):
@@ -235,8 +225,6 @@ class phaseShift(_PYQUEST):
         """Interactive call of PyQuest"""
         if not (0 <= theta and theta <= 2 * np.pi):
             theta = np.mod(theta, 2 * np.pi)
-            warnings.warn('choose rotation angle between 0 and 2 pi '
-                          + ' applying modulo 2*pi', PiModuloWarning)
         quest.phaseShift(qureg, qubit, theta)
 
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
@@ -270,8 +258,6 @@ class rotateAroundAxis(_PYQUEST):
         """Interactive call of PyQuest"""
         if not (0 <= theta and theta <= 4 * np.pi):
             theta = np.mod(theta, 4 * np.pi)
-            warnings.warn('choose rotation angle between 0 and 4*pi (is devided by 2) '
-                          + ' applying modulo 4*pi', PiModuloWarning)
         if not (vector.shape == (3,) and np.isclose(np.linalg.norm(vector), 1)):
             raise RuntimeError("vector needs to be a three component numpy array and unit-vector")
         else:
@@ -326,8 +312,6 @@ class rotateAroundSphericalAxis(_PYQUEST):
         """Interactive call of PyQuest"""
         if not (0 <= theta and theta <= 4 * np.pi):
             theta = np.mod(theta, 4 * np.pi)
-            warnings.warn('choose rotation angle between 0 and 4*pi (is devided by 2) '
-                          + ' applying modulo 4*pi', PiModuloWarning)
 
         vec = ffi_quest.new("Vector *")
         vec.x = np.sin(spherical_theta) * np.cos(spherical_phi)
@@ -374,8 +358,6 @@ class rotateX(_PYQUEST):
         """Interactive call of PyQuest"""
         if not (0 <= theta and theta <= 4 * np.pi):
             theta = np.mod(theta, 4 * np.pi)
-            warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2)'
-                          + ' applying modulo 4*pi', PiModuloWarning)
         quest.rotateX(qureg,
                       qubit,
                       theta)
@@ -412,8 +394,6 @@ class rotateY(_PYQUEST):
         """Interactive call of PyQuest"""
         if not (0 <= theta and theta <= 4 * np.pi):
             theta = np.mod(theta, 4 * np.pi)
-            warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2)'
-                          + ' applying modulo 4*pi', PiModuloWarning)
         quest.rotateY(qureg,
                       qubit,
                       theta)
@@ -450,8 +430,6 @@ class rotateZ(_PYQUEST):
         """Interactive call of PyQuest"""
         if not (0 <= theta and theta <= 4 * np.pi):
             theta = np.mod(theta, 4 * np.pi)
-            warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2)'
-                          + ' applying modulo 4*pi', PiModuloWarning)
         quest.rotateZ(qureg,
                       qubit,
                       theta)
@@ -817,8 +795,6 @@ class controlledPhaseShift(_PYQUEST):
         """Interactive call of PyQuest"""
         if not (0 <= theta and theta <= 2 * np.pi):
             theta = np.mod(theta, 2 * np.pi)
-            warnings.warn('choose rotation angle between 0 and 2 pi '
-                          + ' applying modulo 2*pi', PiModuloWarning)
         quest.controlledPhaseShift(qureg, control, qubit, theta)
 
     def matrix(self, theta: float, **kwargs) -> np.ndarray:
@@ -867,8 +843,6 @@ class controlledRotateAroundAxis(_PYQUEST):
         """Interactive call of PyQuest"""
         if not (0 <= theta and theta <= 4 * np.pi):
             theta = np.mod(theta, 4 * np.pi)
-            warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2!)'
-                          + ' applying modulo 4*pi', PiModuloWarning)
         if not (vector.shape == (3,) and np.isclose(np.linalg.norm(vector), 1)):
             raise RuntimeError("vector needs to be a three component numpy array and unit-vector")
         else:
@@ -928,8 +902,6 @@ class controlledRotateX(_PYQUEST):
         """Interactive call of PyQuest"""
         if not (0 <= theta and theta <= 4 * np.pi):
             theta = np.mod(theta, 4 * np.pi)
-            warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2)'
-                          + ' applying modulo 4*pi', PiModuloWarning)
         quest.controlledRotateX(qureg, control,
                                 qubit,
                                 theta)
@@ -978,8 +950,6 @@ class controlledRotateY(_PYQUEST):
         """Interactive call of PyQuest"""
         if not (0 <= theta and theta <= 4 * np.pi):
             theta = np.mod(theta, 4 * np.pi)
-            warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2)'
-                          + ' applying modulo 4*pi', PiModuloWarning)
         quest.controlledRotateY(qureg, control,
                                 qubit,
                                 theta)
@@ -1028,8 +998,6 @@ class controlledRotateZ(_PYQUEST):
         """Interactive call of PyQuest"""
         if not (0 <= theta and theta <= 4 * np.pi):
             theta = np.mod(theta, 4 * np.pi)
-            warnings.warn('choose rotation angle between 0 and 4 pi (is devided by 2)'
-                          + ' applying modulo 4*pi', PiModuloWarning)
         quest.controlledRotateZ(qureg, control,
                                 qubit,
                                 theta)
@@ -1140,8 +1108,7 @@ class multiControlledPhaseShift(_PYQUEST):
         """Interactive call of PyQuest"""
         if not (0 <= theta and theta <= 4 * np.pi):
             theta = np.mod(theta, 4 * np.pi)
-            warnings.warn('choose rotation angle between 0 and 4 pi '
-                          + ' applying modulo 4*pi', PiModuloWarning)
+
         pointer = ffi_quest.new("int[{}]".format(len(controls)))
         for co, control in enumerate(controls):
             pointer[co] = control

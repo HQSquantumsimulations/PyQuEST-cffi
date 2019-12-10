@@ -86,6 +86,7 @@ def test_mix_kraus_map():
                  np.array([[0, 0], [1, 0]]), ]
     ops.mixKrausMap()(dm, qubit=0, operators=operators)
 
+
 @pytest.mark.skip()
 def test_mix_two_qubit_kraus_map():
     """Test Kraus operator error acting on two qubits"""
@@ -95,6 +96,7 @@ def test_mix_two_qubit_kraus_map():
                  np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [1, 0, 0, 0]])
                  ]
     ops.mixTwoQubitKrausMap()(dm, target_qubit_1=0, target_qubit_2=1, operators=operators)
+
 
 @pytest.mark.skip()
 def test_mix_multi_qubit_kraus_map():

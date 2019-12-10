@@ -48,7 +48,6 @@ from pyquest_cffi.ops.ops import (
     controlledRotateAroundAxis,
     controlledCompactUnitary,
     controlledUnitary,
-    PiModuloWarning,
     MolmerSorensenXX,
     sqrtISwap,
     invSqrtISwap,
