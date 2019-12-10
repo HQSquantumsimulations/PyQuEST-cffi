@@ -19,7 +19,7 @@ from pyquest_cffi.questlib import quest, _PYQUEST, tquestenv, tqureg
 class createQuestEnv(_PYQUEST):
     """Creates the QuEST simulator environment, needed for all simulations"""
 
-    def call_interactive(self) -> tquestenv:
+    def call_interactive(self,) -> tquestenv:
         """Call interactive Pyquest-cffi function"""
         return quest.createQuESTEnv()
 
@@ -88,6 +88,20 @@ class createCloneQureg(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg, env: tquestenv) -> None:
+    def call_interactive(self, qureg, env: tquestenv) -> tqureg:
         """Call interactive Pyquest-cffi function"""
         return quest.createCloneQureg(qureg, env)
+
+
+class cloneQureg(_PYQUEST):
+    """Clone a qureg state into another one
+
+    Args:
+        qureg_original: Qureg to be cloned
+        qureg_clone: Cloned qureg
+
+    """
+
+    def call_interactive(self, qureg_clone, qureg_original) -> None:
+        """Call interactive Pyquest-cffi function"""
+        return quest.cloneQureg(qureg_clone, qureg_original)

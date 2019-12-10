@@ -27,7 +27,9 @@ from pyquest_cffi.utils.dataoperation import (
     createDensityQureg,
     createQuestEnv,
     destroyQureg,
-    destroyQuestEnv
+    destroyQuestEnv,
+    createCloneQureg,
+    cloneQureg
 )
 from pyquest_cffi.utils.reporting import (
     reportQuESTEnv,
