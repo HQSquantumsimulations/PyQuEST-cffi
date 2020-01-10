@@ -81,30 +81,25 @@ def test_mix_pauli():
 def test_mix_kraus_map():
     """Test Kraus operator error"""
     env = utils.createQuestEnv()()
-    dm = utils.createDensityQureg()(2, env)
-    operators = [np.array([[0, 1], [0, 0]]),
-                 np.array([[0, 0], [1, 0]]), ]
+    dm = utils.createDensityQureg()(1, env)
+    operators = [np.array([[1, 0], [0, 1]]), ]
     ops.mixKrausMap()(dm, qubit=0, operators=operators)
 
 
-@pytest.mark.skip()
 def test_mix_two_qubit_kraus_map():
     """Test Kraus operator error acting on two qubits"""
     env = utils.createQuestEnv()()
     dm = utils.createDensityQureg()(2, env)
-    operators = [np.array([[0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]),
-                 np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [1, 0, 0, 0]])
+    operators = [np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]),
                  ]
     ops.mixTwoQubitKrausMap()(dm, target_qubit_1=0, target_qubit_2=1, operators=operators)
 
 
-@pytest.mark.skip()
 def test_mix_multi_qubit_kraus_map():
     """Test Kraus operator error acting on multiple qubits"""
     env = utils.createQuestEnv()()
     dm = utils.createDensityQureg()(2, env)
-    operators = [np.array([[0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]),
-                 np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [1, 0, 0, 0]])
+    operators = [np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]),
                  ]
     ops.mixMultiQubitKrausMap()(dm, qubits=[0, 1], operators=operators)
 
