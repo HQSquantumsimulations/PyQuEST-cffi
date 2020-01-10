@@ -1,4 +1,4 @@
-import sys
+"""Python version of QuEST example"""
 import numpy as np
 from pyquest_cffi import ops
 from pyquest_cffi import cheat
@@ -7,7 +7,8 @@ from pyquest_cffi.utils import reporting
 
 
 def run_example_interactive():
-    """
+    """Example function
+
     Running the exact same Example QuEST provides in the QuEST git repository
     with the interactive python interface of PyQuEST-cffi
     """
@@ -37,22 +38,22 @@ def run_example_interactive():
     ops.multiControlledPhaseFlip()(qureg=qureg, controls=[0, 1, 2], number_controls=3)
 
     u = np.zeros((2, 2), dtype=complex)
-    u[0, 0] = 0.5*(1+1j)
-    u[0, 1] = 0.5*(1-1j)
-    u[1, 0] = 0.5*(1-1j)
-    u[1, 1] = 0.5*(1+1j)
+    u[0, 0] = 0.5 * (1 + 1j)
+    u[0, 1] = 0.5 * (1 - 1j)
+    u[1, 0] = 0.5 * (1 - 1j)
+    u[1, 1] = 0.5 * (1 + 1j)
     ops.unitary()(qureg=qureg, qubit=0, matrix=u)
 
-    a = 0.5+0.5*1j
-    b = 0.5-0.5*1j
+    a = 0.5 + 0.5 * 1j
+    b = 0.5 - 0.5 * 1j
     ops.compactUnitary()(qureg=qureg, qubit=1, alpha=a, beta=b)
 
     v = np.array([1, 0, 0])
-    ops.rotateAroundAxis()(qureg=qureg, qubit=2, theta=np.pi/2, vector=v)
+    ops.rotateAroundAxis()(qureg=qureg, qubit=2, theta=np.pi / 2, vector=v)
 
     ops.controlledCompactUnitary()(qureg=qureg, control=0, qubit=1, alpha=a, beta=b)
 
-    ops.multiControlledUnitary()(qureg=qureg,  controls=[
+    ops.multiControlledUnitary()(qureg=qureg, controls=[
         0, 1], number_controls=2, qubit=2, matrix=u)
 
     # cheated results

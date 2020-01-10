@@ -1,40 +1,27 @@
+"""Manage QuEST environments and quantum registers"""
 # Copyright 2019 HQS Quantum Simulations GmbH
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import typing
 from pyquest_cffi.questlib import quest, _PYQUEST, tquestenv, tqureg
-from typing import Union, List
 
 
 class createQuestEnv(_PYQUEST):
-    """
-    Creates the QuEST simulator environment, needed for all simulations
-    """
+    """Creates the QuEST simulator environment, needed for all simulations"""
 
-    def call_interactive(self) -> tquestenv:
+    def call_interactive(self,) -> tquestenv:
+        """Call interactive Pyquest-cffi function"""
         return quest.createQuESTEnv()
-
-    def call_static(self, env_name: str) -> List[str]:
-        """
-        Static call of createQuestEnv
-
-        Args:
-            env: The name of the created environment as a string, can be now be used at later points in the programm
-        """
-        call = "QuESTEnv {env} = createQuESTEnv();".format(
-            env=env_name)
-        return [call]
 
 
 class destroyQuestEnv(_PYQUEST):
@@ -43,21 +30,12 @@ class destroyQuestEnv(_PYQUEST):
 
     Args:
         env: QuEST environment to be deallocated
+
     """
 
     def call_interactive(self, env: tquestenv) -> None:
+        """Call interactive Pyquest-cffi function"""
         quest.destroyQuESTEnv(env)
-
-    def call_static(self, env_name: str) -> List[str]:
-        """
-        Static call of destroyQestEnv
-
-        Args:
-            env: The name of the previously created quantum environment as a string
-        """
-        call = "destroyQuestEnv({env});".format(
-            env=env_name)
-        return [call]
 
 
 class createQureg(_PYQUEST):
@@ -67,24 +45,12 @@ class createQureg(_PYQUEST):
     Args:
         num_qubits: number of qubits in the quantum register
         env: QuEST environment in which the qureg exists
+
     """
 
     def call_interactive(self, num_qubits: int, env: tquestenv) -> tqureg:
+        """Call interactive Pyquest-cffi function"""
         return quest.createQureg(num_qubits, env)
-
-    def call_static(self, num_qubits: Union[int, str], env: str, qureg_name: str):
-        """
-        Static call of createQureg
-
-        Args:
-            qureg: The name of the created quantum register as a string, can be now be used at later points in the programm
-            env: The name of the previously created quantum environment as a string
-            num_qubits: number of qubits, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-        """
-        call = "Qureg {qureg_name} = createQureg({num_qubits},{env});".format(
-            qureg_name=qureg_name, num_qubits=num_qubits, env=env)
-        return [call]
 
 
 class createDensityQureg(_PYQUEST):
@@ -94,41 +60,48 @@ class createDensityQureg(_PYQUEST):
     Args:
         num_qubits: number of qubits in the quantum register
         env: QuEST environment in which the qureg exists
+
     """
 
     def call_interactive(self, num_qubits: int, env: tquestenv) -> tqureg:
+        """Call interactive Pyquest-cffi function"""
         return quest.createDensityQureg(num_qubits, env)
-
-    def call_static(self, num_qubits: Union[int, str], env: str, qureg_name: str):
-        """
-        Static call of createDensityQureg
-
-        Args:
-            qureg: The name of the created quantum register as a string, can be now be used at later points in the programm
-            env: The name of the previously created quantum environment as a string
-            num_qubits: number of qubits, if int value is used directly,
-                    if string must be the name of previously defined C-variable of type int
-        """
-        call = "Qureg {qureg_name} = createDensityQureg({N},{env});".format(
-            qureg_name=qureg_name, N=num_qubits, env=env)
-        return [call]
 
 
 class destroyQureg(_PYQUEST):
-    """
-    Deallocate memory for a qubit register
-    """
+    """Deallocate memory for a qubit register"""
 
     def call_interactive(self, qubits, env: tquestenv) -> None:
+        """Call interactive Pyquest-cffi function"""
         quest.destroyQureg(qubits, env)
 
-    def call_static(self, qureg_name: str):
-        """
-        Static call of destroyQureg
 
-        Args:
-            qureg: The name of the previously created quantum register as a string
-        """
-        call = "destroyQureg({qureg_name});".format(
-            qureg_name=qureg_name)
-        return [call]
+class createCloneQureg(_PYQUEST):
+    """Create a clone of the qureg in a certain environment
+
+    Args:
+        qureg: Qureg to be cloned
+        env: QuEST environment the clone is created in
+
+    Returns:
+        cloned qureg
+
+    """
+
+    def call_interactive(self, qureg, env: tquestenv) -> tqureg:
+        """Call interactive Pyquest-cffi function"""
+        return quest.createCloneQureg(qureg, env)
+
+
+class cloneQureg(_PYQUEST):
+    """Clone a qureg state into another one
+
+    Args:
+        qureg_original: Qureg to be cloned
+        qureg_clone: Cloned qureg
+
+    """
+
+    def call_interactive(self, qureg_clone, qureg_original) -> None:
+        """Call interactive Pyquest-cffi function"""
+        return quest.cloneQureg(qureg_clone, qureg_original)
