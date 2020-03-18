@@ -41,9 +41,13 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.autosummary',
               'recommonmark'
               ]
+autosummary_generate = True
 
-autodoc_mock_imports = ["cirqprojectq", "pyquest_cffi.questlib._quest"]
+autodoc_mock_imports = ["cirqprojectq", "pyquest_cffi.questlib._quest", "pyquest_cffi.questlib.qreal"]
+autosummary_mock_imports = autodoc_mock_imports
 autoclass_content = 'both'
+autodoc_default_flags = ['members']
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 

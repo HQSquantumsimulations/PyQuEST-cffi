@@ -5,7 +5,6 @@
 
     pyquest_cffi.utils.dataoperation
     pyquest_cffi.utils.reporting
-    pyquest_cffi.utils.compilation_utils
 
 """
 # Copyright 2019 HQS Quantum Simulations GmbH

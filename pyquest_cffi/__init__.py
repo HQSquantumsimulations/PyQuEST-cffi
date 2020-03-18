@@ -17,9 +17,9 @@
 .. autosummary::
     :toctree: generated/
 
-    pyquest_cffi.ops
-    pyquest_cffi.cheat
-    pyquest_cffi.utils
+    ops
+    cheat
+    utils
 
 """
 from pyquest_cffi.questlib import quest
