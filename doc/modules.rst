@@ -1,11 +1,7 @@
 PyQuEST-cffi
 =======
 
-.. automodule:: pyquest_cffi
+.. autosummary::
+    :toctree: generated/
 
-.. toctree::
-   :hidden:
-
-   pyquest_cffi.ops.rst
-   pyquest_cffi.utils.rst
-   pyquest_cffi.cheat.rst
+    pyquest_cffi
