@@ -18,7 +18,7 @@ from cffi import FFI
 import os
 
 def build_quest_so():
-    lib_path = os.path.dirname(os.path.realpath(__file__))
+    lib_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),'pyquest_cffi/questlib/')
     quest_path = os.path.join(lib_path, "../../QuEST/QuEST")
     questlib = os.path.join(lib_path, "libQuEST.so")
     include = [os.path.join(quest_path, "include")]

@@ -18,7 +18,7 @@ from setuptools.command.build_ext import build_ext
 from setuptools.command import build_py
 import subprocess
 import os
-
+path = os.path.dirname(os.path.abspath(__file__))
 
 class CustomExtension(Extension):
     """Custom Extension class"""
@@ -40,6 +40,18 @@ class CustomBuild(build_ext):
             raise RuntimeError(
                 "Make must be installed to build the following extensions: "
                 + ", ".join(e.name for e in self.extensions))
+        try:
+            subprocess.run(['wget', '--version'], check=True)
+        except OSError:
+            raise RuntimeError(
+                "Wget must be installed to build the following extensions: "
+                + ", ".join(e.name for e in self.extensions))
+        try:
+            subprocess.run(['tar', '--version'], check=True)
+        except OSError:
+            raise RuntimeError(
+                "Tar must be installed to build the following extensions: "
+                + ", ".join(e.name for e in self.extensions))
         for ext in self.extensions:
             self.build_extension(ext)
 
@@ -52,7 +64,7 @@ class CustomBuild(build_ext):
             # os.path.dirname(os.path.abspath(sys.argv[0]))
             src_path = os.path.dirname(os.path.realpath(__file__))
             os.chdir(src_path)
-            QuEST_release_link = 'https://github.com/QuEST-Kit/QuEST/archive/3.0.0.tar.gz'
+            QuEST_release_link = 'https://github.com/QuEST-Kit/QuEST/archive/v3.1.1.tar.gz'
 
             if not os.path.exists((src_path + '/QuEST')):
                 os.makedirs(src_path + '/QuEST/')
@@ -70,7 +82,9 @@ class CustomBuild(build_ext):
                                check=True)
             os.chdir(src_path + '/pyquest_cffi/questlib/')
             subprocess.run(['make'], check=True)
-            subprocess.run(['python', 'build_quest.py'], check=True)
+            #subprocess.run(['python', 'build_quest.py'], check=True)
+            from build_quest import build_quest_so
+            build_quest_so()
             os.chdir(old_path)
 
 
@@ -85,11 +99,11 @@ class BuildPyCommand(build_py.build_py):
 
 def setup_packages():
     """Setup method"""
-    with open('README.md') as file:
+    with open(os.path.join(path,'README.md')) as file:
         readme = file.read()
 
-    with open('LICENSE') as file:
-        license = file.read()
+    with open(os.path.join('LICENSE')) as file:
+        License = file.read()
 
     install_requires = [
         'cffi',
@@ -104,7 +118,7 @@ def setup_packages():
                       + ' to QuEST quantum simulation toolkit;'
                       + '  Compile functionality, create, build and import'
                       + ' valid QuEST source code from python'),
-                  'version': '3.0.0',
+                  'version': '3.1.1',
                   'long_description': readme,
                   'packages': packages,
                   # 'package_dir': {'': 'pyquest_cffi'},
@@ -112,7 +126,7 @@ def setup_packages():
                   'author_email': 'info@quantumsimulations.de',
                   'url': '',
                   'download_url': '',
-                  'license': license,
+                  'license': License,
                   'install_requires': install_requires,
                   'setup_requires': ['cffi'],
                   'include_package_data': True,
