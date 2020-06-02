@@ -132,7 +132,7 @@ def setup_packages():
                   'license': License,
                   'install_requires': install_requires,
                   'setup_requires': ['cffi'],
-                  'include_package_data': True,
+                  #'include_package_data': True,
                   'package_data': {'pyquest_cffi': ['questlib/*', 'questlib/*.so']},
                   'data_files': [("", ["LICENSE", "pyquest_cffi/questlib/makefile"])],
                   # add custom build_ext command
