@@ -54,7 +54,7 @@ def run_example_interactive():
     ops.controlledCompactUnitary()(qureg=qureg, control=0, qubit=1, alpha=a, beta=b)
 
     ops.multiControlledUnitary()(qureg=qureg, controls=[
-        0, 1], number_controls=2, qubit=2, matrix=u)
+        0, 1], qubit=2, matrix=u)
 
     # cheated results
 
