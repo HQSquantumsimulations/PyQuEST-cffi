@@ -67,6 +67,7 @@ class CustomBuild(build_ext):
             print('src_path', src_path)
             os.chdir(src_path)
             QuEST_release_link = 'https://github.com/QuEST-Kit/QuEST/archive/v3.1.1.tar.gz'
+            # https://github.com/QuEST-Kit/QuEST/releases/tag/v3.2.0
 
             if not os.path.exists(os.path.join(src_path, 'QuEST')):
                 print('quest_path', os.path.join(src_path, 'QuEST/'))
@@ -121,7 +122,7 @@ def setup_packages():
                       + ' to QuEST quantum simulation toolkit;'
                       + '  Compile functionality, create, build and import'
                       + ' valid QuEST source code from python'),
-                  'version': '3.1.1',
+                  'version': '3.2.0',
                   'long_description': readme,
                   'packages': packages,
                   # 'package_dir': {'': 'pyquest_cffi'},

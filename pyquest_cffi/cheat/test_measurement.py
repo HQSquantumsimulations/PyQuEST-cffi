@@ -12,9 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import sys
+if '/home/kbark/Programming/PyQuEST-cffi' not in sys.path:
+    sys.path.append('/home/kbark/Programming/PyQuEST-cffi')
 
 import pytest
-import sys
 import numpy.testing as npt
 from pyquest_cffi import cheat
 from pyquest_cffi import utils
