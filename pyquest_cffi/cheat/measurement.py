@@ -488,7 +488,7 @@ class calcExpecPauliProd(_PYQUEST):
                                         )
 
 
-class calcHilberSchmidtDistance(_PYQUEST):
+class calcHilbertSchmidtDistance(_PYQUEST):
     r"""Calculate the Hilbert-Schmidt distance between two density matrix quregs
 
     Args:

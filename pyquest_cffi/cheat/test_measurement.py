@@ -55,7 +55,7 @@ def test_calc_Hilbert_Schmidt_distance():
     env = utils.createQuestEnv()()
     qureg1 = utils.createDensityQureg()(4, env)
     qureg2 = utils.createDensityQureg()(4, env)
-    a = cheat.calcHilberSchmidtDistance()(
+    a = cheat.calcHilbertSchmidtDistance()(
         qureg1=qureg1,
         qureg2=qureg2,
     )

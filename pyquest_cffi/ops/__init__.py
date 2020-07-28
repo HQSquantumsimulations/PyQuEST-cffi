@@ -48,9 +48,9 @@ from pyquest_cffi.ops.ops import (
     controlledRotateAroundAxis,
     controlledCompactUnitary,
     controlledUnitary,
-    MolmerSorensenXX,
-    sqrtISwap,
-    invSqrtISwap,
+    MolmerSorensenXX, #
+    sqrtISwap, #
+    invSqrtISwap, #
     swapGate,
     sqrtSwapGate,
     twoQubitUnitary,
@@ -74,11 +74,11 @@ from pyquest_cffi.ops.errors import (
     mixDepolarising,
     mixTwoQubitDephasing,
     mixTwoQubitDepolarising,
-    applyOneQubitDephaseError,
-    applyOneQubitDepolariseError,
-    applyOneQubitDampingError,
-    applyTwoQubitDephaseError,
-    applyTwoQubitDepolariseError,
+    applyOneQubitDephaseError, #
+    applyOneQubitDepolariseError, #
+    applyOneQubitDampingError, #
+    applyTwoQubitDephaseError, #
+    applyTwoQubitDepolariseError, #
     mixPauli,
     mixKrausMap,
     mixTwoQubitKrausMap,
