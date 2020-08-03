@@ -17,7 +17,7 @@ from pyquest_cffi.questlib import (
     quest, _PYQUEST, ffi_quest, qreal, tqureg, tquestenv, paulihamil
 )
 import numpy as np
-from typing import Sequence, Optional
+from typing import Sequence, Optional, Tuple
 
 
 class hadamard(_PYQUEST):
@@ -2342,6 +2342,7 @@ class applyDiagonalOp(_PYQUEST):
         """
         raise NotImplementedError()
 
+
 class applyMatrix2(_PYQUEST):
     r"""Applying a general 2-by-2 matrix, which may be non-unitary
 
@@ -2384,6 +2385,9 @@ class applyMatrix2(_PYQUEST):
         Args:
             matrix: 2 by 2 matrix that defines the two qubit gate
             **kwargs: Additional keyword arguments
+
+        Returns:
+            np.ndarray
         """
         return matrix
 
@@ -2433,6 +2437,9 @@ class applyMatrix4(_PYQUEST):
         Args:
             matrix: 4 by 4 matrix that defines the two qubit gate
             **kwargs: Additional keyword arguments
+
+        Returns:
+            np.ndarray
         """
         return matrix
 
@@ -2496,6 +2503,9 @@ class applyMatrixN(_PYQUEST):
         Args:
             matrix: N by N matrix that defines the N qubit gate
             **kwargs: Additional keyword arguments
+
+        Returns:
+            np.ndarray
         """
         return matrix
 
@@ -2567,6 +2577,9 @@ class applyMultiControlledMatrixN(_PYQUEST):
         Args:
             matrix: N by N matrix that defines the N qubit gate
             **kwargs: Additional keyword arguments
+
+        Returns:
+            np.ndarray
         """
         return matrix
 
@@ -2684,7 +2697,7 @@ class applyPauliSum(_PYQUEST):
 
 
 class applyTrotterCircuit(_PYQUEST):
-    r"""Applying a trotterisation of unitary evolution exp(-i*pauli_hamil*time) to qureg. 
+    r"""Applying a trotterisation of unitary evolution exp(-i*pauli_hamil*time) to qureg
 
     This is a sequence of unitary operators, effected by multiRotatePauli(), which together
     approximate the action of full unitary-time evolution under the given Hamiltonian.

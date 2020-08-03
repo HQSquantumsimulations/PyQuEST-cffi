@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Union, List, Optional
+from typing import Union, List
 import numpy as np
 from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, paulihamil
 import warnings
@@ -202,7 +202,7 @@ class setDensityAmps(_PYQUEST):
         qureg: The quantum register of a density matrix
         reals: the new real values of the elements of the density matrix
                between startind and startind+numamps
-        imgas: the new imaginary values of the elements of the density matrix
+        imags: the new imaginary values of the elements of the density matrix
                between startind and startind+numamps
 
     """
@@ -225,8 +225,6 @@ class setDensityAmps(_PYQUEST):
         imags = list(imags)
         assert len(reals) == np.max(np.shape(reals))
         assert len(imags) == np.max(np.shape(imags))
-        assert len(reals) == numamps
-        assert len(reals) == numamps
         if not qureg.isDensityMatrix:
             warnings.warn('qureg has to be a density matrix qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)

@@ -16,7 +16,7 @@
 
 from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, ffi_quest
 import numpy as np
-from typing import Tuple, Sequence, Optional, List
+from typing import Tuple, Sequence, List
 import warnings
 
 

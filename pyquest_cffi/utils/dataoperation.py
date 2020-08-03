@@ -154,7 +154,7 @@ class createPauliHamil(_PYQUEST):
     """Create a clone of the qureg in a certain environment
 
     Args:
-        number_qubits: the number of qubits on which this Hamiltonian acts 
+        number_qubits: the number of qubits on which this Hamiltonian acts
         number_pauliprods: the number of weighted terms in the sum, or the number of Pauli products
 
     Returns:
@@ -162,12 +162,12 @@ class createPauliHamil(_PYQUEST):
 
     """
 
-    def call_interactive(self, number_qubits: int, number_pauliprods: int) -> paulihamil:
+    def call_interactive(self, number_qubits: int, number_pauliprods: int) -> 'quest.PauliHamil':
         """Interactive call of PyQuest-cffi
 
         Args:
-            number_qubits: the number of qubits on which this Hamiltonian acts 
-            number_pauliprods: the number of weighted terms in the sum, or the number of Pauli products
+            number_qubits: the number of qubits on which this Hamiltonian acts
+            number_pauliprods: the number of weighted terms in the sum/number of Pauli products
 
         Returns:
             PauliHamil: created Pauli Hamiltonian
@@ -188,4 +188,4 @@ class destroyPauliHamil(_PYQUEST):
         Args:
             pauli_hamil: PauliHamil to be destroyed
         """
-        return quest.destroyPauliHamil(pauli_hamil)
+        quest.destroyPauliHamil(pauli_hamil)

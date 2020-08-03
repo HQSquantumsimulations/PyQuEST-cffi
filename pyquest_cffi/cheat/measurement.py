@@ -12,9 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, ffi_quest, qreal
+from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, ffi_quest, qreal, tquestenv, paulihamil
 import numpy as np
-from typing import Sequence, Optional, Union, List
+from typing import Sequence, Optional, Union, List, Tuple
 import warnings
 
 
@@ -163,7 +163,7 @@ class calcTotalProb(_PYQUEST):
             qureg: a qureg containing a density matrix or wavefunction
 
         Returns:
-            Optional[float]
+            float
         """
         return quest.calcTotalProb(qureg)
 
@@ -345,6 +345,135 @@ class getImagAmp(_PYQUEST):
             return None
         else:
             return quest.getImagAmp(qureg, index)
+
+
+# class getAmp(_PYQUEST):
+#     r"""
+#     Get the complex amplitude at a given index in the state vector
+
+#     Args:
+#         qureg: a qureg containing a wavefunction
+#         index: The index either as an int or as a sequence
+#             of 0 and 1 referencing the corresponding basis state
+
+#     """
+
+#     def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]
+#                          ) -> Optional[float]:
+#         """Interactive call of PyQuest-cffi
+
+#         Args:
+#             qureg: a qureg containing a wavefunction
+#             index: The index either as an int or as a sequence
+#                 of 0 and 1 referencing the corresponding basis state
+
+#         Returns:
+#             Optional[float]
+#         """
+#         if hasattr(index, '__len__'):
+#             index = basis_state_to_index(index)
+#         if qureg.isDensityMatrix:
+#             return None
+#         else:
+#             return quest.getAmp(qureg, index)
+
+
+# class getDensityAmp(_PYQUEST):
+#     r"""
+#     Get an amplitude from a density matrix at a given row and column
+
+#     Args:
+#         qureg: a qureg containing a density matrix
+#         row: row of the desired amplitude in the density matrix
+#         column: column of the desired amplitude in the density matrix
+
+#     """
+
+#     def call_interactive(self, qureg: tqureg, row: int, column: int) -> float:
+#         """Interactive call of PyQuest-cffi
+
+#         Args:
+#             qureg: a qureg containing a density matrix
+#             row: row of the desired amplitude in the density matrix
+#             column: column of the desired amplitude in the density matrix
+
+#         Returns:
+#             float
+#         """
+#         return quest.getDensityAmp(qureg, row, column)
+
+
+class getNumAmps(_PYQUEST):
+    r"""
+    Get the number of probability amplitudes in a qureg object, given by 2**number_qubits
+
+    Args:
+        qureg: a qureg containing a wavefunction
+
+    """
+
+    def call_interactive(self, qureg: tqureg) -> int:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction
+
+        Returns:
+            int
+        """
+        return quest.getNumAmps(qureg)
+
+
+class getNumQubits(_PYQUEST):
+    r"""
+    Get the number of qubits in a qureg object
+
+    Args:
+        qureg: a qureg containing a wavefunction
+
+    """
+
+    def call_interactive(self, qureg: tqureg) -> int:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction
+
+        Returns:
+            int
+        """
+        return quest.getNumQubits(qureg)
+
+
+# class getProbAmp(_PYQUEST):
+#     r"""
+#     Get the probability of a state-vector at an index in the full state vector
+
+#     Args:
+#         qureg: a qureg containing a wavefunction
+#         index: The index either as an int or as a sequence
+#             of 0 and 1 referencing the corresponding basis state
+
+#     """
+
+#     def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]
+#                          ) -> Optional[float]:
+#         """Interactive call of PyQuest-cffi
+
+#         Args:
+#             qureg: a qureg containing a wavefunction
+#             index: The index either as an int or as a sequence
+#                 of 0 and 1 referencing the corresponding basis state
+
+#         Returns:
+#             Optional[float]
+#         """
+#         if hasattr(index, '__len__'):
+#             index = basis_state_to_index(index)
+#         if qureg.isDensityMatrix:
+#             return None
+#         else:
+#             return quest.getProbAmp(qureg, index)
 
 
 class getExpectationValue(_PYQUEST):
@@ -529,7 +658,26 @@ class getStateVector(_PYQUEST):
 
 
 class getEnvironmentString(_PYQUEST):
-    r"""Stuff"""
+    r"""Sets input string to a string
+
+    Set string contains the number of qubits in qureg, and the
+    hardware facilities used
+
+    Args:
+        env: object representing the execution environment
+        qureg: quantum register of which to query the simulating hardware
+        string: string to be populated with the output string
+    """
+
+    def call_interactive(self, env: tquestenv, qureg: tqureg, string: str) -> None:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            env: object representing the execution environment
+            qureg: quantum register of which to query the simulating hardware
+            string: string to be populated with the output string
+        """
+        quest.getEnvironmentString(env, qureg, string)
 
 
 class calcExpecPauliSum(_PYQUEST):
@@ -643,6 +791,76 @@ class calcExpecPauliProd(_PYQUEST):
                                         )
 
 
+class calcExpecDiagonalOp(_PYQUEST):
+    r"""Computes the expected value of the diagonal operator op for state qureg
+
+    Since op is not necessarily Hermitian, the expected value may be a complex number.
+
+    Args:
+        qureg: quantum register that is measured
+        operator: operator acting on a certain number of qubits (operator[0]: int)
+            and in a certain QuEST environment (operator[1]: tquestenv)
+
+
+    Returns:
+        Expectation value of the operator
+
+    """
+
+    def call_interactive(self,
+                         qureg: tqureg,
+                         operator: Tuple[int, tquestenv],
+                         ) -> float:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: quantum register that is measured
+            operator: operator acting on a certain number of qubits (operator[0]: int)
+                and in a certain QuEST environment (operator[1]: tquestenv)
+
+        Returns:
+            float
+        """
+        diagonal_op = quest.createDiagonalOp(operator[0], operator[1])
+        return quest.calcExpecDiagonalOp(qureg,
+                                         diagonal_op)
+
+
+class calcExpecPauliHamil(_PYQUEST):
+    r"""Get the expectation value of a product of Pauli operators
+
+    Args:
+        qureg: quantum register that is measured
+        pauli_hamil: a PauliHamil created with createPauliHamil()
+        workspace: A qureg of same type and size as input qureg, is used as temporary
+                   work qureg
+
+    Returns:
+        Expectation value of Pauli Sum
+
+    """
+
+    def call_interactive(self,
+                         qureg: tqureg,
+                         pauli_hamil: paulihamil,
+                         workspace: tqureg
+                         ) -> float:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: quantum register that is measured
+            pauli_hamil: a PauliHamil created with createPauliHamil()
+            workspace: A qureg of same type and size as input qureg, is used as temporary
+                    work qureg
+
+        Returns:
+            float
+        """
+        return quest.calcExpecPauliHamil(qureg,
+                                         pauli_hamil,
+                                         workspace)
+
+
 class calcHilbertSchmidtDistance(_PYQUEST):
     r"""Calculate the Hilbert-Schmidt distance between two density matrix quregs
 
@@ -701,6 +919,74 @@ class calcDensityInnerProduct(_PYQUEST):
         return quest.calcDensityInnerProduct(qureg1,
                                              qureg2
                                              )
+
+
+class seedQuEST(_PYQUEST):
+    r"""Seed the Mersenne Twister used for random number generation with a user defined seed
+
+    This function uses the mt19937 init_by_array function with numSeeds keys supplied by the user.
+    Subsequent calls to mt19937 genrand functions will use this seeding.
+    For a multi process code, the same seed is given to all process, therefore this seeding is only
+    appropriate to use for functions e.g measure where all processes require the same random value.
+
+    Args:
+        seed_array: Array of integers to use as seed
+    """
+
+    def call_interactive(self, seed_array: Sequence[int]) -> None:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            seed_array: Array of integers to use as seed
+        """
+        quest.seedQuEST(seed_array, len(seed_array))
+
+
+class seedQuESTDefault(_PYQUEST):
+    r"""Seed the Mersenne Twister used for random number generation with an example default seed
+
+    This function uses the mt19937 init_by_array function with numSeeds keys supplied by the user.
+    Subsequent calls to mt19937 genrand functions will use this seeding.
+    For a multi process code, the same seed is given to all process, therefore this seeding is only
+    appropriate to use for functions e.g. measure where all processes require the same random value.
+
+    """
+
+    def call_interactive(self) -> None:
+        """Interactive call of PyQuest-cffi"""
+        quest.seedQuESTDefault()
+
+
+class syncQuESTEnv(_PYQUEST):
+    r"""Guarantees that all code up to the given point has been executed on all nodes
+
+    Args:
+        env: execution environment
+    """
+
+    def call_interactive(self, env: tquestenv) -> None:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            env: execution environment
+        """
+        quest.syncQuESTEnv(env)
+
+
+class syncQuESTSuccess(_PYQUEST):
+    r"""Performs a logical AND on all successCodes held by all processes.
+
+    If any one process has a zero successCode all processes will return a zero success code.
+
+    """
+
+    def call_interactive(self) -> int:
+        """Interactive call of PyQuest-cffi
+
+        Returns:
+            int
+        """
+        return quest.syncQuESTSuccess()
 
 
 def basis_state_to_index(basis_state: Union[int, Sequence[int]], endianness: str = 'little') -> int:
