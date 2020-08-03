@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import typing
+from typing import List
 from pyquest_cffi.questlib import quest, _PYQUEST, tquestenv, tqureg
 
 
@@ -26,18 +26,33 @@ class reportQuESTEnv(_PYQUEST):
 
     """
 
-    def call_interactive(self, env: tquestenv) -> None:
-        """Call interactive Pyquest-cffi function"""
+    def call_interactive(self, env: tquestenv) -> 'quest.reportQuESTEnv':
+        """Call interactive Pyquest-cffi function
+
+        Args:
+            env: QuEST environment for which the parameter are reported
+
+        Returns:
+            quest.reportQuESTEnv
+        """
         return quest.reportQuESTEnv(env)
 
     @property
     def restype(self) -> str:
-        """Return result type"""
+        """Return result type
+
+        Returns:
+            str
+        """
         return "void"
 
     @property
-    def argtype(self) -> typing.List[str]:
-        """Return type of argument"""
+    def argtype(self) -> List[str]:
+        """Return type of argument
+
+        Returns:
+            List[str]
+        """
         return ["QuESTEnv"]
 
 
@@ -50,36 +65,66 @@ class reportQuregParams(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg) -> None:
-        """Call interactive Pyquest-cffi function"""
+    def call_interactive(self, qureg: tqureg) -> 'quest.reportQuregParams':
+        """Call interactive Pyquest-cffi function
+
+        Args:
+            qureg: Quantum register for which the parameter are reported
+
+        Returns:
+            quest.reportQuregParams
+        """
         return quest.reportQuregParams(qureg)
 
     @property
     def restype(self) -> str:
-        """Return result type."""
+        """Return result type
+
+        Returns:
+            str
+        """
         return "void"
 
     @property
-    def argtype(self) -> typing.List[str]:
-        """Return argument type"""
+    def argtype(self) -> List[str]:
+        """Return argument type
+
+        Returns:
+            List[str]
+        """
         return ["Qureg"]
 
 
 class reportState(_PYQUEST):
     """Report QuEST state"""
 
-    def call_interactive(self, qureg: tqureg) -> None:
-        """Call interactive Pyquest-cffi function"""
+    def call_interactive(self, qureg: tqureg) -> 'quest.reportState':
+        """Call interactive Pyquest-cffi function
+
+        Args:
+            qureg: Quantum Register (qureg)
+
+        Returns:
+            quest.reportState
+        """
         return quest.reportState(qureg)
 
     @property
     def restype(self) -> str:
-        """Return result type."""
+        """Return result type
+
+        Returns:
+            str
+        """
         return "void"
 
     @property
-    def argtype(self) -> typing.List[str]:
-        """Return argument type."""
+    def argtype(self) -> List[str]:
+        """Return argument type
+
+        Returns:
+            List[str]
+        """
         return ["Qureg"]
 
 
@@ -93,16 +138,36 @@ class reportStateToScreen(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg, env: tquestenv, a: int = 0) -> None:
-        """Call interactive Pyquest-cffi function"""
+    def call_interactive(self,
+                         qureg: tqureg,
+                         env: tquestenv,
+                         a: int = 0) -> 'quest.reportStateToScreen':
+        """Call interactive Pyquest-cffi function
+
+        Args:
+            qureg: the quantum register
+            env: the environment of the quantum register
+            a: integer
+
+        Returns:
+            quest.reportStateToScreen
+        """
         return quest.reportStateToScreen(qureg, env, a)
 
     @property
     def restype(self) -> str:
-        """Return result type"""
+        """Return result type
+
+        Returns:
+            str
+        """
         return "void"
 
     @property
-    def argtype(self) -> typing.List[str]:
-        """Return argument type."""
+    def argtype(self) -> List[str]:
+        """Return argument type
+
+        Returns:
+            List[str]
+        """
         return ["Qureg", "QuESTEnv", "int"]

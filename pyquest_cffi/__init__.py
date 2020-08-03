@@ -22,8 +22,5 @@
     pyquest_cffi.utils
 
 """
-import sys
-if '/home/kbark/Programming/PyQuEST-cffi' not in sys.path:
-    sys.path.append('/home/kbark/Programming/PyQuEST-cffi')
 from pyquest_cffi.questlib import quest
 from pyquest_cffi import ops, cheat, utils

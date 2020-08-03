@@ -14,13 +14,18 @@
 # limitations under the License.
 
 from pyquest_cffi.questlib import quest, _PYQUEST, tquestenv, tqureg
+from typing import List
 
 
 class createQuestEnv(_PYQUEST):
     """Creates the QuEST simulator environment, needed for all simulations"""
 
-    def call_interactive(self,) -> tquestenv:
-        """Call interactive Pyquest-cffi function"""
+    def call_interactive(self) -> tquestenv:
+        """Call interactive Pyquest-cffi function
+
+        Returns:
+            tquestenv
+        """
         return quest.createQuESTEnv()
 
 
@@ -34,7 +39,11 @@ class destroyQuestEnv(_PYQUEST):
     """
 
     def call_interactive(self, env: tquestenv) -> None:
-        """Call interactive Pyquest-cffi function"""
+        """Call interactive Pyquest-cffi function
+
+        Args:
+            env: QuEST environment to be deallocated
+        """
         quest.destroyQuESTEnv(env)
 
 
@@ -49,7 +58,15 @@ class createQureg(_PYQUEST):
     """
 
     def call_interactive(self, num_qubits: int, env: tquestenv) -> tqureg:
-        """Call interactive Pyquest-cffi function"""
+        """Call interactive Pyquest-cffi function
+
+        Args:
+            num_qubits: number of qubits in the quantum register
+            env: QuEST environment in which the qureg exists
+
+        Returns:
+            tqureg
+        """
         return quest.createQureg(num_qubits, env)
 
 
@@ -64,15 +81,28 @@ class createDensityQureg(_PYQUEST):
     """
 
     def call_interactive(self, num_qubits: int, env: tquestenv) -> tqureg:
-        """Call interactive Pyquest-cffi function"""
+        """Call interactive Pyquest-cffi function
+
+        Args:
+            num_qubits: number of qubits in the quantum register
+            env: QuEST environment in which the qureg exists
+
+        Returns:
+            tqureg
+        """
         return quest.createDensityQureg(num_qubits, env)
 
 
 class destroyQureg(_PYQUEST):
     """Deallocate memory for a qubit register"""
 
-    def call_interactive(self, qubits, env: tquestenv) -> None:
-        """Call interactive Pyquest-cffi function"""
+    def call_interactive(self, qubits: List[int], env: tquestenv) -> None:
+        """Call interactive Pyquest-cffi function
+
+        Args:
+            qubits: Qubits in system
+            env: QuEST environment in which the qureg exists
+        """
         quest.destroyQureg(qubits, env)
 
 
@@ -88,8 +118,16 @@ class createCloneQureg(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg, env: tquestenv) -> tqureg:
-        """Call interactive Pyquest-cffi function"""
+    def call_interactive(self, qureg: tqureg, env: tquestenv) -> tqureg:
+        """Call interactive Pyquest-cffi function
+
+        Args:
+            qureg: Qureg to be cloned
+            env: QuEST environment the clone is created in
+
+        Returns:
+            tqureg: cloned qureg
+        """
         return quest.createCloneQureg(qureg, env)
 
 
@@ -102,6 +140,14 @@ class cloneQureg(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg_clone, qureg_original) -> None:
-        """Call interactive Pyquest-cffi function"""
+    def call_interactive(self, qureg_clone: tqureg, qureg_original: tqureg) -> 'quest.cloneQureg':
+        """Call interactive Pyquest-cffi function
+
+        Args:
+            qureg_original: Qureg to be cloned
+            qureg_clone: Cloned qureg
+
+        Returns:
+            quest.cloneQureg
+        """
         return quest.cloneQureg(qureg_clone, qureg_original)

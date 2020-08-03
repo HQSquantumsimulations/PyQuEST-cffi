@@ -12,13 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import sys
-if '/home/kbark/Programming/PyQuEST-cffi' not in sys.path:
-    sys.path.append('/home/kbark/Programming/PyQuEST-cffi')
-
 from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, ffi_quest, qreal
 import numpy as np
-from typing import Sequence, Optional, Union
+from typing import Sequence, Optional, Union, List
 import warnings
 
 
@@ -42,7 +38,15 @@ class calcFidelity(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qureg_reference: tqureg) -> Optional[float]:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction or a density matrix
+            qureg_reference: a qureg containing a wavefunction
+
+        Returns:
+            Optional[float]
+        """
         if not qureg_reference.isDensityMatrix:
             return quest.calcFidelity(qureg, qureg_reference)
         else:
@@ -65,7 +69,15 @@ class calcInnerProduct(_PYQUEST):
     """
 
     def call_interactive(self, qureg1: tqureg, qureg2: tqureg) -> Optional[float]:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg1: a qureg containing a wavefunction
+            qureg2: a qureg containing a wavefunction
+
+        Returns:
+            Optional[float]
+        """
         if qureg1.isDensityMatrix:
             warnings.warn('qureg1 has to be a wavefunction qureg'
                           + ' but density matrix qureg was used', RuntimeWarning)
@@ -90,7 +102,16 @@ class calcProbOfOutcome(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int, outcome: int) -> float:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction or density matrix
+            qubit: the index of the qubit for which the probability is determined
+            outcome: the outcome of the measurement
+
+        Returns:
+            float
+        """
         return quest.calcProbOfOutcome(qureg, qubit, outcome)
 
 
@@ -107,7 +128,14 @@ class calcPurity(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg) -> Optional[float]:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a density matrix
+
+        Returns:
+            Optional[float]
+        """
         if qureg.isDensityMatrix:
             return quest.calcPurity(qureg)
         else:
@@ -123,13 +151,20 @@ class calcTotalProb(_PYQUEST):
     In other words check that trace of density matrix or norm of state vector is one.
 
     Args:
-        qureg: a qureg containing a density matrix or wavefucntion
+        qureg: a qureg containing a density matrix or wavefunction
         readout: the readout register for static compilation
 
     """
 
     def call_interactive(self, qureg: tqureg) -> float:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a density matrix or wavefunction
+
+        Returns:
+            Optional[float]
+        """
         return quest.calcTotalProb(qureg)
 
 
@@ -146,7 +181,16 @@ class getStateVectoratIndex(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> Optional[float]:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction
+            index: The index either as an int or as a sequence
+                of 0 and 1 referencing the corresponding basis state
+
+        Returns:
+            Optional[float]
+        """
         if hasattr(index, '__len__'):
             index = basis_state_to_index(index)
         if qureg.isDensityMatrix:
@@ -178,7 +222,18 @@ class getDensityMatrixatRowColumn(_PYQUEST):
     def call_interactive(self, qureg: tqureg,
                          row: Union[int, Sequence[int]],
                          column: Union[int, Sequence[int]]) -> Optional[float]:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction
+            row: The row index either as an int of as a sequence
+                of 0 and 1 referencing the corresponding basis state
+            column: The column index either as an int of as a sequence
+                of 0 and 1 referencing the corresponding basis state
+
+        Returns:
+            Optional[float]
+        """
         if hasattr(row, '__len__'):
             row = basis_state_to_index(row)
         if hasattr(column, '__len__'):
@@ -207,7 +262,19 @@ class getAbsoluteValSquaredatIndex(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> float:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction
+            index: The index either as an int or as a sequence
+                of 0 and 1 referencing the corresponding basis state
+
+        Returns:
+            Optional[float]
+
+        Raises:
+            RuntimeError: getAbsoluteValSquaredatIndex is only defined for statevector qureg
+        """
         if hasattr(index, '__len__'):
             index = basis_state_to_index(index)
         if qureg.isDensityMatrix:
@@ -231,7 +298,16 @@ class getRealAmp(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> Optional[float]:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction
+            index: The index either as an int of as a sequence
+                of 0 and 1 referencing the corresponding basis state
+
+        Returns:
+            Optional[float]
+        """
         if hasattr(index, '__len__'):
             index = basis_state_to_index(index)
         if qureg.isDensityMatrix:
@@ -252,8 +328,17 @@ class getImagAmp(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> float:
-        """Call interactive PyQuest-cffi"""
+    def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> Optional[float]:
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction
+            index: The index either as an int or as a sequence
+                of 0 and 1 referencing the corresponding basis state
+
+        Returns:
+            Optional[float]
+        """
         if hasattr(index, '__len__'):
             index = basis_state_to_index(index)
         if qureg.isDensityMatrix:
@@ -274,7 +359,15 @@ class getExpectationValue(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, operator_matrix: np.ndarray) -> float:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction or density matrix
+            operator_matrix: The operator in matrix form
+
+        Returns:
+            float
+        """
         density_matrix = getDensityMatrix()(qureg)
         return np.trace(operator_matrix @ density_matrix)
 
@@ -292,7 +385,14 @@ class getDensityMatrix(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg) -> np.ndarray:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction or density matrix
+
+        Returns:
+            np.ndarray
+        """
         N = qureg.numQubitsRepresented
         density_matrix = np.zeros((2**N, 2**N), dtype=np.complex)
         if qureg.isDensityMatrix:
@@ -320,7 +420,14 @@ class getOccupationProbability(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg) -> np.ndarray:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction or density matrix
+
+        Returns:
+            np.ndarray
+        """
         N = qureg.numQubitsRepresented
         prob_vec = np.zeros((2**N,), dtype=np.complex)
         if qureg.isDensityMatrix:
@@ -356,7 +463,17 @@ class getRepeatedMeasurement(_PYQUEST):
 
     def call_interactive(self, qureg: tqureg, number_measurements: int,
                          qubits_to_readout_index_dict: dict) -> np.ndarray:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction or density matrix
+            number_measurements: The number of measurement repetitions
+            qubits_to_readout_index_dict: The mapping of qubit indices to the readout index
+                {qubit_index: readout_index}
+
+        Returns:
+            np.ndarray
+        """
         N = qureg.numQubitsRepresented
         number_qubits = qureg.numQubitsRepresented
         probabilities = np.zeros((2**N, ))
@@ -391,7 +508,14 @@ class getStateVector(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg) -> np.ndarray:
-        """Call interactive PyQuest-cffi"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: a qureg containing a wavefunction
+
+        Returns:
+            np.ndarray
+        """
         N = qureg.numQubitsRepresented
         state_vec = np.zeros((2**N,), dtype=np.complex)
         if qureg.isDensityMatrix:
@@ -424,12 +548,24 @@ class calcExpecPauliSum(_PYQUEST):
     """
 
     def call_interactive(self,
-                         qureg,
+                         qureg: tqureg,
                          paulis: Sequence[Sequence[int]],
                          coefficients: Sequence[float],
-                         workspace
+                         workspace: tqureg
                          ) -> float:
-        """Interactive call of PyQuest"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: quantum register that is measured
+            paulis: List of Lists of Pauli operators in each product
+                    encoded as int via IDENTITY=0, PAULI_X=1, PAULI_Y=2, PAULI_Z=3
+            coefficients: coefficients of the sum
+            workspace: A qureg of same type and size as input qureg, is used as temporary
+                    work qureg
+
+        Returns:
+            float
+        """
         flat_list = [p for product in paulis for p in product]
         pointer_paulis = ffi_quest.new("enum pauliOpType[{}]".format(len(flat_list)))
         for co, p in enumerate(flat_list):
@@ -465,12 +601,27 @@ class calcExpecPauliProd(_PYQUEST):
     """
 
     def call_interactive(self,
-                         qureg,
+                         qureg: tqureg,
                          qubits: Sequence[int],
                          paulis: Sequence[Sequence[int]],
-                         workspace
+                         workspace: tqureg
                          ) -> float:
-        """Interactive call of PyQuest"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg: quantum register that is measured
+            qubits: target qubits
+            paulis: List of Pauli operators in the product
+                    encoded as int via IDENTITY=0, PAULI_X=1, PAULI_Y=2, PAULI_Z=3
+            workspace: A qureg of same type and size as input qureg, is used as temporary
+                    work qureg
+
+        Returns:
+            float
+
+        Raises:
+            RuntimeError: ''
+        """
         if not len(qubits) == len(paulis):
             raise RuntimeError("")
         flat_list = [p for p in paulis]
@@ -501,10 +652,18 @@ class calcHilbertSchmidtDistance(_PYQUEST):
     """
 
     def call_interactive(self,
-                         qureg1,
-                         qureg2
+                         qureg1: tqureg,
+                         qureg2: tqureg
                          ) -> float:
-        """Interactive call of PyQuest"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg1: first quantum register
+            qureg2: first quantum register
+
+        Returns:
+            float
+        """
         return quest.calcHilbertSchmidtDistance(qureg1,
                                                 qureg2
                                                 )
@@ -523,16 +682,24 @@ class calcDensityInnerProduct(_PYQUEST):
     """
 
     def call_interactive(self,
-                         qureg1,
-                         qureg2
+                         qureg1: tqureg,
+                         qureg2: tqureg
                          ) -> float:
-        """Interactive call of PyQuest"""
+        """Call interactive PyQuest-cffi
+
+        Args:
+            qureg1: first quantum register
+            qureg2: first quantum register
+
+        Returns:
+            float
+        """
         return quest.calcDensityInnerProduct(qureg1,
                                              qureg2
                                              )
 
 
-def basis_state_to_index(basis_state, endianness='little'):
+def basis_state_to_index(basis_state: Union[int, Sequence[int]], endianness: str = 'little') -> int:
     """Convert a basis state to index
 
     Converts a up/down representation of a basis state to the index of the basis
@@ -540,7 +707,7 @@ def basis_state_to_index(basis_state, endianness='little'):
 
     Args:
         basis_state: a sequence of 0 and one representing the qubit basis stae
-        enidanness: 'big' or 'little' corresponding to the least significant bit
+        endianness: 'big' or 'little' corresponding to the least significant bit
             being stored in the last or first element of the array respectively
             In little endianness the qubit 0 corresponds to the bit at index 0 of basis_state
             the qubit 1 to the bit at index 1 and so on.
@@ -549,6 +716,8 @@ def basis_state_to_index(basis_state, endianness='little'):
             For example 4 which will be 100 in binary
             would correspond to basis_state= np.array([0,0,1])
 
+    Returns:
+        int
     """
     b_state = np.array(basis_state)
     if endianness == 'little':
@@ -559,7 +728,9 @@ def basis_state_to_index(basis_state, endianness='little'):
     return index
 
 
-def index_to_basis_state(index, num_qubits_represented, endianness='little'):
+def index_to_basis_state(index: int,
+                         num_qubits_represented: int,
+                         endianness: str = 'little') -> List:
     """Converst index to basis state
 
     Converts an index of the basis to the  up/down representation of a basis state
@@ -567,7 +738,8 @@ def index_to_basis_state(index, num_qubits_represented, endianness='little'):
 
     Args:
         index: the basis index
-        enidanness: 'big' or 'little' corresponding to the least significant bit
+        num_qubits_represented: Number of qubits represented
+        endianness: 'big' or 'little' corresponding to the least significant bit
             being stored in the last or first element of the array respectively
             In little endianness the qubit 0 corresponds to the bit at index 0 of basis_state
             the qubit 1 to the bit at index 1 and so on.
@@ -577,7 +749,7 @@ def index_to_basis_state(index, num_qubits_represented, endianness='little'):
             would correspond to basis_state= np.array([0,0,1])
 
     Returns:
-        a sequence of 0 and one representing the qubit basis state
+        List: a sequence of 0 and one representing the qubit basis state
 
     """
     b_list = list()

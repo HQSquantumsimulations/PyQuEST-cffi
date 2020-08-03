@@ -17,7 +17,13 @@ import ctypes
 from cffi import FFI
 import os
 
-def build_quest_so():
+
+def build_quest_so() -> None:
+    """Build QuEST so
+
+    Raises:
+        TypeError: Unable to determine precision of qreal
+    """
     lib_path = os.path.dirname(os.path.realpath(__file__))
     quest_path = os.path.join(lib_path, "../../QuEST/QuEST")
     questlib = os.path.join(lib_path, "libQuEST.so")
@@ -39,17 +45,15 @@ def build_quest_so():
     del(QuESTPrec)
     del(QuESTPrecFunc)
 
-
     with open(os.path.join(include[0], "QuEST.h"), "r") as f:
         lines = [line for line in f]
 
     lines += ["void statevec_setAmps(Qureg qureg, long long int startInd,"
-            + " qreal* reals, qreal* imags, long long int numAmps);"]
+              + " qreal* reals, qreal* imags, long long int numAmps);"]
     lines += ["qreal densmatr_calcProbOfOutcome(Qureg qureg, const int measureQubit, int outcome);"]
     lines += ["qreal statevec_calcProbOfOutcome(Qureg qureg, const int measureQubit, int outcome);"]
     lines += ["int generateMeasurementOutcome(qreal zeroProb, qreal *outcomeProb);"]
     lines += ["int getQuEST_PREC(void);"]
-
 
     _lines = []
     no_def = True
@@ -67,7 +71,7 @@ def build_quest_so():
                 no_def = False
             elif l.startswith("#endif"):
                 no_def = True
-    _lines = "".join(_lines).replace('qreal', qreal)
+    _lines = ["".join(_lines).replace('qreal', qreal)]
 
     ffibuilder = FFI()
     ffibuilder.cdef(_lines)
@@ -82,6 +86,7 @@ def build_quest_so():
         # extra_link_args=['-Wl,-rpath={}'.format(lib_path)],
     )
     ffibuilder.compile(verbose=True)
+
 
 if __name__ == '__main__':
     build_quest_so()

@@ -14,9 +14,6 @@
 # limitations under the License.
 
 # Requires LD_LIBRARY_PATH=path/to/this/dir to run
-import sys
-if '/home/kbark/Programming/PyQuEST-cffi' not in sys.path:
-    sys.path.append('/home/kbark/Programming/PyQuEST-cffi')
 import os
 from pyquest_cffi.questlib._abstract import _PYQUEST, tquestenv, tqureg
 from ._quest import ffi as ffi_quest
