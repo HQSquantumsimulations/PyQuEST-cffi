@@ -14,7 +14,7 @@
 # limitations under the License.
 from typing import Union, List, Optional
 import numpy as np
-from pyquest_cffi.questlib import quest, _PYQUEST, tqureg
+from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, paulihamil
 import warnings
 
 
@@ -26,16 +26,13 @@ class initZeroState(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg) -> 'quest.initZeroState':
-        """Call interactive Pyquest-cffi function
+    def call_interactive(self, qureg: tqureg) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
-
-        Returns:
-            quest.initZeroState
         """
-        return quest.initZeroState(qureg)
+        quest.initZeroState(qureg)
 
 
 class initPlusState(_PYQUEST):
@@ -46,16 +43,13 @@ class initPlusState(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg) -> 'quest.initPlusState':
-        """Call interactive Pyquest-cffi function
+    def call_interactive(self, qureg: tqureg) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
-
-        Returns:
-            quest.initPlusState
         """
-        return quest.initPlusState(qureg)
+        quest.initPlusState(qureg)
 
 
 class initClassicalState(_PYQUEST):
@@ -69,17 +63,14 @@ class initClassicalState(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg, state: int) -> 'quest.initClassicalState':
-        """Call interactive Pyquest-cffi function
+    def call_interactive(self, qureg: tqureg, state: int) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
             state: The integer that is initialised in binary representation in the quantum register
-
-        Returns:
-            quest.initClassicalState
         """
-        return quest.initClassicalState(qureg, state)
+        quest.initClassicalState(qureg, state)
 
 
 class initPureState(_PYQUEST):
@@ -94,17 +85,14 @@ class initPureState(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg_a: tqureg, qureg_b: tqureg) -> 'quest.initPureState':
-        """Call interactive Pyquest-cffi function
+    def call_interactive(self, qureg_a: tqureg, qureg_b: tqureg) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg_a: Quantum register that is initialised
             qureg_b: Quantum register that contains the reference pure state
-
-        Returns:
-            quest.initPureState
         """
-        return quest.initPureState(qureg_a, qureg_b)
+        quest.initPureState(qureg_a, qureg_b)
 
 
 class initStateFromAmps(_PYQUEST):
@@ -124,16 +112,13 @@ class initStateFromAmps(_PYQUEST):
                          qureg: tqureg,
                          reals: Union[np.ndarray, List[float]],
                          imags: Union[np.ndarray, List[float]]
-                         ) -> Optional['quest.initStateFromAmps']:
-        """Call interactive Pyquest-cffi function
+                         ) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: the quantum register
             reals: The real parts of the statevector
             imags: The imaginary parts of the statevector
-
-        Returns:
-            Optional['quest.initStateFromAmps']
         """
         reals = list(reals)
         imags = list(imags)
@@ -142,24 +127,20 @@ class initStateFromAmps(_PYQUEST):
         if qureg.isDensityMatrix:
             warnings.warn('qureg has to be a wavefunction qureg'
                           + ' but density matrix qureg was used', RuntimeWarning)
-            return None
         else:
-            return quest.initStateFromAmps(qureg, reals, imags)
+            quest.initStateFromAmps(qureg, reals, imags)
 
 
-class initStateDebug(_PYQUEST):
+class initDebugState(_PYQUEST):
     """Debug class for state initialization"""
 
-    def call_interactive(self, qureg: tqureg) -> 'quest.initStateDebug':
-        """Call interactive Pyquest-cffi function
+    def call_interactive(self, qureg: tqureg) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
-
-        Returns:
-            quest.initStateDebug
         """
-        return quest.initStateDebug(qureg)
+        quest.initDebugState(qureg)
 
 
 class setAmps(_PYQUEST):
@@ -184,8 +165,8 @@ class setAmps(_PYQUEST):
                          reals: Union[np.ndarray, List[float]],
                          imags: Union[np.ndarray, List[float]],
                          numamps: int
-                         ) -> Optional['quest.setAmps']:
-        """Call interactive Pyquest-cffi function
+                         ) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: The quantum register
@@ -195,9 +176,6 @@ class setAmps(_PYQUEST):
             imags: the new imaginary values of the elements of the statevector
                 between startind and startind+numamps
             numamps: the number of new values that are set in the statevector
-
-        Returns:
-            Optional[quest.setAmps]
         """
         reals = list(reals)
         imags = list(imags)
@@ -208,9 +186,8 @@ class setAmps(_PYQUEST):
         if qureg.isDensityMatrix:
             warnings.warn('qureg has to be a wavefunction qureg'
                           + ' but density matrix qureg was used', RuntimeWarning)
-            return None
         else:
-            return quest.setAmps(qureg, startind, reals, imags, numamps)
+            quest.setAmps(qureg, startind, reals, imags, numamps)
 
 # cant find it in the API
 
@@ -223,35 +200,26 @@ class setDensityAmps(_PYQUEST):
 
     Args:
         qureg: The quantum register of a density matrix
-        startind: The index of the first element of the density matrix that is set
         reals: the new real values of the elements of the density matrix
                between startind and startind+numamps
         imgas: the new imaginary values of the elements of the density matrix
                between startind and startind+numamps
-        numaps: the number of new values that are set in the density matrix
 
     """
 
     def call_interactive(self,
                          qureg: tqureg,
-                         startind: int,
                          reals: Union[np.ndarray, List[float]],
                          imags: Union[np.ndarray, List[float]],
-                         numamps: int
-                         ) -> Optional['quest.statevec_setAmps']:
-        """Call interactive Pyquest-cffi function
+                         ) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: The quantum register of a density matrix
-            startind: The index of the first element of the density matrix that is set
             reals: the new real values of the elements of the density matrix
                 between startind and startind+numamps
             imags: the new imaginary values of the elements of the density matrix
                 between startind and startind+numamps
-            numamps: the number of new values that are set in the density matrix
-
-        Returns:
-            quest.initZeroState
         """
         reals = list(reals)
         imags = list(imags)
@@ -262,9 +230,8 @@ class setDensityAmps(_PYQUEST):
         if not qureg.isDensityMatrix:
             warnings.warn('qureg has to be a density matrix qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
-            return None
         else:
-            return quest.statevec_setAmps(qureg, startind, reals, imags, numamps)
+            quest.setDensityAmps(qureg, reals, imags)
 
 
 class setWeightedQureg(_PYQUEST):
@@ -291,7 +258,7 @@ class setWeightedQureg(_PYQUEST):
                          facout: float,
                          quregout: tqureg
                          ) -> None:
-        """Call interactive Pyquest-cffi function
+        """Interactive call of PyQuest-cffi
 
         Args:
             fac1: prefactor of first qureg in sum
@@ -315,9 +282,32 @@ class initBlankState(_PYQUEST):
     def call_interactive(self,
                          qureg: tqureg,
                          ) -> None:
-        """Call interactive Pyquest-cffi function
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: qureg that is set to zero
         """
         quest.initBlankState(qureg)
+
+
+class initPauliHamil(_PYQUEST):
+    """Initialise a PauliHamil instance
+
+    Args:
+        pauli_hamil: PauliHamil instance to initialise
+        coeffs: array of coefficients
+        codes: array of Pauli codes
+    """
+
+    def call_interactive(self,
+                         pauli_hamil: paulihamil,
+                         coeffs: List[float],
+                         codes: List[int]) -> None:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            pauli_hamil: PauliHamil instance to initialise
+            coeffs: array of coefficients
+            codes: array of Pauli codes
+        """
+        quest.initPauliHamil(pauli_hamil, coeffs, codes)

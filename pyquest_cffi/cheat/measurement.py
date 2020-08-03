@@ -38,7 +38,7 @@ class calcFidelity(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qureg_reference: tqureg) -> Optional[float]:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a wavefunction or a density matrix
@@ -69,7 +69,7 @@ class calcInnerProduct(_PYQUEST):
     """
 
     def call_interactive(self, qureg1: tqureg, qureg2: tqureg) -> Optional[float]:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg1: a qureg containing a wavefunction
@@ -102,7 +102,7 @@ class calcProbOfOutcome(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int, outcome: int) -> float:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a wavefunction or density matrix
@@ -128,7 +128,7 @@ class calcPurity(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg) -> Optional[float]:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -157,7 +157,7 @@ class calcTotalProb(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg) -> float:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix or wavefunction
@@ -181,7 +181,7 @@ class getStateVectoratIndex(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> Optional[float]:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a wavefunction
@@ -222,7 +222,7 @@ class getDensityMatrixatRowColumn(_PYQUEST):
     def call_interactive(self, qureg: tqureg,
                          row: Union[int, Sequence[int]],
                          column: Union[int, Sequence[int]]) -> Optional[float]:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a wavefunction
@@ -262,7 +262,7 @@ class getAbsoluteValSquaredatIndex(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> float:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a wavefunction
@@ -298,7 +298,7 @@ class getRealAmp(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> Optional[float]:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a wavefunction
@@ -329,7 +329,7 @@ class getImagAmp(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> Optional[float]:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a wavefunction
@@ -359,7 +359,7 @@ class getExpectationValue(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, operator_matrix: np.ndarray) -> float:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a wavefunction or density matrix
@@ -385,7 +385,7 @@ class getDensityMatrix(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg) -> np.ndarray:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a wavefunction or density matrix
@@ -420,7 +420,7 @@ class getOccupationProbability(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg) -> np.ndarray:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a wavefunction or density matrix
@@ -463,7 +463,7 @@ class getRepeatedMeasurement(_PYQUEST):
 
     def call_interactive(self, qureg: tqureg, number_measurements: int,
                          qubits_to_readout_index_dict: dict) -> np.ndarray:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a wavefunction or density matrix
@@ -508,7 +508,7 @@ class getStateVector(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg) -> np.ndarray:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a wavefunction
@@ -526,6 +526,10 @@ class getStateVector(_PYQUEST):
             for index in range(2**N):
                 state_vec[index] = getStateVectoratIndex()(qureg, index)
         return state_vec
+
+
+class getEnvironmentString(_PYQUEST):
+    r"""Stuff"""
 
 
 class calcExpecPauliSum(_PYQUEST):
@@ -553,7 +557,7 @@ class calcExpecPauliSum(_PYQUEST):
                          coefficients: Sequence[float],
                          workspace: tqureg
                          ) -> float:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register that is measured
@@ -606,7 +610,7 @@ class calcExpecPauliProd(_PYQUEST):
                          paulis: Sequence[Sequence[int]],
                          workspace: tqureg
                          ) -> float:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register that is measured
@@ -655,7 +659,7 @@ class calcHilbertSchmidtDistance(_PYQUEST):
                          qureg1: tqureg,
                          qureg2: tqureg
                          ) -> float:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg1: first quantum register
@@ -685,7 +689,7 @@ class calcDensityInnerProduct(_PYQUEST):
                          qureg1: tqureg,
                          qureg2: tqureg
                          ) -> float:
-        """Call interactive PyQuest-cffi
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg1: first quantum register

@@ -13,7 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pyquest_cffi.questlib import quest, _PYQUEST, ffi_quest, qreal, tqureg
+from pyquest_cffi.questlib import (
+    quest, _PYQUEST, ffi_quest, qreal, tqureg, tquestenv, paulihamil
+)
 import numpy as np
 from typing import Sequence, Optional
 
@@ -34,7 +36,7 @@ class hadamard(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -71,7 +73,7 @@ class pauliX(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -108,7 +110,7 @@ class pauliY(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -146,7 +148,7 @@ class pauliZ(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -183,7 +185,7 @@ class sGate(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -220,7 +222,7 @@ class tGate(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -259,7 +261,7 @@ class compactUnitary(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int, alpha: complex, beta: complex) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -313,7 +315,7 @@ class phaseShift(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int, theta: float) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -360,7 +362,7 @@ class rotateAroundAxis(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int, theta: float, vector: np.ndarray) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -433,7 +435,7 @@ class rotateAroundSphericalAxis(_PYQUEST):
 
     def call_interactive(self, qureg: tqureg, qubit: int, theta: float,
                          spherical_theta: float, spherical_phi: float,) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -496,7 +498,7 @@ class rotateX(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int, theta: float) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -546,7 +548,7 @@ class rotateY(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int, theta: float) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -596,7 +598,7 @@ class rotateZ(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int, theta: float) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -636,7 +638,7 @@ class unitary(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int, matrix: np.ndarray) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -699,7 +701,7 @@ class controlledCompactUnitary(_PYQUEST):
                          qubit: int,
                          alpha: complex,
                          beta: complex) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -762,7 +764,7 @@ class controlledNot(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -809,7 +811,7 @@ class controlledPauliY(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -856,7 +858,7 @@ class controlledPhaseFlip(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -903,7 +905,7 @@ class swapGate(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -950,7 +952,7 @@ class sqrtSwapGate(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -997,7 +999,7 @@ class sqrtISwap(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1050,7 +1052,7 @@ class invSqrtISwap(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1104,7 +1106,7 @@ class controlledPhaseShift(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int, theta: float) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1171,7 +1173,7 @@ class controlledRotateAroundAxis(_PYQUEST):
                          qubit: int,
                          theta: float,
                          vector: np.ndarray) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1249,7 +1251,7 @@ class controlledRotateX(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int, theta: float) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1311,7 +1313,7 @@ class controlledRotateY(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int, theta: float) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1373,7 +1375,7 @@ class controlledRotateZ(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int, theta: float) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1421,7 +1423,7 @@ class controlledUnitary(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int, matrix: np.ndarray) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1484,7 +1486,7 @@ class multiControlledPhaseFlip(_PYQUEST):
                          qureg: tqureg,
                          controls: Sequence[int],
                          number_controls: Optional[int] = None) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1527,7 +1529,7 @@ class multiControlledPhaseShift(_PYQUEST):
 
     def call_interactive(self, qureg: tqureg, controls: Sequence[int],
                          number_controls: Optional[int] = None, theta: float = 0) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1574,7 +1576,7 @@ class multiControlledUnitary(_PYQUEST):
     def call_interactive(self, qureg: tqureg,
                          controls: Sequence[int],
                          qubit: int, matrix: np.ndarray) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1629,7 +1631,7 @@ class measure(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int) -> int:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1651,7 +1653,7 @@ class measureWithStats(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int, outcome_proba: float) -> int:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1674,7 +1676,7 @@ class collapseToOutcome(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, qubit: int, outcome: int) -> float:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1712,7 +1714,7 @@ class MolmerSorensenXX(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, control: int, qubit: int) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1767,7 +1769,7 @@ class twoQubitUnitary(_PYQUEST):
                          target_qubit_1: int,
                          target_qubit_2: int,
                          matrix: np.ndarray) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1820,7 +1822,7 @@ class controlledTwoQubitUnitary(_PYQUEST):
                          target_qubit_1: int,
                          target_qubit_2: int,
                          matrix: np.ndarray) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1881,7 +1883,7 @@ class multiControlledTwoQubitUnitary(_PYQUEST):
                          target_qubit_1: int,
                          target_qubit_2: int,
                          matrix: np.ndarray) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -1937,7 +1939,7 @@ class multiQubitUnitary(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, targets: Sequence[int], matrix: np.ndarray) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -2001,7 +2003,7 @@ class controlledMultiQubitUnitary(_PYQUEST):
                          qureg: tqureg, control: int,
                          targets: Sequence[int],
                          matrix: np.ndarray) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -2073,7 +2075,7 @@ class multiControlledMultiQubitUnitary(_PYQUEST):
                          controls: Sequence[int],
                          targets: Sequence[int],
                          matrix: np.ndarray) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -2141,7 +2143,7 @@ class multiRotateZ(_PYQUEST):
                          qureg: tqureg,
                          qubits: Sequence[int],
                          angle: float) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -2188,7 +2190,7 @@ class multiRotatePauli(_PYQUEST):
                          qubits: Sequence[int],
                          paulis: Sequence[int],
                          angle: float) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -2253,7 +2255,7 @@ class multiStateControlledUnitary(_PYQUEST):
                          control_states: Sequence[int],
                          qubit: int,
                          matrix: np.ndarray) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -2301,6 +2303,324 @@ class multiStateControlledUnitary(_PYQUEST):
         raise NotImplementedError()
 
 
+class applyDiagonalOp(_PYQUEST):
+    r"""Applying a diagonal operator to state
+
+    Apply a diagonal complex operator, which is possibly non-unitary
+    and non-Hermitian, on the entire quantum register.
+
+    Args:
+        qureg: quantum register input, is not changed
+        operator: operator acting on a certain number of qubits (operator[0]: int)
+            and in a certain QuEST environment (operator[1]: tquestenv)
+
+    """
+
+    def call_interactive(self,
+                         qureg: tqureg,
+                         operator: Tuple[int, tquestenv],
+                         ) -> None:
+        r"""Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: quantum register
+            operator: operator acting on a certain number of qubits (operator[0]: int)
+                and in a certain QuEST environment (operator[1]: tquestenv)
+        """
+        diagonal_op = quest.createDiagonalOp(operator[0], operator[1])
+        quest.applyDiagonalOp(qureg, diagonal_op)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        r"""The definition of the gate as a unitary matrix
+
+        Args:
+            matrix: 4 by 4 matrix that defines the two qubit gate
+            **kwargs: Additional keyword arguments
+
+        Raises:
+            NotImplementedError: not implemented
+        """
+        raise NotImplementedError()
+
+class applyMatrix2(_PYQUEST):
+    r"""Applying a general 2-by-2 matrix, which may be non-unitary
+
+    The matrix is left-multiplied onto the state, for both
+    state-vectors and density matrices. Hence, this function differs
+    from unitary() by more than just permitting a non-unitary matrix.
+
+    Args:
+        qureg: quantum register input, is not changed
+        qubit: qubit to operate the matrix upon
+        matrix: matrix to apply
+
+    Warning:
+        After applyMatrix2 the quantum register is in general no longer normalised
+        and does no longer represent a physical valid state without normalisation.
+    """
+
+    def call_interactive(self,
+                         qureg: tqureg,
+                         qubit: int,
+                         matrix: np.ndarray,
+                         ) -> None:
+        r"""Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: quantum register
+            qubit: qubit to operate the matrix upon
+            matrix: matrix to apply
+        """
+        mat = ffi_quest.new("ComplexMatrix2 *")
+        for i in range(2):
+            for j in range(2):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        quest.applyMatrix2(qureg, qubit, mat)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        r"""The definition of the gate as a unitary matrix
+
+        Args:
+            matrix: 2 by 2 matrix that defines the two qubit gate
+            **kwargs: Additional keyword arguments
+        """
+        return matrix
+
+
+class applyMatrix4(_PYQUEST):
+    r"""Applying a general 4-by-4 matrix, which may be non-unitary
+
+    The matrix is left-multiplied onto the state, for both
+    state-vectors and density matrices. Hence, this function differs from
+    twoQubitUnitary() by more than just permitting a non-unitary matrix.
+
+    Args:
+        qureg: quantum register input, is not changed
+        control: qubit that controls the application of the matrix
+        qubit: qubit to operate the matrix upon
+        matrix: matrix to apply
+
+    Warning:
+        After applyMatrix2 the quantum register is in general no longer normalised
+        and does no longer represent a physical valid state without normalisation.
+    """
+
+    def call_interactive(self,
+                         qureg: tqureg,
+                         control: int,
+                         qubit: int,
+                         matrix: np.ndarray,
+                         ) -> None:
+        r"""Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: quantum register
+            control: qubit that controls the application of the matrix
+            qubit: qubit to operate the matrix upon
+            matrix: matrix to apply
+        """
+        mat = ffi_quest.new("ComplexMatrix4 *")
+        for i in range(4):
+            for j in range(4):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        quest.applyMatrix4(qureg, control, qubit, mat)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        r"""The definition of the gate as a unitary matrix
+
+        Args:
+            matrix: 4 by 4 matrix that defines the two qubit gate
+            **kwargs: Additional keyword arguments
+        """
+        return matrix
+
+
+class applyMatrixN(_PYQUEST):
+    r"""Applying a general N-by-N matrix, which may be non-unitary, on any number of target qubits
+
+    The matrix is left-multiplied onto the state, for both
+    state-vectors and density matrices. Hence, this function differs
+    from multiQubitUnitary() by more than just permitting a non-unitary matrix.
+
+    Args:
+        qureg: quantum register input, is not changed
+        targets: list of target qubits of the N qubit gate
+                 the first qubit in targets is treated as the least significant one
+                 the second as the second least significant one etc.
+        matrix: N by N matrix that defines the N qubit gate
+
+    Warning:
+        After applyMatrixN the quantum register is in general no longer normalised
+        and does no longer represent a physical valid state without normalisation.
+    """
+
+    def call_interactive(self,
+                         qureg: tqureg,
+                         targets: Sequence[int],
+                         matrix: np.ndarray,
+                         ) -> None:
+        r"""Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: quantum register
+            targets: list of target qubits of the N qubit gate
+                    the first qubit in targets is treated as the least significant one
+                    the second as the second least significant one etc.
+            matrix: N by N matrix that defines the N qubit gate
+
+        Raises:
+            RuntimeError: Shape of matrix and length of targets are different
+        """
+        if 2**len(targets) != matrix.shape[0] or 2**len(targets) != matrix.shape[1]:
+            raise RuntimeError("Shape of matrix and length of targets are different")
+        dim = matrix.shape[0]
+        mat = quest.createComplexMatrixN(len(targets))
+        for i in range(dim):
+            for j in range(dim):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        pointer = ffi_quest.new("int[{}]".format(len(targets)))
+        for co, target in enumerate(targets):
+            pointer[co] = target
+        quest.applyMatrixN(qureg,
+                           pointer,
+                           len(targets),
+                           mat)
+        quest.destroyComplexMatrixN(mat)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        r"""The definition of the gate as a unitary matrix
+
+        Args:
+            matrix: N by N matrix that defines the N qubit gate
+            **kwargs: Additional keyword arguments
+        """
+        return matrix
+
+
+class applyMultiControlledMatrixN(_PYQUEST):
+    r"""Apply a general N-by-N matrix, which may be non-unitary, with additional controlled qubits
+
+    A sum of products of Pauli operators (including Identity) is applied to a state.
+    The state is not changed but the corresponding copy with the Pauli sum applied is
+    written to qureg_out
+    For each qubit a Pauli operator must be given in each sum term (can be identity)
+
+    Args:
+        qureg: quantum register
+        controls: controll qubits
+        targets: list of target qubits of the N qubit gate
+                 the first qubit in targets is treated as the least significant one
+                 the second as the second least significant one etc.
+        matrix: N by N matrix that defines the N qubit gate
+
+    Warning:
+        After applyMultiControlledMatrixN the quantum register is in general no longer normalised
+        and does no longer represent a physical valid state without normalisation.
+    """
+
+    def call_interactive(self,
+                         qureg: tqureg,
+                         controls: Sequence[int],
+                         targets: Sequence[int],
+                         matrix: np.ndarray) -> None:
+        r"""Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: quantum register
+            controls: controll qubits
+            targets: list of target qubits of the N qubit gate
+                    the first qubit in targets is treated as the least significant one
+                    the second as the second least significant one etc.
+            matrix: N by N matrix that defines the N qubit gate
+
+        Raises:
+            RuntimeError: Shape of matrix and length of targets are different
+        """
+        if 2**len(targets) != matrix.shape[0] or 2**len(targets) != matrix.shape[1]:
+            raise RuntimeError("Shape of matrix and length of targets are different")
+        dim = matrix.shape[0]
+        mat = quest.createComplexMatrixN(len(targets))
+        for i in range(dim):
+            for j in range(dim):
+                mat.real[i][j] = np.real(matrix[i, j])
+                mat.imag[i][j] = np.imag(matrix[i, j])
+        pointer_c = ffi_quest.new("int[{}]".format(len(controls)))
+        for co, control in enumerate(controls):
+            pointer_c[co] = control
+        pointer = ffi_quest.new("int[{}]".format(len(targets)))
+        for co, t in enumerate(targets):
+            pointer[co] = t
+        quest.applyMultiControlledMatrixN(qureg,
+                                          pointer_c,
+                                          len(controls),
+                                          pointer,
+                                          len(targets),
+                                          mat)
+        quest.destroyComplexMatrixN(mat)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        r"""The definition of the gate as a unitary matrix
+
+        Args:
+            matrix: N by N matrix that defines the N qubit gate
+            **kwargs: Additional keyword arguments
+        """
+        return matrix
+
+
+class applyPauliHamil(_PYQUEST):
+    r"""Applying PauliHamil (a Hermitian but not necessarily unitary operator) to state
+
+    This is merely an encapsulation of applyPauliSum(), which can refer to for elaborated doc.
+    Applies each Pauli product in pauli_hamil to qureg in turn, and adding the resulting
+    state to the initially-blanked qureg_out. Ergo it should scale with the total number
+    of Pauli operators specified (excluding identities), and the qureg dimension.
+
+    Args:
+        qureg: quantum register input, is not changed
+        paulis: List of Lists of Pauli operators in each product
+                encoded as int via IDENTITY=0, PAULI_X=1, PAULI_Y=2, PAULI_Z=3
+        matrix: N by N matrix that defines the N qubit gate
+        qureg_out: quantum register after application of Pauli sum
+
+    Warning:
+        After applyPauliHamil the output quantum register is in general no longer normalised
+        and does no longer represent a physical valid state without normalisation.
+
+    """
+
+    def call_interactive(self,
+                         qureg: tqureg,
+                         pauli_hamil: paulihamil,
+                         qureg_out: tqureg
+                         ) -> None:
+        r"""Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: quantum register
+            pauli_hamil: PauliHamil instance to be applied
+            qureg_out: quantum register after application of Pauli sum
+        """
+        quest.applyPauliHamil(qureg,
+                              pauli_hamil,
+                              qureg_out)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        r"""The definition of the gate as a unitary matrix
+
+        Args:
+            matrix: 4 by 4 matrix that defines the two qubit gate
+            **kwargs: Additional keyword arguments
+
+        Raises:
+            NotImplementedError: not implemented
+        """
+        raise NotImplementedError()
+
+
 class applyPauliSum(_PYQUEST):
     r"""Applying a sum of Products of Pauli operators to state
 
@@ -2317,7 +2637,7 @@ class applyPauliSum(_PYQUEST):
         qureg_out: quantum register after application of Pauli sum
 
     Warning:
-        After applyPauliSum der quantum register is in general no longer normalised
+        After applyPauliSum the quantum register is in general no longer normalised
         and does no longer represent a physical valid state without normalisation.
 
     """
@@ -2328,7 +2648,7 @@ class applyPauliSum(_PYQUEST):
                          coefficients: Sequence[float],
                          qureg_out: tqureg
                          ) -> None:
-        r"""Interactive call of PyQuest
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register
@@ -2349,6 +2669,58 @@ class applyPauliSum(_PYQUEST):
                             pointer,
                             len(coefficients),
                             qureg_out)
+
+    def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
+        r"""The definition of the gate as a unitary matrix
+
+        Args:
+            matrix: 4 by 4 matrix that defines the two qubit gate
+            **kwargs: Additional keyword arguments
+
+        Raises:
+            NotImplementedError: not implemented
+        """
+        raise NotImplementedError()
+
+
+class applyTrotterCircuit(_PYQUEST):
+    r"""Applying a trotterisation of unitary evolution exp(-i*pauli_hamil*time) to qureg. 
+
+    This is a sequence of unitary operators, effected by multiRotatePauli(), which together
+    approximate the action of full unitary-time evolution under the given Hamiltonian.
+    These formulations are taken from 'Finding Exponential Product Formulas of Higher Orders',
+    Naomichi Hatano and Masuo Suzuki (2005).
+
+    Args:
+        qureg: the register to modify under the approximate unitary-time evolution
+        pauli_hamil: PauliHamil under which to approxiamte unitary-time evolution
+        time: the target evolution time, which is permitted to be both positive and negative
+        order: the order of Trotter-Suzuki decomposition to use
+        repetitions: the number of repetitions of the decomposition of the given order
+
+    """
+
+    def call_interactive(self,
+                         qureg: tqureg,
+                         pauli_hamil: paulihamil,
+                         time: float,
+                         order: int,
+                         repetitions: int
+                         ) -> None:
+        r"""Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: the register to modify under the approximate unitary-time evolution
+            pauli_hamil: PauliHamil under which to approxiamte unitary-time evolution
+            time: the target evolution time, which is permitted to be both positive and negative
+            order: the order of Trotter-Suzuki decomposition to use
+            repetitions: the number of repetitions of the decomposition of the given order
+        """
+        quest.applyPauliSum(qureg,
+                            pauli_hamil,
+                            time,
+                            order,
+                            repetitions)
 
     def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
         r"""The definition of the gate as a unitary matrix

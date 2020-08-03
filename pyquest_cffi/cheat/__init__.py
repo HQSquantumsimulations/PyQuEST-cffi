@@ -50,11 +50,11 @@ from pyquest_cffi.cheat.initialization import (
     initClassicalState,
     initPlusState,
     initPureState,
-    initStateDebug,  #
+    initDebugState,
     initStateFromAmps,
     initZeroState,
     setAmps,
-    setDensityAmps,  #
+    setDensityAmps,
     initBlankState,
     setWeightedQureg
 )

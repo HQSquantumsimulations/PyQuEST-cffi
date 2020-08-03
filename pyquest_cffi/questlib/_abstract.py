@@ -19,6 +19,7 @@ import typing
 
 tquestenv = typing.TypeVar("QuESTEnv")
 tqureg = typing.TypeVar("Qureg")
+paulihamil = typing.TypeVar("PauliHamil")
 
 
 class _PYQUEST(abc.ABC):

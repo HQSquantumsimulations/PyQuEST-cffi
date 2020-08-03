@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pyquest_cffi.questlib import quest, _PYQUEST, tquestenv, tqureg
+from pyquest_cffi.questlib import quest, _PYQUEST, tquestenv, tqureg, paulihamil
 from typing import List
 
 
@@ -21,7 +21,7 @@ class createQuestEnv(_PYQUEST):
     """Creates the QuEST simulator environment, needed for all simulations"""
 
     def call_interactive(self) -> tquestenv:
-        """Call interactive Pyquest-cffi function
+        """Interactive call of PyQuest-cffi
 
         Returns:
             tquestenv
@@ -39,7 +39,7 @@ class destroyQuestEnv(_PYQUEST):
     """
 
     def call_interactive(self, env: tquestenv) -> None:
-        """Call interactive Pyquest-cffi function
+        """Interactive call of PyQuest-cffi
 
         Args:
             env: QuEST environment to be deallocated
@@ -58,7 +58,7 @@ class createQureg(_PYQUEST):
     """
 
     def call_interactive(self, num_qubits: int, env: tquestenv) -> tqureg:
-        """Call interactive Pyquest-cffi function
+        """Interactive call of PyQuest-cffi
 
         Args:
             num_qubits: number of qubits in the quantum register
@@ -81,7 +81,7 @@ class createDensityQureg(_PYQUEST):
     """
 
     def call_interactive(self, num_qubits: int, env: tquestenv) -> tqureg:
-        """Call interactive Pyquest-cffi function
+        """Interactive call of PyQuest-cffi
 
         Args:
             num_qubits: number of qubits in the quantum register
@@ -97,7 +97,7 @@ class destroyQureg(_PYQUEST):
     """Deallocate memory for a qubit register"""
 
     def call_interactive(self, qubits: List[int], env: tquestenv) -> None:
-        """Call interactive Pyquest-cffi function
+        """Interactive call of PyQuest-cffi
 
         Args:
             qubits: Qubits in system
@@ -119,7 +119,7 @@ class createCloneQureg(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg, env: tquestenv) -> tqureg:
-        """Call interactive Pyquest-cffi function
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: Qureg to be cloned
@@ -140,14 +140,52 @@ class cloneQureg(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg_clone: tqureg, qureg_original: tqureg) -> 'quest.cloneQureg':
-        """Call interactive Pyquest-cffi function
+    def call_interactive(self, qureg_clone: tqureg, qureg_original: tqureg) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg_original: Qureg to be cloned
             qureg_clone: Cloned qureg
+        """
+        quest.cloneQureg(qureg_clone, qureg_original)
+
+
+class createPauliHamil(_PYQUEST):
+    """Create a clone of the qureg in a certain environment
+
+    Args:
+        number_qubits: the number of qubits on which this Hamiltonian acts 
+        number_pauliprods: the number of weighted terms in the sum, or the number of Pauli products
+
+    Returns:
+        cloned qureg
+
+    """
+
+    def call_interactive(self, number_qubits: int, number_pauliprods: int) -> paulihamil:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            number_qubits: the number of qubits on which this Hamiltonian acts 
+            number_pauliprods: the number of weighted terms in the sum, or the number of Pauli products
 
         Returns:
-            quest.cloneQureg
+            PauliHamil: created Pauli Hamiltonian
         """
-        return quest.cloneQureg(qureg_clone, qureg_original)
+        return quest.createPauliHamil(number_qubits, number_pauliprods)
+
+
+class destroyPauliHamil(_PYQUEST):
+    """Create a DiagonalOp on the full Hilbert space of a Qureg.
+
+    Args:
+        pauli_hamil: PauliHamil to be destroyed
+    """
+
+    def call_interactive(self, pauli_hamil: paulihamil) -> None:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            pauli_hamil: PauliHamil to be destroyed
+        """
+        return quest.destroyPauliHamil(pauli_hamil)

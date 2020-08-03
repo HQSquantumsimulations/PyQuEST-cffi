@@ -20,6 +20,30 @@ from typing import Tuple, Sequence, Optional, List
 import warnings
 
 
+class mixDensityMatrix(_PYQUEST):
+    r"""Modifies combineQureg to become (1-prob)combineProb + prob otherQureg
+
+    Both registers must be equal-dimension density matrices, and prob must be in [0, 1].
+
+    Args:
+        qureg: quantum register to be modified
+        probability: the probability of qureg_other in the modified qureg
+        qureg_other: the quantum register to be mixed into qureg
+    """
+
+    def call_interactive(self, qureg: tqureg,
+                         probability: float,
+                         qureg_other: tqureg) -> None:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: quantum register to be modified
+            probability: the probability of qureg_other in the modified qureg
+            qureg_other: the quantum register to be mixed into qureg
+        """
+        quest.mixDensityMatrix(qureg, probability, qureg_other)
+
+
 class mixDephasing(_PYQUEST):
     r"""OneQubitDephasing
 
@@ -41,17 +65,14 @@ class mixDephasing(_PYQUEST):
 
     def call_interactive(self, qureg: tqureg,
                          qubit: int,
-                         probability: float) -> Optional['quest.mixDephasing']:
-        """Interactive call of QuEST function
+                         probability: float) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
             qubit: The qubit dephasing
             probability: The probability/ relative amplitude with which the dephasing occurs,
                 probability needs to be smaller than 1/2
-
-        Returns:
-            Optional['quest.mixDephasing']
 
         Raises:
             RuntimeError: probability of twoQubitDepolariseErrors needs to be smaller that 1/2
@@ -60,11 +81,10 @@ class mixDephasing(_PYQUEST):
             raise RuntimeError(
                 "probability of twoQubitDepolariseErrors needs to be smaller that 1/2")
         if qureg.isDensityMatrix:
-            return quest.mixDephasing(qureg, qubit, probability)
+            quest.mixDephasing(qureg, qubit, probability)
         else:
             warnings.warn('qureg1 has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
-            return None
 
     def Kraus_matrices(self, probability: float, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
         """The definition of the Kraus Operator as a matrix
@@ -128,17 +148,14 @@ class mixDepolarising(_PYQUEST):
 
     def call_interactive(self, qureg: tqureg,
                          qubit: int,
-                         probability: float) -> Optional['quest.mixDepolarising']:
-        """Interactive call of QuEST function
+                         probability: float) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
             qubit: The qubit depolarising
             probability: The probability/ relative amplitude with which the dephasing occurs,
                 probability needs to be smaller than 1/2
-
-        Returns:
-            Optional['quest.mixDepolarising']
 
         Raises:
             RuntimeError: probability of twoQubitDepolariseErrors needs to be smaller that 3/4
@@ -147,11 +164,10 @@ class mixDepolarising(_PYQUEST):
             raise RuntimeError(
                 "probability of twoQubitDepolariseErrors needs to be smaller that 3/4")
         if qureg.isDensityMatrix:
-            return quest.mixDepolarising(qureg, qubit, probability)
+            quest.mixDepolarising(qureg, qubit, probability)
         else:
             warnings.warn('qureg1 has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
-            return None
 
     def Kraus_matrices(self,
                        probability: float,
@@ -224,8 +240,8 @@ class mixDamping(_PYQUEST):
 
     def call_interactive(self, qureg: tqureg,
                          qubit: int,
-                         probability: float) -> Optional['quest.mixDamping']:
-        """Interactive call of QuEST function
+                         probability: float) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -233,15 +249,12 @@ class mixDamping(_PYQUEST):
             probability: The probability/ relative amplitude with which the dephasing occurs,
                 probability needs to be smaller than 1/2
 
-        Returns:
-            Optional['quest.mixDamping']
         """
         if qureg.isDensityMatrix:
-            return quest.mixDamping(qureg, qubit, probability)
+            quest.mixDamping(qureg, qubit, probability)
         else:
             warnings.warn('qureg1 has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
-            return None
 
     def Kraus_matrices(self, probability: float, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
         """The definition of the Kraus Operator as a matrix
@@ -310,8 +323,8 @@ class mixTwoQubitDepolarising(_PYQUEST):
     def call_interactive(self, qureg: tqureg,
                          qubit1: int,
                          qubit2: int,
-                         probability: float) -> Optional['quest.mixTwoQubitDepolarising']:
-        r"""Interactive call of QuEST function
+                         probability: float) -> None:
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -320,9 +333,6 @@ class mixTwoQubitDepolarising(_PYQUEST):
             probability: The probability/ relative amplitude with which the depolarisation occurs.
                 Needs to be smaller than :math:`\frac{15}{16}`
 
-        Returns:
-            Optional['quest.mixTwoQubitDepolarising']
-
         Raises:
             RuntimeError: probability of twoQubitDepolariseErrors needs to be smaller that 15/16
         """
@@ -330,11 +340,10 @@ class mixTwoQubitDepolarising(_PYQUEST):
             raise RuntimeError(
                 "probability of twoQubitDepolariseErrors needs to be smaller that 15/16")
         if qureg.isDensityMatrix:
-            return quest.mixTwoQubitDepolarising(qureg, qubit1, qubit2, probability)
+            quest.mixTwoQubitDepolarising(qureg, qubit1, qubit2, probability)
         else:
             warnings.warn('qureg has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
-            return None
 
     def superoperator_matrix(self, probability: float, **kwargs) -> None:
         r"""
@@ -381,8 +390,8 @@ class mixTwoQubitDephasing(_PYQUEST):
     def call_interactive(self, qureg: tqureg,
                          qubit1: int,
                          qubit2: int,
-                         probability: float) -> Optional['quest.mixTwoQubitDephasing']:
-        """Interactive call of QuEST function
+                         probability: float) -> None:
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -391,9 +400,6 @@ class mixTwoQubitDephasing(_PYQUEST):
             probability: The probability/ relative amplitude with which the dephasing occurs,
                         probability needs to be smaller than 3/4
 
-        Returns:
-            Optional['quest.mixTwoQubitDephasing']
-
         Raises:
             RuntimeError: probability of twoQubitDepolariseErrors needs to be smaller that 3/4
         """
@@ -401,11 +407,10 @@ class mixTwoQubitDephasing(_PYQUEST):
             raise RuntimeError(
                 "probability of twoQubitDepolariseErrors needs to be smaller that 3/4")
         if qureg.isDensityMatrix:
-            return quest.mixTwoQubitDephasing(qureg, qubit1, qubit2, probability)
+            quest.mixTwoQubitDephasing(qureg, qubit1, qubit2, probability)
         else:
             warnings.warn('qureg has to be a density matrix  qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
-            return None
 
     def Kraus_matrices(self,
                        probability: float,
@@ -567,7 +572,7 @@ class mixMultiQubitKrausMap(_PYQUEST):
                          qubits: Sequence[int],
                          operators: Sequence[np.ndarray],
                          ) -> None:
-        """Interactive call of QuEST function
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -651,7 +656,7 @@ class mixTwoQubitKrausMap(_PYQUEST):
                          target_qubit_2: Sequence[int],
                          operators: Sequence[np.ndarray],
                          ) -> None:
-        """Interactive call of QuEST function
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -728,7 +733,7 @@ class mixKrausMap(_PYQUEST):
                          qubit: int,
                          operators: Sequence[np.ndarray],
                          ) -> None:
-        """Interactive call of QuEST function
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -805,7 +810,7 @@ class mixPauli(_PYQUEST):
                          probY: float,
                          probZ: float,
                          ) -> None:
-        """Interactive call of QuEST function
+        """Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
