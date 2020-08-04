@@ -45,6 +45,7 @@ class destroyQuestEnv(_PYQUEST):
             env: QuEST environment to be deallocated
         """
         quest.destroyQuESTEnv(env)
+        print('destroyed?')
 
 
 class createQureg(_PYQUEST):
@@ -138,6 +139,9 @@ class cloneQureg(_PYQUEST):
         qureg_original: Qureg to be cloned
         qureg_clone: Cloned qureg
 
+    Raises:
+        TypeError: The quregs need to be of the same type, so either
+            both density matrices OR both wave functions
     """
 
     def call_interactive(self, qureg_clone: tqureg, qureg_original: tqureg) -> None:
@@ -147,11 +151,17 @@ class cloneQureg(_PYQUEST):
             qureg_original: Qureg to be cloned
             qureg_clone: Cloned qureg
         """
-        quest.cloneQureg(qureg_clone, qureg_original)
+        if qureg_clone.isDensityMatrix and qureg_original.isDensityMatrix:
+            quest.cloneQureg(qureg_clone, qureg_original)
+        elif not qureg_clone.isDensityMatrix and not qureg_original.isDensityMatrix:
+            quest.cloneQureg(qureg_clone, qureg_original)
+        else:
+            raise TypeError("The quregs need to be of the same type, so either both "
+                            + "density matrices OR both wave functions")
 
 
 class createPauliHamil(_PYQUEST):
-    """Create a clone of the qureg in a certain environment
+    """Create a Hamiltonian expressed as a real-weighted sum of products of Pauli operators
 
     Args:
         number_qubits: the number of qubits on which this Hamiltonian acts
@@ -176,7 +186,7 @@ class createPauliHamil(_PYQUEST):
 
 
 class destroyPauliHamil(_PYQUEST):
-    """Create a DiagonalOp on the full Hilbert space of a Qureg.
+    """Destroy a PauliHamil instance
 
     Args:
         pauli_hamil: PauliHamil to be destroyed

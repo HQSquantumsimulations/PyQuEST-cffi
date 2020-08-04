@@ -36,29 +36,30 @@ from pyquest_cffi.ops.ops import (
     rotateAroundAxis,
     rotateAroundSphericalAxis,
     compactUnitary,
-    unitary)
+    unitary
+)
 from pyquest_cffi.ops.ops import (
-    controlledPhaseFlip,
-    controlledPhaseShift,
+    controlledCompactUnitary,
     controlledNot,
     controlledPauliY,
+    controlledPhaseFlip,
+    swapGate,
+    sqrtSwapGate,
+    sqrtISwap,
+    invSqrtISwap,
+    controlledPhaseShift,
+    controlledRotateAroundAxis,
     controlledRotateX,
     controlledRotateY,
     controlledRotateZ,
-    controlledRotateAroundAxis,
-    controlledCompactUnitary,
     controlledUnitary,
-    MolmerSorensenXX,  #
-    sqrtISwap,  #
-    invSqrtISwap,  #
-    swapGate,
-    sqrtSwapGate,
+    MolmerSorensenXX,
     twoQubitUnitary,
     controlledTwoQubitUnitary,
     multiQubitUnitary,
     controlledMultiQubitUnitary,
-    multiStateControlledUnitary,
-    applyPauliSum)
+    multiStateControlledUnitary
+)
 from pyquest_cffi.ops.ops import (
     multiControlledPhaseFlip,
     multiControlledPhaseShift,
@@ -66,21 +67,39 @@ from pyquest_cffi.ops.ops import (
     multiControlledTwoQubitUnitary,
     multiControlledMultiQubitUnitary,
     multiRotateZ,
-    multiRotatePauli)
-from pyquest_cffi.ops.ops import measure
+    multiRotatePauli
+)
+from pyquest_cffi.ops.ops import (
+    measure,
+    measureWithStats,
+    collapseToOutcome
+)
+from pyquest_cffi.ops.ops import (
+    applyDiagonalOp,
+    applyMatrix2,
+    applyMatrix4,
+    applyMatrixN,
+    applyMultiControlledMatrixN,
+    applyPauliHamil,
+    applyPauliSum,
+    applyTrotterCircuit
+)
 from pyquest_cffi.ops.errors import (
-    mixDamping,
+    mixDensityMatrix,
     mixDephasing,
     mixDepolarising,
+    mixDamping,
     mixTwoQubitDephasing,
     mixTwoQubitDepolarising,
-    applyOneQubitDephaseError,  #
-    applyOneQubitDepolariseError,  #
-    applyOneQubitDampingError,  #
-    applyTwoQubitDephaseError,  #
-    applyTwoQubitDepolariseError,  #
     mixPauli,
     mixKrausMap,
     mixTwoQubitKrausMap,
     mixMultiQubitKrausMap
+)
+from pyquest_cffi.ops.errors import (
+    applyOneQubitDephaseError,
+    applyOneQubitDepolariseError,
+    applyOneQubitDampingError,
+    applyTwoQubitDephaseError,
+    applyTwoQubitDepolariseError,
 )

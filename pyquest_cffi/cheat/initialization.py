@@ -200,36 +200,44 @@ class setDensityAmps(_PYQUEST):
 
     Args:
         qureg: The quantum register of a density matrix
+        startind: The index of the first element of the density matrix that is set
         reals: the new real values of the elements of the density matrix
                between startind and startind+numamps
         imags: the new imaginary values of the elements of the density matrix
                between startind and startind+numamps
+        numamps: the number of new values that are set in the density matrix
 
     """
 
     def call_interactive(self,
                          qureg: tqureg,
+                         startind: int,
                          reals: Union[np.ndarray, List[float]],
                          imags: Union[np.ndarray, List[float]],
+                         numamps: int
                          ) -> None:
         """Interactive call of PyQuest-cffi
 
         Args:
             qureg: The quantum register of a density matrix
+            startind: The index of the first element of the density matrix that is set
             reals: the new real values of the elements of the density matrix
                 between startind and startind+numamps
             imags: the new imaginary values of the elements of the density matrix
                 between startind and startind+numamps
+            numamps: the number of new values that are set in the density matrix
         """
         reals = list(reals)
         imags = list(imags)
         assert len(reals) == np.max(np.shape(reals))
         assert len(imags) == np.max(np.shape(imags))
+        assert len(reals) == numamps
+        assert len(reals) == numamps
         if not qureg.isDensityMatrix:
             warnings.warn('qureg has to be a density matrix qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
         else:
-            quest.setDensityAmps(qureg, reals, imags)
+            quest.statevec_setAmps(qureg, startind, reals, imags, numamps)
 
 
 class setWeightedQureg(_PYQUEST):

@@ -906,7 +906,7 @@ class calcDensityInnerProduct(_PYQUEST):
     def call_interactive(self,
                          qureg1: tqureg,
                          qureg2: tqureg
-                         ) -> float:
+                         ) -> Optional[float]:
         """Interactive call of PyQuest-cffi
 
         Args:
@@ -914,11 +914,19 @@ class calcDensityInnerProduct(_PYQUEST):
             qureg2: first quantum register
 
         Returns:
-            float
+            Optional[float]
         """
-        return quest.calcDensityInnerProduct(qureg1,
-                                             qureg2
-                                             )
+        if not qureg1.isDensityMatrix:
+            warnings.warn('qureg1 has to be a density matrix qureg'
+                          + ' but wavefunction qureg was used', RuntimeWarning)
+            return None
+        elif not qureg2.isDensityMatrix:
+            warnings.warn('qureg2 has to be a density matrix qureg'
+                          + ' but wavefunction qureg was used', RuntimeWarning)
+            return None
+        else:
+            return quest.calcDensityInnerProduct(qureg1,
+                                                 qureg2)
 
 
 class seedQuEST(_PYQUEST):
@@ -978,15 +986,20 @@ class syncQuESTSuccess(_PYQUEST):
 
     If any one process has a zero successCode all processes will return a zero success code.
 
+    Args:
+        success_code: 1 if process task succeeded, 0 if process task failed 
     """
 
-    def call_interactive(self) -> int:
+    def call_interactive(self, success_code: int) -> int:
         """Interactive call of PyQuest-cffi
+
+        Args:
+            success_code: 1 if process task succeeded, 0 if process task failed 
 
         Returns:
             int
         """
-        return quest.syncQuESTSuccess()
+        return quest.syncQuESTSuccess(success_code)
 
 
 def basis_state_to_index(basis_state: Union[int, Sequence[int]], endianness: str = 'little') -> int:

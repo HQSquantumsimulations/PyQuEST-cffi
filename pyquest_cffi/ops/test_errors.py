@@ -28,7 +28,8 @@ from pyquest_cffi import utils
                                       (ops.applyOneQubitDepolariseError, 3 / 4),
                                       (ops.mixDamping, 1),
                                       (ops.mixDephasing, 1 / 2),
-                                      (ops.mixDepolarising, 3 / 4)])
+                                      (ops.mixDepolarising, 3 / 4),
+                                      (ops.mixDensityMatrix, 1 / 4)])
 def test_one_qubit_errors(prob, gate_def) -> None:
     """Testing one qubit errors"""
     op = gate_def[0]
@@ -41,8 +42,11 @@ def test_one_qubit_errors(prob, gate_def) -> None:
     state_dm = state_dm.reshape((4, 1))
     cheat.setDensityAmps()(dm, startind=0,
                            reals=np.real(state_dm), imags=np.imag(state_dm), numamps=4)
-
-    op()(qureg=dm, qubit=0, probability=prob)
+    if gate_def[1] == 1 / 4:
+        dm_other = utils.createDensityQureg()(2, env)
+        op()(qureg=dm, probability=prob, qureg_other=dm_other)
+    else:
+        op()(qureg=dm, qubit=0, probability=prob)
     superop = op().superoperator_matrix(probability=prob)
     end_matrix = (superop @ state_dm).reshape((2, 2), order='F')
     matrix = cheat.getDensityMatrix()(dm)
@@ -65,8 +69,9 @@ def test_two_qubit_errors(prob, gate_def) -> None:
     state = state / np.linalg.norm(state)
     state_dm = state @ state.conjugate().T
     state_dm = state_dm.reshape((16, 1))
-    cheat.setDensityAmps()(dm, startind=0,
-                           reals=np.real(state_dm), imags=np.imag(state_dm), numamps=16)
+    cheat.initStateFromAmps()(dm,
+                              reals=np.real(state_dm),
+                              imags=np.imag(state_dm))
 
     op()(qureg=dm, qubit1=0, qubit2=1, probability=prob)
 

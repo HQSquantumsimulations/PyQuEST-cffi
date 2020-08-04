@@ -20,6 +20,7 @@ import numpy.testing as npt
 from pyquest_cffi import ops
 from pyquest_cffi import cheat
 from pyquest_cffi import utils
+from typing import List
 
 
 @pytest.mark.parametrize("gate", [ops.hadamard,
@@ -278,25 +279,53 @@ def test_multi_controlled_multi_qubit_unitary(gate, theta):
         matrix=matrix_gate)
 
 
-def test_apply_Pauli_sum():
-    """Test applyPauliSum"""
-    env = utils.createQuestEnv()()
-    qubits = utils.createQureg()(4, env)
-    qubits_out = utils.createQureg()(4, env)
-    ops.applyPauliSum()(
-        qureg=qubits,
-        paulis=[[0, 1, 2, 3], [3, 2, 1, 0]],
-        coefficients=[0.4, 0.3],
-        qureg_out=qubits_out,
-    )
-
-
 def test_multiRotatePauli():
     """Testing multiRotatePauli"""
     env = utils.createQuestEnv()()
     qureg = utils.createQureg()(3, env=env)
     a = ops.multiRotatePauli()
     a(qureg, [0, 1, 2], [1, 2, 3], 0.35)
+
+
+def test_multiRotateZ():
+    """Testing multiRotateZ"""
+    env = utils.createQuestEnv()()
+    qureg = utils.createQureg()(3, env=env)
+    a = ops.multiRotateZ()
+    a(qureg, [0, 1, 2], 0.35)
+
+
+@pytest.mark.parametrize("applied", [
+    # (ops.applyDiagonalOp, [(3, utils.createQuestEnv()())]),
+    (ops.applyMatrix2, [2, np.array([[0, 1], [2, 1]])]),
+    (ops.applyMatrix4, [1, 3, 'matrix']),
+    (ops.applyMatrixN, [[1, 2], 'matrix']),
+    (ops.applyMultiControlledMatrixN, [[1, 2], [3, 4], 'matrix']),
+    # (ops.applyPauliHamil, [utils.createPauliHamil()(3, 2),
+    #                        utils.createQureg()(5, utils.createQuestEnv()())]),
+    (ops.applyPauliSum, [[[0, 1, 2, 3], [3, 2, 1, 0]], [0.4, 0.3],
+                         utils.createQureg()(5, utils.createQuestEnv()())]),
+    # (ops.applyTrotterCircuit, [utils.createPauliHamil()(3, 2), 0.7, 1, 2])
+    ])
+def test_apply_functions(applied) -> None:
+    """Test applyPauliSum"""
+    env = utils.createQuestEnv()()
+    qubits = utils.createQureg()(5, env)
+    op = applied[0]()
+    positional_args = applied[1]
+    print(op, positional_args)
+    matrix = np.array([[1, 0, 0, 1], [0, 2, 0, 2], [2, 0, 2, 0], [1, 0, 0, 1]])
+    if positional_args[-1] == 'matrix':
+        args = [qubits]
+        args.extend(positional_args)
+        args[-1] = matrix
+    else:
+        args = [qubits]
+        args.extend(positional_args)
+
+    op(*args)
+    if positional_args[-1] == 'matrix':
+        npt.assert_array_equal(matrix, op.matrix(matrix=matrix))
 
 
 def build_one_qubit_matrix(gate, gate_args):

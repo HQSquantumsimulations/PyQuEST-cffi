@@ -21,7 +21,7 @@ import warnings
 
 
 class mixDensityMatrix(_PYQUEST):
-    r"""Modifies combineQureg to become (1-prob)combineProb + prob otherQureg
+    r"""Modifies qureg to become (1-probability)*qureg + probability*qureg_other
 
     Both registers must be equal-dimension density matrices, and prob must be in [0, 1].
 

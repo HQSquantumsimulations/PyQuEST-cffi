@@ -18,6 +18,7 @@ from pyquest_cffi.questlib import (
 )
 import numpy as np
 from typing import Sequence, Optional, Tuple
+from pyquest_cffi import utils
 
 
 class hadamard(_PYQUEST):
@@ -671,6 +672,7 @@ class unitary(_PYQUEST):
             np.ndarray
         """
         return matrix
+
 
 # Controlled Operations
 
@@ -1465,6 +1467,7 @@ class controlledUnitary(_PYQUEST):
                         [0, 0, matrix[1, 0], matrix[1, 1]]], dtype=np.complex)
         return mat
 
+
 # Multi-controlled Operations
 
 
@@ -1616,7 +1619,8 @@ class multiControlledUnitary(_PYQUEST):
         """
         raise NotImplementedError
 
-# measurement
+
+# Measurement
 
 
 class measure(_PYQUEST):
@@ -2329,6 +2333,7 @@ class applyDiagonalOp(_PYQUEST):
         """
         diagonal_op = quest.createDiagonalOp(operator[0], operator[1])
         quest.applyDiagonalOp(qureg, diagonal_op)
+        quest.destroyDiagonalOp(diagonal_op, operator[1])
 
     def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
         r"""The definition of the gate as a unitary matrix
@@ -2377,7 +2382,7 @@ class applyMatrix2(_PYQUEST):
             for j in range(2):
                 mat.real[i][j] = np.real(matrix[i, j])
                 mat.imag[i][j] = np.imag(matrix[i, j])
-        quest.applyMatrix2(qureg, qubit, mat)
+        quest.applyMatrix2(qureg, qubit, mat[0])
 
     def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
         r"""The definition of the gate as a unitary matrix
@@ -2429,7 +2434,7 @@ class applyMatrix4(_PYQUEST):
             for j in range(4):
                 mat.real[i][j] = np.real(matrix[i, j])
                 mat.imag[i][j] = np.imag(matrix[i, j])
-        quest.applyMatrix4(qureg, control, qubit, mat)
+        quest.applyMatrix4(qureg, control, qubit, mat[0])
 
     def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
         r"""The definition of the gate as a unitary matrix
@@ -2561,8 +2566,8 @@ class applyMultiControlledMatrixN(_PYQUEST):
         for co, control in enumerate(controls):
             pointer_c[co] = control
         pointer = ffi_quest.new("int[{}]".format(len(targets)))
-        for co, t in enumerate(targets):
-            pointer[co] = t
+        for co, target in enumerate(targets):
+            pointer[co] = target
         quest.applyMultiControlledMatrixN(qureg,
                                           pointer_c,
                                           len(controls),
@@ -2617,6 +2622,11 @@ class applyPauliHamil(_PYQUEST):
             pauli_hamil: PauliHamil instance to be applied
             qureg_out: quantum register after application of Pauli sum
         """
+        env = utils.createQuestEnv()()
+        qureg = utils.createQureg()(5, env)
+        pauli_hamil = utils.createPauliHamil()(number_qubits=3, number_pauliprods=2)
+        qureg_out = utils.createQureg()(5, utils.createQuestEnv()())
+        assert 1 == 2
         quest.applyPauliHamil(qureg,
                               pauli_hamil,
                               qureg_out)
@@ -2729,11 +2739,11 @@ class applyTrotterCircuit(_PYQUEST):
             order: the order of Trotter-Suzuki decomposition to use
             repetitions: the number of repetitions of the decomposition of the given order
         """
-        quest.applyPauliSum(qureg,
-                            pauli_hamil,
-                            time,
-                            order,
-                            repetitions)
+        quest.applyTrotterCircuit(qureg,
+                                  pauli_hamil,
+                                  time,
+                                  order,
+                                  repetitions)
 
     def matrix(self, matrix: np.ndarray, **kwargs) -> np.ndarray:
         r"""The definition of the gate as a unitary matrix

@@ -22,16 +22,20 @@
 # limitations under the License.
 
 from pyquest_cffi.utils.dataoperation import (
+    createQuestEnv,
+    destroyQuestEnv,
     createQureg,
     createDensityQureg,
-    createQuestEnv,
     destroyQureg,
-    destroyQuestEnv,
     createCloneQureg,
-    cloneQureg
+    cloneQureg,
+    createPauliHamil,
+    destroyPauliHamil
 )
 from pyquest_cffi.utils.reporting import (
     reportQuESTEnv,
     reportQuregParams,
-    reportStateToScreen
+    reportState,
+    reportStateToScreen,
+    reportPauliHamil
 )
