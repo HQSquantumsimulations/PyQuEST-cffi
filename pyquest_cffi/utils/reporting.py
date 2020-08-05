@@ -18,8 +18,7 @@ from pyquest_cffi.questlib import quest, _PYQUEST, tquestenv, tqureg, paulihamil
 
 
 class reportQuESTEnv(_PYQUEST):
-    """
-    Report the properties of the QuEST simulation environment to stdout
+    r"""Report the properties of the QuEST simulation environment to stdout
 
     Args:
         env: QuEST environment for which the parameter are reported
@@ -27,7 +26,7 @@ class reportQuESTEnv(_PYQUEST):
     """
 
     def call_interactive(self, env: tquestenv) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             env: QuEST environment for which the parameter are reported
@@ -36,7 +35,7 @@ class reportQuESTEnv(_PYQUEST):
 
     @property
     def restype(self) -> str:
-        """Return result type
+        r"""Return result type
 
         Returns:
             str
@@ -45,7 +44,7 @@ class reportQuESTEnv(_PYQUEST):
 
     @property
     def argtype(self) -> List[str]:
-        """Return type of argument
+        r"""Return type of argument
 
         Returns:
             List[str]
@@ -54,8 +53,7 @@ class reportQuESTEnv(_PYQUEST):
 
 
 class reportQuregParams(_PYQUEST):
-    """
-    Reports the parameters of a quantum register to stdout
+    r"""Reports the parameters of a quantum register to stdout
 
     Args:
         qureg: Quantum register for which the parameter are reported
@@ -63,7 +61,7 @@ class reportQuregParams(_PYQUEST):
     """
 
     def call_interactive(self, qureg: tqureg) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: Quantum register for which the parameter are reported
@@ -72,7 +70,7 @@ class reportQuregParams(_PYQUEST):
 
     @property
     def restype(self) -> str:
-        """Return result type
+        r"""Return result type
 
         Returns:
             str
@@ -81,7 +79,7 @@ class reportQuregParams(_PYQUEST):
 
     @property
     def argtype(self) -> List[str]:
-        """Return argument type
+        r"""Return argument type
 
         Returns:
             List[str]
@@ -90,10 +88,15 @@ class reportQuregParams(_PYQUEST):
 
 
 class reportState(_PYQUEST):
-    """Report QuEST state"""
+    r"""Report QuEST state
+
+    Args:
+        qureg: Quantum Register (qureg)
+
+    """
 
     def call_interactive(self, qureg: tqureg) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: Quantum Register (qureg)
@@ -102,7 +105,7 @@ class reportState(_PYQUEST):
 
     @property
     def restype(self) -> str:
-        """Return result type
+        r"""Return result type
 
         Returns:
             str
@@ -111,7 +114,7 @@ class reportState(_PYQUEST):
 
     @property
     def argtype(self) -> List[str]:
-        """Return argument type
+        r"""Return argument type
 
         Returns:
             List[str]
@@ -120,8 +123,7 @@ class reportState(_PYQUEST):
 
 
 class reportStateToScreen(_PYQUEST):
-    """
-    Report statevector or density matrix in a qureg to stdout
+    r"""Report statevector or density matrix in a qureg to stdout
 
     Args:
         qureg: the quantum register
@@ -133,7 +135,7 @@ class reportStateToScreen(_PYQUEST):
                          qureg: tqureg,
                          env: tquestenv,
                          a: int = 0) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: the quantum register
@@ -144,7 +146,7 @@ class reportStateToScreen(_PYQUEST):
 
     @property
     def restype(self) -> str:
-        """Return result type
+        r"""Return result type
 
         Returns:
             str
@@ -153,7 +155,7 @@ class reportStateToScreen(_PYQUEST):
 
     @property
     def argtype(self) -> List[str]:
-        """Return argument type
+        r"""Return argument type
 
         Returns:
             List[str]
@@ -173,10 +175,11 @@ class reportPauliHamil(_PYQUEST):
 
     Args:
         pauli_hamil: instatiated PauliHamil
+
     """
 
     def call_interactive(self, pauli_hamil: paulihamil) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             pauli_hamil: instatiated PauliHamil
@@ -185,7 +188,7 @@ class reportPauliHamil(_PYQUEST):
 
     @property
     def restype(self) -> str:
-        """Return result type
+        r"""Return result type
 
         Returns:
             str
@@ -194,7 +197,7 @@ class reportPauliHamil(_PYQUEST):
 
     @property
     def argtype(self) -> List[str]:
-        """Return argument type
+        r"""Return argument type
 
         Returns:
             List[str]

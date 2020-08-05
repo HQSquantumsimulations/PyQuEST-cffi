@@ -30,12 +30,13 @@ class mixDensityMatrix(_PYQUEST):
         qureg: quantum register to be modified
         probability: the probability of qureg_other in the modified qureg
         qureg_other: the quantum register to be mixed into qureg
+
     """
 
     def call_interactive(self, qureg: tqureg,
                          probability: float,
                          qureg_other: tqureg) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: quantum register to be modified
@@ -52,7 +53,7 @@ class mixDensityMatrix(_PYQUEST):
             quest.mixDensityMatrix(qureg, probability, qureg_other)
 
     def Kraus_matrices(self, probability: float, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
-        """The definition of the Kraus Operator as a matrix
+        r"""The definition of the Kraus Operator as a matrix
 
         Args:
             probability: The probability/ relative amplitude with which the dephasing occurs,
@@ -65,8 +66,7 @@ class mixDensityMatrix(_PYQUEST):
         raise NotImplementedError()
 
     def superoperator_matrix(self, probability: float, **kwargs) -> np.ndarray:
-        r"""
-        The definition of the superoperator acting on the density matrix written as a vector
+        r"""The definition of the superoperator acting on the density matrix written as a vector
 
         .. math::
             \rho = A \rho B \\
@@ -86,7 +86,7 @@ class mixDensityMatrix(_PYQUEST):
 
 
 class mixDephasing(_PYQUEST):
-    r"""OneQubitDephasing
+    r"""One qubit dephasing error
 
     Apply the dephasing :math:`\sigma^z` operator to a qubit q with probability p
         Can also be expressed as a Kraus operator :math:`\mathcal{K}`
@@ -107,7 +107,7 @@ class mixDephasing(_PYQUEST):
     def call_interactive(self, qureg: tqureg,
                          qubit: int,
                          probability: float) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -128,7 +128,7 @@ class mixDephasing(_PYQUEST):
                           + ' but wavefunction qureg was used', RuntimeWarning)
 
     def Kraus_matrices(self, probability: float, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
-        """The definition of the Kraus Operator as a matrix
+        r"""The definition of the Kraus Operator as a matrix
 
         Args:
             probability: The probability/ relative amplitude with which the dephasing occurs,
@@ -145,8 +145,7 @@ class mixDephasing(_PYQUEST):
         return (residual, dephasing)
 
     def superoperator_matrix(self, probability: float, **kwargs) -> np.ndarray:
-        r"""
-        The definition of the superoperator acting on the density matrix written as a vector
+        r"""The definition of the superoperator acting on the density matrix written as a vector
 
         .. math::
             \rho = A \rho B \\
@@ -190,7 +189,7 @@ class mixDepolarising(_PYQUEST):
     def call_interactive(self, qureg: tqureg,
                          qubit: int,
                          probability: float) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -214,7 +213,7 @@ class mixDepolarising(_PYQUEST):
                        probability: float,
                        **kwargs
                        ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-        """The definition of the Kraus Operator as a matrix
+        r"""The definition of the Kraus Operator as a matrix
 
         Args:
             probability: The probability/ relative amplitude with which the dephasing occurs,
@@ -237,8 +236,7 @@ class mixDepolarising(_PYQUEST):
         return (residual, depol1, depol2, depol3)
 
     def superoperator_matrix(self, probability: float, **kwargs) -> np.ndarray:
-        r"""
-        The definition of the Superoperator acting on the density matrix written as a vector
+        r"""The definition of the Superoperator acting on the density matrix written as a vector
 
         .. math::
             \rho = A \rho B \\
@@ -282,7 +280,7 @@ class mixDamping(_PYQUEST):
     def call_interactive(self, qureg: tqureg,
                          qubit: int,
                          probability: float) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -298,7 +296,7 @@ class mixDamping(_PYQUEST):
                           + ' but wavefunction qureg was used', RuntimeWarning)
 
     def Kraus_matrices(self, probability: float, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
-        """The definition of the Kraus Operator as a matrix
+        r"""The definition of the Kraus Operator as a matrix
 
         Args:
             probability: The probability/ relative amplitude with which the dephasing occurs,
@@ -315,8 +313,7 @@ class mixDamping(_PYQUEST):
         return (residual, damping)
 
     def superoperator_matrix(self, probability: float, **kwargs) -> np.ndarray:
-        r"""
-        The definition of the Superoperator acting on the density matrix written as a vector
+        r"""The definition of the Superoperator acting on the density matrix written as a vector
 
         .. math::
             \rho = A \rho B \\
@@ -342,7 +339,7 @@ class mixDamping(_PYQUEST):
 
 
 class mixTwoQubitDepolarising(_PYQUEST):
-    r"""Two qubit depolarisation
+    r"""Two qubit depolarisation error
 
     Apply any tensor product of two operators :math:`U` :math:`\sigma^x`, :math:`\sigma^y`
     and :math:`\sigma^z`  to two qubits q1 and q2 with an evenly distributed probability p`
@@ -387,8 +384,7 @@ class mixTwoQubitDepolarising(_PYQUEST):
                           + ' but wavefunction qureg was used', RuntimeWarning)
 
     def superoperator_matrix(self, probability: float, **kwargs) -> None:
-        r"""
-        The definition of the superoperator acting on the density matrix written as a vector
+        r"""The definition of the superoperator acting on the density matrix written as a vector
 
         .. math::
             \rho = A \rho B \\
@@ -432,7 +428,7 @@ class mixTwoQubitDephasing(_PYQUEST):
                          qubit1: int,
                          qubit2: int,
                          probability: float) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -457,7 +453,7 @@ class mixTwoQubitDephasing(_PYQUEST):
                        probability: float,
                        **kwargs
                        ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-        """The definition of the Kraus Operator as a matrix
+        r"""The definition of the Kraus Operator as a matrix
 
         Args:
             probability: The probability/ relative amplitude with which the dephasing occurs,
@@ -488,8 +484,7 @@ class mixTwoQubitDephasing(_PYQUEST):
         return (residual, dephasing1, dephasing2, dephasing3)
 
     def superoperator_matrix(self, probability: float, **kwargs) -> np.ndarray:
-        r"""
-        The definition of the superoperator acting on the density matrix written as a vector
+        r"""The definition of the superoperator acting on the density matrix written as a vector
 
         .. math::
             \rho = A \rho B \\
@@ -516,10 +511,10 @@ class mixTwoQubitDephasing(_PYQUEST):
 
 
 class applyOneQubitDephaseError(mixDephasing):
-    """One Qubit Dephasing"""
+    r"""One Qubit Dephasing - deprecated"""
 
     def __init__(self, *args, **kwargs) -> None:
-        """Initialisation
+        r"""Initialisation
 
         Args:
             *args: Arguments
@@ -532,10 +527,10 @@ class applyOneQubitDephaseError(mixDephasing):
 
 
 class applyOneQubitDepolariseError(mixDepolarising):
-    """One Qubit Depolarisation"""
+    r"""One Qubit Depolarisation - deprecated"""
 
     def __init__(self, *args, **kwargs) -> None:
-        """Initialisation
+        r"""Initialisation
 
         Args:
             *args: Arguments
@@ -548,10 +543,10 @@ class applyOneQubitDepolariseError(mixDepolarising):
 
 
 class applyOneQubitDampingError(mixDamping):
-    """One Qubit Damping"""
+    r"""One Qubit Damping - deprecated"""
 
     def __init__(self, *args, **kwargs) -> None:
-        """Initialisation
+        r"""Initialisation
 
         Args:
             *args: Arguments
@@ -564,10 +559,10 @@ class applyOneQubitDampingError(mixDamping):
 
 
 class applyTwoQubitDephaseError(mixTwoQubitDephasing):
-    """Two Qubit Dephasing"""
+    r"""Two Qubit Dephasing - deprecated"""
 
     def __init__(self, *args, **kwargs) -> None:
-        """Initialisation
+        r"""Initialisation
 
         Args:
             *args: Arguments
@@ -581,10 +576,10 @@ class applyTwoQubitDephaseError(mixTwoQubitDephasing):
 
 
 class applyTwoQubitDepolariseError(mixTwoQubitDepolarising):
-    """Two Qubit Depolarisation"""
+    r"""Two Qubit Depolarisation - deprecated"""
 
     def __init__(self, *args, **kwargs) -> None:
-        """Initialisation
+        r"""Initialisation
 
         Args:
             *args: Arguments
@@ -598,9 +593,9 @@ class applyTwoQubitDepolariseError(mixTwoQubitDepolarising):
 
 
 class mixMultiQubitKrausMap(_PYQUEST):
-    r"""Error affecting multiple Qubits
+    r"""Error affecting multiple qubits
 
-    An error acting on multiple qubtis simultaniously is defined by a set of Kraus operators
+    An error acting on multiple qubtis simultaneously is defined by a set of Kraus operators
 
     Args:
         qureg: a qureg containing a density matrix
@@ -613,7 +608,7 @@ class mixMultiQubitKrausMap(_PYQUEST):
                          qubits: Sequence[int],
                          operators: Sequence[np.ndarray],
                          ) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -651,7 +646,7 @@ class mixMultiQubitKrausMap(_PYQUEST):
             quest.destroyComplexMatrixN(p)
 
     def Kraus_matrices(self, operators: Sequence[np.ndarray], **kwargs) -> Sequence[np.ndarray]:
-        """The definition of the Kraus Operator as a matrix
+        r"""The definition of the Kraus Operator as a matrix
 
         Args:
             operators: The Kraus operators
@@ -663,8 +658,7 @@ class mixMultiQubitKrausMap(_PYQUEST):
         return operators
 
     def superoperator_matrix(self, operators: Sequence[np.ndarray], **kwargs) -> np.ndarray:
-        r"""
-        The definition of the superoperator acting on the density matrix written as a vector
+        r"""The definition of the superoperator acting on the density matrix written as a vector
 
         Args:
             operators: The Kraus operators
@@ -682,7 +676,7 @@ class mixMultiQubitKrausMap(_PYQUEST):
 class mixTwoQubitKrausMap(_PYQUEST):
     r"""Error affecting two qubits
 
-    An error acting on two qubtis simultaniously is defined by a set of Kraus operators
+    An error acting on two qubtis simultaneously is defined by a set of Kraus operators
 
     Args:
         qureg: a qureg containing a density matrix
@@ -697,7 +691,7 @@ class mixTwoQubitKrausMap(_PYQUEST):
                          target_qubit_2: Sequence[int],
                          operators: Sequence[np.ndarray],
                          ) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -730,7 +724,7 @@ class mixTwoQubitKrausMap(_PYQUEST):
             len(operators))
 
     def Kraus_matrices(self, operators: Sequence[np.ndarray], **kwargs) -> Sequence[np.ndarray]:
-        """The definition of the Kraus Operator as a matrix
+        r"""The definition of the Kraus Operator as a matrix
 
         Args:
             operators: The Kraus operators
@@ -742,8 +736,7 @@ class mixTwoQubitKrausMap(_PYQUEST):
         return operators
 
     def superoperator_matrix(self, operators: Sequence[np.ndarray], **kwargs) -> np.ndarray:
-        r"""
-        The definition of the superoperator acting on the density matrix written as a vector
+        r"""The definition of the superoperator acting on the density matrix written as a vector
 
         Args:
             operators: The Kraus operators
@@ -759,7 +752,7 @@ class mixTwoQubitKrausMap(_PYQUEST):
 
 
 class mixKrausMap(_PYQUEST):
-    r"""General error affecting one qubits
+    r"""General error affecting one qubit
 
     An error acting on one qubit is defined by a set of Kraus operators
 
@@ -774,7 +767,7 @@ class mixKrausMap(_PYQUEST):
                          qubit: int,
                          operators: Sequence[np.ndarray],
                          ) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -805,7 +798,7 @@ class mixKrausMap(_PYQUEST):
             len(operators))
 
     def Kraus_matrices(self, operators: Sequence[np.ndarray], **kwargs) -> Sequence[np.ndarray]:
-        """The definition of the Kraus Operator as a matrix
+        r"""The definition of the Kraus Operator as a matrix
 
         Args:
             operators: The Kraus operators
@@ -817,8 +810,7 @@ class mixKrausMap(_PYQUEST):
         return operators
 
     def superoperator_matrix(self, operators: Sequence[np.ndarray], **kwargs) -> np.ndarray:
-        r"""
-        The definition of the superoperator acting on the density matrix written as a vector
+        r"""The definition of the superoperator acting on the density matrix written as a vector
 
         Args:
             operators: The Kraus operators
@@ -851,7 +843,7 @@ class mixPauli(_PYQUEST):
                          probY: float,
                          probZ: float,
                          ) -> None:
-        """Interactive call of PyQuest-cffi
+        r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
@@ -872,7 +864,7 @@ class mixPauli(_PYQUEST):
                        probY: float,
                        probZ: float,
                        **kwargs) -> List[np.ndarray]:
-        """The definition of the Kraus Operator as a matrix
+        r"""The definition of the Kraus Operator as a matrix
 
         Args:
             probX: The probability that Pauli X is acting on qubit as Kraus operator
@@ -894,8 +886,7 @@ class mixPauli(_PYQUEST):
                              probY: float,
                              probZ: float,
                              **kwargs) -> np.ndarray:
-        r"""
-        The definition of the superoperator acting on the density matrix written as a vector
+        r"""The definition of the superoperator acting on the density matrix written as a vector
 
         Args:
             probX: The probability that Pauli X is acting on qubit as Kraus operator
