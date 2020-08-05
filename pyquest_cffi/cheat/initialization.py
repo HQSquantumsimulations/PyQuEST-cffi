@@ -182,6 +182,9 @@ class initPauliHamil(_PYQUEST):
             coeffs: array of coefficients
             codes: array of Pauli codes
         """
+        print(pauli_hamil.numQubits, pauli_hamil.numSumTerms, pauli_hamil.pauliCodes, pauli_hamil.termCoeffs)
+        
+        assert 1 == 2
         quest.initPauliHamil(pauli_hamil, coeffs, codes)
 
 

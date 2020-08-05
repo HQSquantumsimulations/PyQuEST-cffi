@@ -41,12 +41,11 @@ def test_apply_functions(init) -> None:
     qubits = utils.createQureg()(5, env)
     initialisation = init[0]()
     args = init[1]
-    print(initialisation, args)
+
     if args[0] == 'qureg':
         args[0] = qubits
     elif args[0] == 'pauli':
-        args[0] = utils.createPauliHamil()(number_qubits=5, number_pauliprods=5)
-        assert 1 == 2
+        args[0] = utils.createPauliHamil()(number_qubits=5, number_pauliprods=1)
 
     initialisation(*args)
 

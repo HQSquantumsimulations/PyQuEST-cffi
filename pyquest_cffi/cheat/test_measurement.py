@@ -22,7 +22,8 @@ import numpy as np
 def test_calc_simple() -> None:
     """Testing simple calc functions.
     
-    calcPurity, calcFidelity, calcInnerProduct, calcProbofOutcome, calcTotalProb
+    calcPurity, calcFidelity, calcInnerProduct, calcProbofOutcome,
+    calcTotalProb, calcDensityInnerProduct
     """
     env = utils.createQuestEnv()()
     qureg = utils.createQureg()(2, env)
@@ -120,7 +121,7 @@ def test_get_simple() -> None:
         real_val_sate_vec = cheat.getRealAmp()(qureg=qureg, index=1)
         imag_val_sate_vec = cheat.getImagAmp()(qureg=qureg, index=1)
     density_matrix = cheat.getDensityAmp()(qureg=qureg, row=1, column=1)
-    # num_amps = cheat.getNumAmps()(qureg=qureg)
+    num_amps = cheat.getNumAmps()(qureg=qureg)
     num_qubits = cheat.getNumQubits()(qureg=qureg)
     expec_val = cheat.getExpectationValue()(qureg=qureg,
                                             operator_matrix=operator_matrix)
@@ -130,7 +131,7 @@ def test_get_simple() -> None:
     assert abs_val_state_vec is None
     assert real_val_sate_vec is None
     assert imag_val_sate_vec is None
-    # assert num_amps == 4
+    assert num_amps == 4
     assert num_qubits == 2
     assert expec_val == 1
 
@@ -138,7 +139,7 @@ def test_get_simple() -> None:
 def test_get_complicated() -> None:
     """Test less simple get functions
 
-    getDensityMatrix,
+    getDensityMatrix, getStateVector, getOccupationProbability, getRepeatedMeasurement
     """
     env = utils.createQuestEnv()()
     qureg_statevec = utils.createQureg()(2, env)
@@ -168,7 +169,7 @@ def test_get_complicated() -> None:
 
 
 def test_calc_Expec_Pauli_Sum() -> None:
-    """Test calculating the expectation value of a pauli sum"""
+    """Test calculating the expectation value of a PauliSum"""
     env = utils.createQuestEnv()()
     qubits = utils.createQureg()(4, env)
     workspace = utils.createQureg()(4, env)
@@ -181,20 +182,8 @@ def test_calc_Expec_Pauli_Sum() -> None:
     assert a == 0.0
 
 
-def test_calc_Hilbert_Schmidt_distance() -> None:
-    """Test calculating the Hilbert Schmidt distance"""
-    env = utils.createQuestEnv()()
-    qureg1 = utils.createDensityQureg()(4, env)
-    qureg2 = utils.createDensityQureg()(4, env)
-    a = cheat.calcHilbertSchmidtDistance()(
-        qureg1=qureg1,
-        qureg2=qureg2,
-    )
-    assert a == 0.0
-
-
 def test_calc_Expec_Pauli_Prod() -> None:
-    """Test calculating the expectation value of a pauli product"""
+    """Test calculating the expectation value of a PauliProduct"""
     env = utils.createQuestEnv()()
     qubits = utils.createQureg()(4, env)
     workspace = utils.createQureg()(4, env)
@@ -203,6 +192,43 @@ def test_calc_Expec_Pauli_Prod() -> None:
         qubits=[0, 1, 2, 3],
         paulis=[0, 1, 3, 2],
         workspace=workspace,
+    )
+    assert a == 0.0
+
+
+def test_calc_Expec_Diagonal_Op() -> None:
+    """Test calculating the expectation value of a DiagonalOp"""
+    env = utils.createQuestEnv()()
+    qubits = utils.createQureg()(4, env)
+    a = cheat.calcExpecDiagonalOp()(
+        qureg=qubits,
+        operator=(4, env),
+    )
+    assert a == 0
+
+
+def test_calc_Expec_Pauli_Hamil() -> None:
+    """Test calculating the expectation value of a PauliHamil"""
+    env = utils.createQuestEnv()()
+    qubits = utils.createQureg()(4, env)
+    pauli_hamil = utils.createPauliHamil()(number_qubits=4, number_pauliprods=1)
+    workspace = utils.createQureg()(4, env)
+    a = cheat.calcExpecPauliHamil()(
+        qureg=qubits,
+        pauli_hamil=pauli_hamil,
+        workspace=workspace,
+    )
+    npt.assert_almost_equal(a, 0.0)
+
+
+def test_calc_Hilbert_Schmidt_distance() -> None:
+    """Test calculating the Hilbert Schmidt distance"""
+    env = utils.createQuestEnv()()
+    qureg1 = utils.createDensityQureg()(4, env)
+    qureg2 = utils.createDensityQureg()(4, env)
+    a = cheat.calcHilbertSchmidtDistance()(
+        qureg1=qureg1,
+        qureg2=qureg2,
     )
     assert a == 0.0
 

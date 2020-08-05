@@ -28,8 +28,8 @@ from pyquest_cffi import utils
                                       (ops.applyOneQubitDepolariseError, 3 / 4),
                                       (ops.mixDamping, 1),
                                       (ops.mixDephasing, 1 / 2),
-                                      (ops.mixDepolarising, 3 / 4),
-                                      (ops.mixDensityMatrix, 1 / 4)])
+                                      (ops.mixDepolarising, 3 / 4),])
+                                    #   (ops.mixDensityMatrix, 1 / 4)])
 def test_one_qubit_errors(prob, gate_def) -> None:
     """Testing one qubit errors"""
     op = gate_def[0]

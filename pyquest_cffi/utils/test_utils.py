@@ -39,8 +39,11 @@ def test_QuReg() -> None:
     """Testing the creation, cloning, destruction and reporting of a QuReg"""
     env = utils.createQuestEnv()()
     wave_qureg = utils.createQureg()(num_qubits=2, env=env)
+    cheat.initZeroState()(qureg=wave_qureg)
     density_qureg = utils.createDensityQureg()(num_qubits=2, env=env)
+    cheat.initZeroState()(qureg=density_qureg)
     cloned_qureg = utils.createCloneQureg()(qureg=density_qureg, env=env)
+    cheat.initZeroState()(qureg=cloned_qureg)
 
     # [wave_string, density_string, cloned_string] = ['', '', '']
     # cheat.getEnvironmentString()(env=env, qureg=wave_qureg, string=wave_string)
@@ -53,6 +56,10 @@ def test_QuReg() -> None:
     assert wave_qureg.isDensityMatrix == False
     assert density_qureg.isDensityMatrix == True
     assert cloned_qureg.isDensityMatrix == True
+    assert np.all(cheat.getDensityMatrix()(qureg=density_qureg)
+                  == cheat.getDensityMatrix()(qureg=cloned_qureg))
+    assert not np.all(cheat.getStateVector()(qureg=wave_qureg)
+                      == cheat.getDensityMatrix()(qureg=cloned_qureg))
 
     npt.assert_raises(TypeError, utils.cloneQureg(), cloned_qureg, wave_qureg)
 
@@ -86,6 +93,9 @@ def test_PauliHamil() -> None:
     """Testing the creation, destruction and reporting of a PauliHamil"""
     env = utils.createQuestEnv()()
     pauli_hamil = utils.createPauliHamil()(number_qubits=5, number_pauliprods=3)
+    # cheat.initPauliHamil()(pauli_hamil=pauli_hamil,
+    #                        coeffs=[0.1, 0.2, 0.3],
+    #                        codes=[0, 2, 1])
     utils.reportPauliHamil()(pauli_hamil=pauli_hamil)
     result_type = utils.reportPauliHamil().restype
     argument_type = utils.reportPauliHamil().argtype

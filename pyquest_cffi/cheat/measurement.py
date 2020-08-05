@@ -16,6 +16,7 @@ from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, ffi_quest, qreal, tqu
 import numpy as np
 from typing import Sequence, Optional, Union, List, Tuple
 import warnings
+from pyquest_cffi import utils, cheat
 
 
 class calcFidelity(_PYQUEST):
@@ -369,7 +370,10 @@ class getNumAmps(_PYQUEST):
         Returns:
             int
         """
-        return quest.getNumAmps(qureg)
+        if qureg.isDensityMatrix:
+            return 2 ** cheat.getNumQubits()(qureg=qureg)
+        else:
+            return quest.getNumAmps(qureg)
 
 
 class getNumQubits(_PYQUEST):
@@ -726,8 +730,9 @@ class calcExpecDiagonalOp(_PYQUEST):
             float
         """
         diagonal_op = quest.createDiagonalOp(operator[0], operator[1])
-        return quest.calcExpecDiagonalOp(qureg,
-                                         diagonal_op)
+        complex_return = quest.calcExpecDiagonalOp(qureg,
+                                                   diagonal_op)
+        return complex(complex_return.real, complex_return.imag)
 
 
 class calcExpecPauliHamil(_PYQUEST):
@@ -760,6 +765,9 @@ class calcExpecPauliHamil(_PYQUEST):
         Returns:
             float
         """
+        if not (cheat.getNumQubits()(qureg=qureg) == pauli_hamil.numQubits):
+            warnings.warn('Qureg and PauliHamil must be defined for the '
+                          + 'same number of qubits', RuntimeWarning)
         return quest.calcExpecPauliHamil(qureg,
                                          pauli_hamil,
                                          workspace)

@@ -135,6 +135,8 @@ class createCloneQureg(_PYQUEST):
 class cloneQureg(_PYQUEST):
     """Clone a qureg state into another one
 
+    Set qureg_clone to be a clone of qureg_original
+
     Args:
         qureg_original: Qureg to be cloned
         qureg_clone: Cloned qureg

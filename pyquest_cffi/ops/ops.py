@@ -18,7 +18,8 @@ from pyquest_cffi.questlib import (
 )
 import numpy as np
 from typing import Sequence, Optional, Tuple
-from pyquest_cffi import utils
+from pyquest_cffi import utils, cheat
+import warnings
 
 
 class hadamard(_PYQUEST):
@@ -1620,79 +1621,6 @@ class multiControlledUnitary(_PYQUEST):
         raise NotImplementedError
 
 
-# Measurement
-
-
-class measure(_PYQUEST):
-    r"""Implements a one-qubit Measurement operation
-
-    Args:
-        qureg: quantum register
-        qubit: the measured qubit
-        readout: The readout register for static compilation
-        readout_index: The index in the readout register for static compilation
-
-    """
-
-    def call_interactive(self, qureg: tqureg, qubit: int) -> int:
-        r"""Interactive call of PyQuest-cffi
-
-        Args:
-            qureg: quantum register
-            qubit: qubit the unitary gate is applied to
-
-        Returns:
-            int
-        """
-        return quest.measure(qureg, qubit)
-
-
-class measureWithStats(_PYQUEST):
-    r"""Measures a single qubit and gives the probability of that outcome.
-
-    Args:
-        qureg: quantum register
-        qubit: the measured qubit
-        outcome_proba: where to set the probability of the occurred outcome
-    """
-
-    def call_interactive(self, qureg: tqureg, qubit: int, outcome_proba: float) -> int:
-        r"""Interactive call of PyQuest-cffi
-
-        Args:
-            qureg: quantum register
-            qubit: qubit the unitary gate is applied to
-            outcome_proba: where to set the probability of the occurred outcome
-
-        Returns:
-            int
-        """
-        return quest.measureWithStats(qureg, qubit, outcome_proba)
-
-
-class collapseToOutcome(_PYQUEST):
-    r"""Updates qureg to be consistent with measuring measureQubit and returns the probability.
-
-    Args:
-        qureg: quantum register
-        qubit: the measured qubit
-        outcome: where to set the probability of the occurred outcome
-    """
-
-    def call_interactive(self, qureg: tqureg, qubit: int, outcome: int) -> float:
-        r"""Interactive call of PyQuest-cffi
-
-        Args:
-            qureg: quantum register
-            qubit: qubit the unitary gate is applied to
-            outcome: where to set the probability of the occurred outcome
-
-        Returns:
-            float
-        """
-        return quest.collapseToOutcome(qureg, qubit, outcome)
-
-
 # Extra gates:
 
 
@@ -2307,6 +2235,9 @@ class multiStateControlledUnitary(_PYQUEST):
         raise NotImplementedError()
 
 
+# Apply operations
+
+
 class applyDiagonalOp(_PYQUEST):
     r"""Applying a diagonal operator to state
 
@@ -2332,6 +2263,9 @@ class applyDiagonalOp(_PYQUEST):
                 and in a certain QuEST environment (operator[1]: tquestenv)
         """
         diagonal_op = quest.createDiagonalOp(operator[0], operator[1])
+        if not (cheat.getNumQubits()(qureg=qureg) == diagonal_op.numQubits):
+            warnings.warn('Qureg and DiagonalOp must be defined for the '
+                          + 'same number of qubits', RuntimeWarning)
         quest.applyDiagonalOp(qureg, diagonal_op)
         quest.destroyDiagonalOp(diagonal_op, operator[1])
 
@@ -2622,11 +2556,9 @@ class applyPauliHamil(_PYQUEST):
             pauli_hamil: PauliHamil instance to be applied
             qureg_out: quantum register after application of Pauli sum
         """
-        env = utils.createQuestEnv()()
-        qureg = utils.createQureg()(5, env)
-        pauli_hamil = utils.createPauliHamil()(number_qubits=3, number_pauliprods=2)
-        qureg_out = utils.createQureg()(5, utils.createQuestEnv()())
-        assert 1 == 2
+        if not (cheat.getNumQubits()(qureg=qureg) == pauli_hamil.numQubits):
+            warnings.warn('Qureg and PauliHamil must be defined for the '
+                          + 'same number of qubits', RuntimeWarning)
         quest.applyPauliHamil(qureg,
                               pauli_hamil,
                               qureg_out)
@@ -2756,3 +2688,78 @@ class applyTrotterCircuit(_PYQUEST):
             NotImplementedError: not implemented
         """
         raise NotImplementedError()
+
+
+# Measurement
+
+
+class measure(_PYQUEST):
+    r"""Implements a one-qubit Measurement operation
+
+    Args:
+        qureg: quantum register
+        qubit: the measured qubit
+        readout: The readout register for static compilation
+        readout_index: The index in the readout register for static compilation
+
+    """
+
+    def call_interactive(self, qureg: tqureg, qubit: int) -> int:
+        r"""Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: quantum register
+            qubit: qubit the unitary gate is applied to
+
+        Returns:
+            int
+        """
+        return quest.measure(qureg, qubit)
+
+
+class measureWithStats(_PYQUEST):
+    r"""Measures a single qubit and gives the probability of that outcome.
+
+    Args:
+        qureg: quantum register
+        qubit: the measured qubit
+        outcome_proba: where to set the probability of the occurred outcome
+    """
+
+    def call_interactive(self, qureg: tqureg, qubit: int, outcome_proba: float) -> int:
+        r"""Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: quantum register
+            qubit: qubit the unitary gate is applied to
+            outcome_proba: where to set the probability of the occurred outcome
+
+        Returns:
+            int
+        """
+        outcome_pointer = ffi_quest.new("{}[{}]".format(qreal, 1))
+        outcome_pointer[0] = outcome_proba
+        return quest.measureWithStats(qureg, qubit, outcome_pointer)
+
+
+class collapseToOutcome(_PYQUEST):
+    r"""Updates qureg to be consistent with measuring measureQubit and returns the probability.
+
+    Args:
+        qureg: quantum register
+        qubit: the measured qubit
+        outcome: where to set the probability of the occurred outcome
+    """
+
+    def call_interactive(self, qureg: tqureg, qubit: int, outcome: int) -> float:
+        r"""Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: quantum register
+            qubit: qubit the unitary gate is applied to
+            outcome: where to set the probability of the occurred outcome
+
+        Returns:
+            float
+        """
+        return quest.collapseToOutcome(qureg, qubit, outcome)

@@ -38,7 +38,7 @@ from typing import List
                                   ops.swapGate,
                                   ops.sqrtSwapGate
                                   ])
-def test_simple_gate_matrices(gate):
+def test_simple_gate_matrices(gate) -> None:
     """Testing gates without parameters"""
     matrix_gate = gate().matrix()
     if matrix_gate.shape == (2, 2):
@@ -132,7 +132,7 @@ def test_unitary_gate_matrices(gate, alpha, phase) -> None:
                                   ops.controlledPhaseShift,
                                   ])
 @pytest.mark.parametrize("theta", list(np.arange(0, 2 * np.pi, 2 * np.pi / 10)))
-def test_two_qubit_unitary(gate, theta):
+def test_two_qubit_unitary(gate, theta) -> None:
     """Test two qubit unitary gate"""
     matrix_gate = gate().matrix(theta=theta)
     matrix_reconstructed = build_two_qubit_matrix_target(
@@ -146,7 +146,7 @@ def test_two_qubit_unitary(gate, theta):
                                   ops.controlledPhaseShift,
                                   ])
 @pytest.mark.parametrize("theta", list(np.arange(0, 2 * np.pi, 2 * np.pi / 10)))
-def test_controlled_two_qubit_unitary(gate, theta):
+def test_controlled_two_qubit_unitary(gate, theta) -> None:
     """Test controlled two qubit unitary gate"""
     matrix_gate = gate().matrix(theta=theta)
     matrix_reconstructed = build_two_qubit_matrix_target(
@@ -163,7 +163,7 @@ def test_controlled_two_qubit_unitary(gate, theta):
                                   ops.controlledPhaseShift,
                                   ])
 @pytest.mark.parametrize("theta", list(np.arange(0, 2 * np.pi, 2 * np.pi / 10)))
-def test_multi_qubit_unitary(gate, theta):
+def test_multi_qubit_unitary(gate, theta) -> None:
     """Test multi qubit unitary gate"""
     matrix_gate = gate().matrix(theta=theta)
     matrix_reconstructed = build_two_qubit_matrix_targets(
@@ -177,7 +177,7 @@ def test_multi_qubit_unitary(gate, theta):
                                   ops.controlledPhaseShift,
                                   ])
 @pytest.mark.parametrize("theta", list(np.arange(0, 2 * np.pi, 2 * np.pi / 10)))
-def test_controlled_multi_qubit_unitary(gate, theta):
+def test_controlled_multi_qubit_unitary(gate, theta) -> None:
     """Test controlled multi qubit unitary gate"""
     matrix_gate = gate().matrix(theta=theta)
     matrix_reconstructed = build_two_qubit_matrix_targets(
@@ -193,7 +193,7 @@ def test_controlled_multi_qubit_unitary(gate, theta):
                                   ops.rotateY,
                                   ])
 @pytest.mark.parametrize("theta", list(np.arange(0, 2 * np.pi, 2 * np.pi / 10)))
-def test_multi_state_controlled_unitary(gate, theta):
+def test_multi_state_controlled_unitary(gate, theta) -> None:
     """Test multiStateControlledUnitary"""
     matrix_gate = gate().matrix(theta=theta)
     env = utils.createQuestEnv()()
@@ -206,7 +206,7 @@ def test_multi_state_controlled_unitary(gate, theta):
         matrix=matrix_gate)
 
 
-def test_multi_controlled_PhaseFlip():
+def test_multi_controlled_PhaseFlip() -> None:
     """Test multiControlledPhaseFlip"""
     env = utils.createQuestEnv()()
     qubits = utils.createQureg()(3, env)
@@ -216,7 +216,7 @@ def test_multi_controlled_PhaseFlip():
     )
 
 
-def test_multi_controlled_PhaseShift():
+def test_multi_controlled_PhaseShift() -> None:
     """Test multiControlledPhaseShift"""
     env = utils.createQuestEnv()()
     qubits = utils.createQureg()(3, env)
@@ -232,7 +232,7 @@ def test_multi_controlled_PhaseShift():
                                   ops.rotateY,
                                   ])
 @pytest.mark.parametrize("theta", list(np.arange(0, 2 * np.pi, 2 * np.pi / 10)))
-def test_multi_controlled_unitary(gate, theta):
+def test_multi_controlled_unitary(gate, theta) -> None:
     """Test multiControlledUnitary"""
     matrix_gate = gate().matrix(theta=theta)
     env = utils.createQuestEnv()()
@@ -249,7 +249,7 @@ def test_multi_controlled_unitary(gate, theta):
                                   ops.controlledRotateY,
                                   ])
 @pytest.mark.parametrize("theta", list(np.arange(0, 2 * np.pi, 2 * np.pi / 10)))
-def test_multi_controlled_two_qubit_unitary(gate, theta):
+def test_multi_controlled_two_qubit_unitary(gate, theta) -> None:
     """Test multiControlledTwoQubitUnitary"""
     matrix_gate = gate().matrix(theta=theta)
     env = utils.createQuestEnv()()
@@ -267,7 +267,7 @@ def test_multi_controlled_two_qubit_unitary(gate, theta):
                                   ops.controlledRotateY,
                                   ])
 @pytest.mark.parametrize("theta", list(np.arange(0, 2 * np.pi, 2 * np.pi / 10)))
-def test_multi_controlled_multi_qubit_unitary(gate, theta):
+def test_multi_controlled_multi_qubit_unitary(gate, theta) -> None:
     """Test multiControlledMultiQubitUnitary"""
     matrix_gate = gate().matrix(theta=theta)
     env = utils.createQuestEnv()()
@@ -279,7 +279,7 @@ def test_multi_controlled_multi_qubit_unitary(gate, theta):
         matrix=matrix_gate)
 
 
-def test_multiRotatePauli():
+def test_multiRotatePauli() -> None:
     """Testing multiRotatePauli"""
     env = utils.createQuestEnv()()
     qureg = utils.createQureg()(3, env=env)
@@ -287,7 +287,7 @@ def test_multiRotatePauli():
     a(qureg, [0, 1, 2], [1, 2, 3], 0.35)
 
 
-def test_multiRotateZ():
+def test_multiRotateZ() -> None:
     """Testing multiRotateZ"""
     env = utils.createQuestEnv()()
     qureg = utils.createQureg()(3, env=env)
@@ -295,40 +295,7 @@ def test_multiRotateZ():
     a(qureg, [0, 1, 2], 0.35)
 
 
-@pytest.mark.parametrize("applied", [
-    # (ops.applyDiagonalOp, [(3, utils.createQuestEnv()())]),
-    (ops.applyMatrix2, [2, np.array([[0, 1], [2, 1]])]),
-    (ops.applyMatrix4, [1, 3, 'matrix']),
-    (ops.applyMatrixN, [[1, 2], 'matrix']),
-    (ops.applyMultiControlledMatrixN, [[1, 2], [3, 4], 'matrix']),
-    # (ops.applyPauliHamil, [utils.createPauliHamil()(3, 2),
-    #                        utils.createQureg()(5, utils.createQuestEnv()())]),
-    (ops.applyPauliSum, [[[0, 1, 2, 3], [3, 2, 1, 0]], [0.4, 0.3],
-                         utils.createQureg()(5, utils.createQuestEnv()())]),
-    # (ops.applyTrotterCircuit, [utils.createPauliHamil()(3, 2), 0.7, 1, 2])
-    ])
-def test_apply_functions(applied) -> None:
-    """Test applyPauliSum"""
-    env = utils.createQuestEnv()()
-    qubits = utils.createQureg()(5, env)
-    op = applied[0]()
-    positional_args = applied[1]
-    print(op, positional_args)
-    matrix = np.array([[1, 0, 0, 1], [0, 2, 0, 2], [2, 0, 2, 0], [1, 0, 0, 1]])
-    if positional_args[-1] == 'matrix':
-        args = [qubits]
-        args.extend(positional_args)
-        args[-1] = matrix
-    else:
-        args = [qubits]
-        args.extend(positional_args)
-
-    op(*args)
-    if positional_args[-1] == 'matrix':
-        npt.assert_array_equal(matrix, op.matrix(matrix=matrix))
-
-
-def build_one_qubit_matrix(gate, gate_args):
+def build_one_qubit_matrix(gate, gate_args) -> None:
     """Build one qubit matrix for tests"""
     matrix = np.zeros((2, 2), dtype=complex)
     for co, state in enumerate([np.array([1, 0]),
@@ -343,7 +310,7 @@ def build_one_qubit_matrix(gate, gate_args):
     return matrix
 
 
-def build_two_qubit_matrix(gate, gate_args):
+def build_two_qubit_matrix(gate, gate_args) -> None:
     """Build two qubit matrix for tests"""
     matrix = np.zeros((4, 4), dtype=complex)
     for co, state in enumerate([np.array([1, 0, 0, 0]),
@@ -360,7 +327,7 @@ def build_two_qubit_matrix(gate, gate_args):
     return matrix
 
 
-def build_two_qubit_matrix_target(gate, gate_args, control=None):
+def build_two_qubit_matrix_target(gate, gate_args, control=None) -> None:
     """Build two qubit matrix for tests"""
     matrix = np.zeros((4, 4), dtype=complex)
     for co, state in enumerate([np.array([1, 0, 0, 0]),
@@ -401,7 +368,7 @@ def build_two_qubit_matrix_target(gate, gate_args, control=None):
     return matrix
 
 
-def build_two_qubit_matrix_targets(gate, gate_args, control=None):
+def build_two_qubit_matrix_targets(gate, gate_args, control=None) -> None:
     """Build two qubit matrix for tests"""
     matrix = np.zeros((4, 4), dtype=complex)
     for co, state in enumerate([np.array([1, 0, 0, 0]),
@@ -440,6 +407,55 @@ def build_two_qubit_matrix_targets(gate, gate_args, control=None):
                 cComplex = cheat.getAmp()(qureg=qubits, index=i)
                 matrix[i, co] = cComplex.real + 1j * cComplex.imag
     return matrix
+
+
+@pytest.mark.parametrize("applied", [
+    (ops.applyDiagonalOp, [(5, utils.createQuestEnv()())]),
+    (ops.applyMatrix2, [2, np.array([[0, 1], [2, 1]])]),
+    (ops.applyMatrix4, [1, 3, 'matrix']),
+    (ops.applyMatrixN, [[1, 2], 'matrix']),
+    (ops.applyMultiControlledMatrixN, [[1, 2], [3, 4], 'matrix']),
+    (ops.applyPauliHamil, [utils.createPauliHamil()(5, 2),
+                           utils.createQureg()(5, utils.createQuestEnv()())]),
+    (ops.applyPauliSum, [[[0, 1, 2, 3], [3, 2, 1, 0]], [0.4, 0.3],
+                         utils.createQureg()(5, utils.createQuestEnv()())]),
+    (ops.applyTrotterCircuit, [utils.createPauliHamil()(5, 2), 0.7, 1, 2])
+    ])
+def test_apply_functions(applied) -> None:
+    """Test all non-deprecated apply functions"""
+    env = utils.createQuestEnv()()
+    qubits = utils.createQureg()(5, env)
+    cheat.initZeroState()(qureg=qubits)
+    op = applied[0]()
+    positional_args = applied[1]
+    print(op, positional_args)
+    matrix = np.array([[1, 0, 0, 1], [0, 2, 0, 2], [2, 0, 2, 0], [1, 0, 0, 1]])
+    if positional_args[-1] == 'matrix':
+        args = [qubits]
+        args.extend(positional_args)
+        args[-1] = matrix
+    else:
+        args = [qubits]
+        args.extend(positional_args)
+
+    op(*args)
+    if positional_args[-1] == 'matrix':
+        npt.assert_array_equal(matrix, op.matrix(matrix=matrix))
+
+
+def test_measure() -> None:
+    """Test measuring functions: measure, measureWithStats and collapseToOutcome"""
+    env = utils.createQuestEnv()()
+    qureg = utils.createQureg()(3, env)
+    cheat.initZeroState()(qureg=qureg)
+
+    qubit_0 = ops.measure()(qureg=qureg, qubit=0)
+    qubit_1 = ops.measureWithStats()(qureg=qureg, qubit=1, outcome_proba=0.5)
+    proba_qubit_2 = ops.collapseToOutcome()(qureg=qureg, qubit=2, outcome=0)
+
+    assert qubit_0 == 0
+    assert qubit_1 == 0
+    assert proba_qubit_2 == 1
 
 
 if __name__ == '__main__':
