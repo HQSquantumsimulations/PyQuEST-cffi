@@ -210,7 +210,7 @@ class getDensityMatrixatRowColumn(_PYQUEST):
     Get the value of the density matrix in qureg at row and column
 
     Args:
-        qureg: a qureg containing a wavefunction
+        qureg: a qureg containing a density matrix
         row: The row index either as an int of as a sequence
             of 0 and 1 referencing the corresponding basis state
         column: The column index either as an int of as a sequence
@@ -225,7 +225,7 @@ class getDensityMatrixatRowColumn(_PYQUEST):
         """Interactive call of PyQuest-cffi
 
         Args:
-            qureg: a qureg containing a wavefunction
+            qureg: a qureg containing a density matrix
             row: The row index either as an int of as a sequence
                 of 0 and 1 referencing the corresponding basis state
             column: The column index either as an int of as a sequence
@@ -242,7 +242,7 @@ class getDensityMatrixatRowColumn(_PYQUEST):
             cComplex = quest.getDensityAmp(qureg, row, column)
             return cComplex.real + 1j * cComplex.imag
         else:
-            warnings.warn('qureg1 has to be a density matrix  qureg'
+            warnings.warn('qureg has to be a density matrix qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
             return None
 
@@ -261,7 +261,7 @@ class getAbsoluteValSquaredatIndex(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> float:
+    def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> Optional[float]:
         """Interactive call of PyQuest-cffi
 
         Args:
@@ -271,15 +271,15 @@ class getAbsoluteValSquaredatIndex(_PYQUEST):
 
         Returns:
             Optional[float]
-
-        Raises:
-            RuntimeError: getAbsoluteValSquaredatIndex is only defined for statevector qureg
         """
         if hasattr(index, '__len__'):
             index = basis_state_to_index(index)
         if qureg.isDensityMatrix:
-            raise RuntimeError('getAbsoluteValSquaredatIndex is only defined for statevector qureg')
-        return quest.getProbAmp(qureg, index)
+            warnings.warn('qureg has to be a wavefunction qureg'
+                          + ' but density matrix qureg was used', RuntimeWarning)
+            return None
+        else:
+            return quest.getProbAmp(qureg, index)
 
 
 getProbAmp = getAbsoluteValSquaredatIndex
@@ -311,6 +311,8 @@ class getRealAmp(_PYQUEST):
         if hasattr(index, '__len__'):
             index = basis_state_to_index(index)
         if qureg.isDensityMatrix:
+            warnings.warn('qureg has to be a wavefunction qureg'
+                          + ' but density matrix qureg was used', RuntimeWarning)
             return None
         else:
             return quest.getRealAmp(qureg, index)
@@ -342,65 +344,11 @@ class getImagAmp(_PYQUEST):
         if hasattr(index, '__len__'):
             index = basis_state_to_index(index)
         if qureg.isDensityMatrix:
+            warnings.warn('qureg has to be a wavefunction qureg'
+                          + ' but density matrix qureg was used', RuntimeWarning)
             return None
         else:
             return quest.getImagAmp(qureg, index)
-
-
-# class getAmp(_PYQUEST):
-#     r"""
-#     Get the complex amplitude at a given index in the state vector
-
-#     Args:
-#         qureg: a qureg containing a wavefunction
-#         index: The index either as an int or as a sequence
-#             of 0 and 1 referencing the corresponding basis state
-
-#     """
-
-#     def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]
-#                          ) -> Optional[float]:
-#         """Interactive call of PyQuest-cffi
-
-#         Args:
-#             qureg: a qureg containing a wavefunction
-#             index: The index either as an int or as a sequence
-#                 of 0 and 1 referencing the corresponding basis state
-
-#         Returns:
-#             Optional[float]
-#         """
-#         if hasattr(index, '__len__'):
-#             index = basis_state_to_index(index)
-#         if qureg.isDensityMatrix:
-#             return None
-#         else:
-#             return quest.getAmp(qureg, index)
-
-
-# class getDensityAmp(_PYQUEST):
-#     r"""
-#     Get an amplitude from a density matrix at a given row and column
-
-#     Args:
-#         qureg: a qureg containing a density matrix
-#         row: row of the desired amplitude in the density matrix
-#         column: column of the desired amplitude in the density matrix
-
-#     """
-
-#     def call_interactive(self, qureg: tqureg, row: int, column: int) -> float:
-#         """Interactive call of PyQuest-cffi
-
-#         Args:
-#             qureg: a qureg containing a density matrix
-#             row: row of the desired amplitude in the density matrix
-#             column: column of the desired amplitude in the density matrix
-
-#         Returns:
-#             float
-#         """
-#         return quest.getDensityAmp(qureg, row, column)
 
 
 class getNumAmps(_PYQUEST):
@@ -408,7 +356,7 @@ class getNumAmps(_PYQUEST):
     Get the number of probability amplitudes in a qureg object, given by 2**number_qubits
 
     Args:
-        qureg: a qureg containing a wavefunction
+        qureg: a qureg containing a wavefunction or a density matrix
 
     """
 
@@ -416,7 +364,7 @@ class getNumAmps(_PYQUEST):
         """Interactive call of PyQuest-cffi
 
         Args:
-            qureg: a qureg containing a wavefunction
+            qureg: a qureg containing a wavefunction or a density matrix
 
         Returns:
             int
@@ -429,7 +377,7 @@ class getNumQubits(_PYQUEST):
     Get the number of qubits in a qureg object
 
     Args:
-        qureg: a qureg containing a wavefunction
+        qureg: a qureg containing a wavefunction or a density matrix
 
     """
 
@@ -437,43 +385,12 @@ class getNumQubits(_PYQUEST):
         """Interactive call of PyQuest-cffi
 
         Args:
-            qureg: a qureg containing a wavefunction
+            qureg: a qureg containing a wavefunction or a density matrix
 
         Returns:
             int
         """
         return quest.getNumQubits(qureg)
-
-
-# class getProbAmp(_PYQUEST):
-#     r"""
-#     Get the probability of a state-vector at an index in the full state vector
-
-#     Args:
-#         qureg: a qureg containing a wavefunction
-#         index: The index either as an int or as a sequence
-#             of 0 and 1 referencing the corresponding basis state
-
-#     """
-
-#     def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]
-#                          ) -> Optional[float]:
-#         """Interactive call of PyQuest-cffi
-
-#         Args:
-#             qureg: a qureg containing a wavefunction
-#             index: The index either as an int or as a sequence
-#                 of 0 and 1 referencing the corresponding basis state
-
-#         Returns:
-#             Optional[float]
-#         """
-#         if hasattr(index, '__len__'):
-#             index = basis_state_to_index(index)
-#         if qureg.isDensityMatrix:
-#             return None
-#         else:
-#             return quest.getProbAmp(qureg, index)
 
 
 class getExpectationValue(_PYQUEST):
@@ -507,9 +424,6 @@ class getDensityMatrix(_PYQUEST):
 
     Args:
         qureg: a qureg containing a wavefunction or density matrix
-        readout: The readout register for static compilation mode
-        number_qubits: The number of qubits in the quantum register, required for compilation mode
-        endianness: The endianness of the returned density matrix for compilation mode
 
     """
 
@@ -542,9 +456,6 @@ class getOccupationProbability(_PYQUEST):
 
     Args:
         qureg: a qureg containing a wavefunction or density matrix
-        readout: The readout register for static compilation mode
-        number_qubits: The number of qubits in the quantum register, required for compilation mode
-        endianness: The endianness of the returned density matrix for compilation mode
 
     """
 
@@ -579,9 +490,6 @@ class getRepeatedMeasurement(_PYQUEST):
         number_measurments: The number of measurement repetitions
         qubits_to_readout_index_dict: The mapping of qubit indices to the readout index
             {qubit_index: readout_index}
-        number_qubits: the number of qubits represendet by qureg, required for compilation mode
-        is_density_matrix: is qureg a statevector or density matrix qureg, r
-            equired for compilation mode
 
     Returns:
         A measurement record 2d numpy array with N columns, one or each qubit
@@ -629,10 +537,6 @@ class getStateVector(_PYQUEST):
 
     Args:
         qureg: a qureg containing a wavefunction
-        readout: The readout register for static compilation
-        number_qubits: the number of qubits represendet by qureg, required for compilation mode
-        is_density_matrix: is qureg a statevector or density matrix qureg, r
-            equired for compilation mode
 
     """
 

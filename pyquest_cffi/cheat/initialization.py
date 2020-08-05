@@ -143,10 +143,52 @@ class initDebugState(_PYQUEST):
         quest.initDebugState(qureg)
 
 
+class initBlankState(_PYQUEST):
+    """Initialise classical zero state
+
+    Args:
+        qureg: qureg that is set to zero
+
+    """
+
+    def call_interactive(self,
+                         qureg: tqureg,
+                         ) -> None:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            qureg: qureg that is set to zero
+        """
+        quest.initBlankState(qureg)
+
+
+class initPauliHamil(_PYQUEST):
+    """Initialise a PauliHamil instance
+
+    Args:
+        pauli_hamil: PauliHamil instance to initialise
+        coeffs: array of coefficients
+        codes: array of Pauli codes
+    """
+
+    def call_interactive(self,
+                         pauli_hamil: paulihamil,
+                         coeffs: List[float],
+                         codes: List[int]) -> None:
+        """Interactive call of PyQuest-cffi
+
+        Args:
+            pauli_hamil: PauliHamil instance to initialise
+            coeffs: array of coefficients
+            codes: array of Pauli codes
+        """
+        quest.initPauliHamil(pauli_hamil, coeffs, codes)
+
+
 class setAmps(_PYQUEST):
     """Set Amplitudes in statevector
 
-    Set the values of elements of the statvector in a quantum register
+    Set the values of elements of the statevector in a quantum register
 
     Args:
         qureg: The quantum register
@@ -237,6 +279,7 @@ class setDensityAmps(_PYQUEST):
             warnings.warn('qureg has to be a density matrix qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
         else:
+            print(type(qureg), type(startind), type(reals), type(imags), type(numamps))
             quest.statevec_setAmps(qureg, startind, reals, imags, numamps)
 
 
@@ -257,11 +300,11 @@ class setWeightedQureg(_PYQUEST):
     """
 
     def call_interactive(self,
-                         fac1: float,
+                         fac1: complex,
                          qureg1: tqureg,
-                         fac2: float,
+                         fac2: complex,
                          qureg2: tqureg,
-                         facout: float,
+                         facout: complex,
                          quregout: tqureg
                          ) -> None:
         """Interactive call of PyQuest-cffi
@@ -274,46 +317,17 @@ class setWeightedQureg(_PYQUEST):
             facout: prefactor of output qureg
             quregout: output qureg
         """
-        quest.setWeightedQureg(fac1, qureg1, fac2, qureg2, facout, quregout)
+        if qureg1.isDensityMatrix and qureg2.isDensityMatrix and quregout.isDensityMatrix:
+            quest.setWeightedQureg((fac1.real, fac1.imag), qureg1,
+                                   (fac2.real, fac2.imag), qureg2,
+                                   (facout.real, facout.imag), quregout)
+        elif (
+            not qureg1.isDensityMatrix and not qureg2.isDensityMatrix and (
+                not quregout.isDensityMatrix)):
+            quest.setWeightedQureg((fac1.real, fac1.imag), qureg1,
+                                   (fac2.real, fac2.imag), qureg2,
+                                   (facout.real, facout.imag), quregout)
+        else:
+            warnings.warn('All three quregs need to be of the same type, so all three '
+                          + 'wavefunctions OR all three density matrices', RuntimeWarning)
 
-
-class initBlankState(_PYQUEST):
-    """Initialise classical zero state
-
-    Args:
-        qureg: qureg that is set to zero
-
-    """
-
-    def call_interactive(self,
-                         qureg: tqureg,
-                         ) -> None:
-        """Interactive call of PyQuest-cffi
-
-        Args:
-            qureg: qureg that is set to zero
-        """
-        quest.initBlankState(qureg)
-
-
-class initPauliHamil(_PYQUEST):
-    """Initialise a PauliHamil instance
-
-    Args:
-        pauli_hamil: PauliHamil instance to initialise
-        coeffs: array of coefficients
-        codes: array of Pauli codes
-    """
-
-    def call_interactive(self,
-                         pauli_hamil: paulihamil,
-                         coeffs: List[float],
-                         codes: List[int]) -> None:
-        """Interactive call of PyQuest-cffi
-
-        Args:
-            pauli_hamil: PauliHamil instance to initialise
-            coeffs: array of coefficients
-            codes: array of Pauli codes
-        """
-        quest.initPauliHamil(pauli_hamil, coeffs, codes)

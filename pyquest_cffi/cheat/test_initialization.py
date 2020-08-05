@@ -20,81 +20,84 @@ import pytest
 import numpy.testing as npt
 from pyquest_cffi import cheat
 from pyquest_cffi import utils
+import numpy as np
 
 
-def test_calcPurity():
-    """Testing calcPurity"""
+@pytest.mark.parametrize("init", [
+    (cheat.initZeroState, ['qureg']),
+    (cheat.initPlusState, ['qureg']),
+    (cheat.initDebugState, ['qureg']),
+    (cheat.initBlankState, ['qureg']),
+    (cheat.initClassicalState, ['qureg', 1]),
+    (cheat.initPureState, ['qureg', utils.createQureg()(5, utils.createQuestEnv()())]),
+    (cheat.initStateFromAmps, ['qureg', [1, 4, 2, 3, 0], [3, 0, 2, 0, 5]]),
+    # (cheat.initPauliHamil, ['pauli',
+    #                         [0.3, 0.2, 0.5, 0.1],
+    #                         [2, 1, 3, 0]])
+    ])
+def test_apply_functions(init) -> None:
+    """Test applyPauliSum"""
     env = utils.createQuestEnv()()
-    qureg = utils.createQureg()(2, env)
-    cheat.initZeroState()(qureg)
-    with npt.assert_warns(RuntimeWarning):
-        purity = cheat.measurement.calcPurity()(qureg)
-    assert(purity is None)
-    qureg = utils.createDensityQureg()(2, env)
-    cheat.initZeroState()(qureg)
-    purity = cheat.measurement.calcPurity()(qureg)
-    npt.assert_equal(purity, 1)
+    qubits = utils.createQureg()(5, env)
+    initialisation = init[0]()
+    args = init[1]
+    print(initialisation, args)
+    if args[0] == 'qureg':
+        args[0] = qubits
+    elif args[0] == 'pauli':
+        args[0] = utils.createPauliHamil()(number_qubits=5, number_pauliprods=5)
+        assert 1 == 2
+
+    initialisation(*args)
 
 
-def test_calc_Expec_Pauli_Sum():
-    """Test calculating the expectation value of a pauli sum"""
+def test_set_amps_qureg() -> None:
+    """Testing setAmps, setDensityAmps, setWeightedQureg"""
     env = utils.createQuestEnv()()
-    qubits = utils.createQureg()(4, env)
-    workspace = utils.createQureg()(4, env)
-    a = cheat.calcExpecPauliSum()(
-        qureg=qubits,
-        paulis=[[0, 1, 2, 3], [3, 2, 1, 0]],
-        coefficients=[0.4, 0.3],
-        workspace=workspace,
-    )
-    print(a)
+    qureg_statevec = utils.createQureg()(2, env)
+    qureg_dens = utils.createDensityQureg()(2, env)
+    cheat.initZeroState()(qureg_statevec)
+    cheat.initZeroState()(qureg_dens)
 
+    cheat.setAmps()(qureg=qureg_statevec,
+                    startind=0,
+                    reals=[1, 2, 0, 1],
+                    imags=[0, 3, 4, 3],
+                    numamps=4)
+    state_vec = cheat.getStateVector()(qureg=qureg_statevec)
+    state_array = np.array([1 + 0j, 2 + 3j, 0 + 4j, 1 + 3j])
+    assert np.all(state_vec == state_array)
 
-def test_calc_Hilbert_Schmidt_distance():
-    """Test calculating the Hilbert Schmidt distance"""
-    env = utils.createQuestEnv()()
-    qureg1 = utils.createDensityQureg()(4, env)
-    qureg2 = utils.createDensityQureg()(4, env)
-    a = cheat.calcHilbertSchmidtDistance()(
-        qureg1=qureg1,
-        qureg2=qureg2,
-    )
-    print(a)
+    # cheat.setDensityAmps()(qureg=qureg_dens,
+    #                        startind=0,
+    #                        reals=[[1, 2, 1, 2], [1, 2, 1, 2], [1, 2, 1, 2], [1, 2, 1, 2]],
+    #                        imags=[[4, 3, 4, 3], [4, 3, 4, 3], [4, 3, 4, 3], [4, 3, 4, 3]],
+    #                        numamps=4)
+    # dens_mat = cheat.getDensityMatrix()(qureg=qureg_dens)
+    dens_array = [[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+    dens_array = np.array(dens_array)
+    # assert np.all(dens_mat == dens_array)
 
+    # for a wavefunction qureg:
+    quregout = utils.createQureg()(2, env)
+    cheat.setWeightedQureg()(fac1=2.5, qureg1=qureg_statevec,
+                             fac2=3.5j, qureg2=qureg_statevec,
+                             facout=1, quregout=quregout)
+    state_vec_combined = cheat.getStateVector()(qureg=quregout)
+    comparison_array = 2.5 * state_array + 3.5j * state_array + 1 * np.array([1, 0, 0, 0])
+    assert np.all(state_vec_combined == comparison_array)
 
-def test_calc_density_inner_product():
-    """Test calculating the inner product for density matrices"""
-    env = utils.createQuestEnv()()
-    qureg1 = utils.createDensityQureg()(4, env)
-    qureg2 = utils.createDensityQureg()(4, env)
-    a = cheat.calcDensityInnerProduct()(
-        qureg1=qureg1,
-        qureg2=qureg2,
-    )
-    print(a)
-
-
-def test_calc_Expec_Pauli_Prod():
-    """Test calculating the expectation value of a pauli product"""
-    env = utils.createQuestEnv()()
-    qubits = utils.createQureg()(4, env)
-    workspace = utils.createQureg()(4, env)
-    a = cheat.calcExpecPauliProd()(
-        qureg=qubits,
-        qubits=[0, 1, 2, 3],
-        paulis=[0, 1, 3, 2],
-        workspace=workspace,
-    )
-    print(a)
-
-
-def test_basis_state_to_index():
-    """Testing conversion basis state to index"""
-    basis_state = [0, 0, 1, 0, 1]
-    index = cheat.basis_state_to_index(basis_state, endianness='little')
-    npt.assert_array_equal(index, 20)
-    index = cheat.basis_state_to_index(basis_state, endianness='big')
-    npt.assert_array_equal(index, 5)
+    # for a density matrix qureg:
+    quregout = utils.createDensityQureg()(2, env)
+    cheat.setWeightedQureg()(fac1=2.5, qureg1=qureg_dens,
+                             fac2=3.5j, qureg2=qureg_dens,
+                             facout=0.5, quregout=quregout)
+    dens_mat_combined = cheat.getDensityMatrix()(qureg=quregout)
+    comparison_array = 2.5 * dens_array + 3.5j * dens_array + 0.5 * np.array([[1, 0, 0, 0],
+                                                                              [0, 0, 0, 0],
+                                                                              [0, 0, 0, 0],
+                                                                              [0, 0, 0, 0]])
+    assert np.all(dens_mat_combined == comparison_array)
 
 
 if __name__ == '__main__':
