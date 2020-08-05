@@ -295,7 +295,7 @@ def test_multiRotateZ() -> None:
     a(qureg, [0, 1, 2], 0.35)
 
 
-def build_one_qubit_matrix(gate, gate_args) -> None:
+def build_one_qubit_matrix(gate, gate_args) -> np.ndarray:
     """Build one qubit matrix for tests"""
     matrix = np.zeros((2, 2), dtype=complex)
     for co, state in enumerate([np.array([1, 0]),
@@ -310,7 +310,7 @@ def build_one_qubit_matrix(gate, gate_args) -> None:
     return matrix
 
 
-def build_two_qubit_matrix(gate, gate_args) -> None:
+def build_two_qubit_matrix(gate, gate_args) -> np.ndarray:
     """Build two qubit matrix for tests"""
     matrix = np.zeros((4, 4), dtype=complex)
     for co, state in enumerate([np.array([1, 0, 0, 0]),
@@ -327,7 +327,7 @@ def build_two_qubit_matrix(gate, gate_args) -> None:
     return matrix
 
 
-def build_two_qubit_matrix_target(gate, gate_args, control=None) -> None:
+def build_two_qubit_matrix_target(gate, gate_args, control=None) -> np.ndarray:
     """Build two qubit matrix for tests"""
     matrix = np.zeros((4, 4), dtype=complex)
     for co, state in enumerate([np.array([1, 0, 0, 0]),
@@ -368,7 +368,7 @@ def build_two_qubit_matrix_target(gate, gate_args, control=None) -> None:
     return matrix
 
 
-def build_two_qubit_matrix_targets(gate, gate_args, control=None) -> None:
+def build_two_qubit_matrix_targets(gate, gate_args, control=None) -> np.ndarray:
     """Build two qubit matrix for tests"""
     matrix = np.zeros((4, 4), dtype=complex)
     for co, state in enumerate([np.array([1, 0, 0, 0]),
@@ -428,7 +428,6 @@ def test_apply_functions(applied) -> None:
     cheat.initZeroState()(qureg=qubits)
     op = applied[0]()
     positional_args = applied[1]
-    print(op, positional_args)
     matrix = np.array([[1, 0, 0, 1], [0, 2, 0, 2], [2, 0, 2, 0], [1, 0, 0, 1]])
     if positional_args[-1] == 'matrix':
         args = [qubits]

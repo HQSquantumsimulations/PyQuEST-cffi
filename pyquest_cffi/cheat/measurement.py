@@ -16,7 +16,7 @@ from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, ffi_quest, qreal, tqu
 import numpy as np
 from typing import Sequence, Optional, Union, List, Tuple
 import warnings
-from pyquest_cffi import utils, cheat
+from pyquest_cffi import cheat
 
 
 class calcFidelity(_PYQUEST):
@@ -718,7 +718,7 @@ class calcExpecDiagonalOp(_PYQUEST):
     def call_interactive(self,
                          qureg: tqureg,
                          operator: Tuple[int, tquestenv],
-                         ) -> float:
+                         ) -> complex:
         """Interactive call of PyQuest-cffi
 
         Args:
@@ -899,14 +899,14 @@ class syncQuESTSuccess(_PYQUEST):
     If any one process has a zero successCode all processes will return a zero success code.
 
     Args:
-        success_code: 1 if process task succeeded, 0 if process task failed 
+        success_code: 1 if process task succeeded, 0 if process task failed
     """
 
     def call_interactive(self, success_code: int) -> int:
         """Interactive call of PyQuest-cffi
 
         Args:
-            success_code: 1 if process task succeeded, 0 if process task failed 
+            success_code: 1 if process task succeeded, 0 if process task failed
 
         Returns:
             int

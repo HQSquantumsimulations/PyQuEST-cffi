@@ -18,7 +18,7 @@ from pyquest_cffi.questlib import (
 )
 import numpy as np
 from typing import Sequence, Optional, Tuple
-from pyquest_cffi import utils, cheat
+from pyquest_cffi import cheat
 import warnings
 
 

@@ -13,9 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import sys
-if '/home/kbark/Programming/PyQuEST-cffi' not in sys.path:
-    sys.path.append('/home/kbark/Programming/PyQuEST-cffi')
-
 import pytest
 import numpy.testing as npt
 from pyquest_cffi import cheat
@@ -31,9 +28,9 @@ import numpy as np
     (cheat.initClassicalState, ['qureg', 1]),
     (cheat.initPureState, ['qureg', utils.createQureg()(5, utils.createQuestEnv()())]),
     (cheat.initStateFromAmps, ['qureg', [1, 4, 2, 3, 0], [3, 0, 2, 0, 5]]),
-    # (cheat.initPauliHamil, ['pauli',
-    #                         [0.3, 0.2, 0.5, 0.1],
-    #                         [2, 1, 3, 0]])
+    (cheat.initPauliHamil, ['pauli',
+                            [0.3, 0.2, 0.5, 0.1],
+                            [[2, 1, 3, 0], [1, 2], [3, 0], [2, 0, 3]]])
     ])
 def test_apply_functions(init) -> None:
     """Test applyPauliSum"""
@@ -73,8 +70,7 @@ def test_set_amps_qureg() -> None:
     #                        imags=[[4, 3, 4, 3], [4, 3, 4, 3], [4, 3, 4, 3], [4, 3, 4, 3]],
     #                        numamps=4)
     # dens_mat = cheat.getDensityMatrix()(qureg=qureg_dens)
-    dens_array = [[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-    dens_array = np.array(dens_array)
+    dens_array = np.array([[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
     # assert np.all(dens_mat == dens_array)
 
     # for a wavefunction qureg:

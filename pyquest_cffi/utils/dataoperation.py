@@ -45,7 +45,6 @@ class destroyQuestEnv(_PYQUEST):
             env: QuEST environment to be deallocated
         """
         quest.destroyQuESTEnv(env)
-        print('destroyed?')
 
 
 class createQureg(_PYQUEST):
@@ -152,6 +151,10 @@ class cloneQureg(_PYQUEST):
         Args:
             qureg_original: Qureg to be cloned
             qureg_clone: Cloned qureg
+
+        Raises:
+            TypeError: The quregs need to be of the same type, so either both density
+                matrices OR both wave functions
         """
         if qureg_clone.isDensityMatrix and qureg_original.isDensityMatrix:
             quest.cloneQureg(qureg_clone, qureg_original)

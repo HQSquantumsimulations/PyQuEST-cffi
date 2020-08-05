@@ -12,9 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Union, List
+from typing import Union, List, Sequence
 import numpy as np
-from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, paulihamil
+from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, paulihamil, ffi_quest, qreal
 import warnings
 
 
@@ -173,8 +173,8 @@ class initPauliHamil(_PYQUEST):
 
     def call_interactive(self,
                          pauli_hamil: paulihamil,
-                         coeffs: List[float],
-                         codes: List[int]) -> None:
+                         coeffs: Sequence[float],
+                         codes: Sequence[Sequence[int]]) -> None:
         """Interactive call of PyQuest-cffi
 
         Args:
@@ -182,10 +182,15 @@ class initPauliHamil(_PYQUEST):
             coeffs: array of coefficients
             codes: array of Pauli codes
         """
-        print(pauli_hamil.numQubits, pauli_hamil.numSumTerms, pauli_hamil.pauliCodes, pauli_hamil.termCoeffs)
-        
-        assert 1 == 2
-        quest.initPauliHamil(pauli_hamil, coeffs, codes)
+        pointer_coeffs = ffi_quest.new("{}[{}]".format(qreal, len(coeffs)))
+        for co, c in enumerate(coeffs):
+            pointer_coeffs[co] = c
+        flat_list = [p for product in codes for p in product]
+        pointer_codes = ffi_quest.new("enum pauliOpType[{}]".format(len(flat_list)))
+        for co, p in enumerate(flat_list):
+            pointer_codes[co] = p
+
+        quest.initPauliHamil(pauli_hamil, pointer_coeffs, pointer_codes)
 
 
 class setAmps(_PYQUEST):
@@ -282,7 +287,6 @@ class setDensityAmps(_PYQUEST):
             warnings.warn('qureg has to be a density matrix qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
         else:
-            print(type(qureg), type(startind), type(reals), type(imags), type(numamps))
             quest.statevec_setAmps(qureg, startind, reals, imags, numamps)
 
 
@@ -333,4 +337,3 @@ class setWeightedQureg(_PYQUEST):
         else:
             warnings.warn('All three quregs need to be of the same type, so all three '
                           + 'wavefunctions OR all three density matrices', RuntimeWarning)
-

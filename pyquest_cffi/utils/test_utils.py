@@ -64,9 +64,10 @@ def test_QuReg() -> None:
     npt.assert_raises(TypeError, utils.cloneQureg(), cloned_qureg, wave_qureg)
 
     to_be_cloned = utils.createDensityQureg()(num_qubits=3, env=env)
+    cheat.initZeroState()(qureg=to_be_cloned)
     clone_into = utils.createDensityQureg()(num_qubits=1, env=env)
-    # utils.cloneQureg()(clone_into, to_be_cloned)
-
+    cheat.initZeroState()(qureg=clone_into)
+    utils.cloneQureg()(clone_into, to_be_cloned)
     assert clone_into.isDensityMatrix == True
 
     result_type_list = ['', '', '']
@@ -92,10 +93,10 @@ def test_QuReg() -> None:
 def test_PauliHamil() -> None:
     """Testing the creation, destruction and reporting of a PauliHamil"""
     env = utils.createQuestEnv()()
-    pauli_hamil = utils.createPauliHamil()(number_qubits=5, number_pauliprods=3)
-    # cheat.initPauliHamil()(pauli_hamil=pauli_hamil,
-    #                        coeffs=[0.1, 0.2, 0.3],
-    #                        codes=[0, 2, 1])
+    pauli_hamil = utils.createPauliHamil()(number_qubits=5, number_pauliprods=1)
+    cheat.initPauliHamil()(pauli_hamil=pauli_hamil,
+                           coeffs=[0.1, 0.2, 0.3],
+                           codes=[[2, 1, 3, 0], [1, 2], [3, 0]])
     utils.reportPauliHamil()(pauli_hamil=pauli_hamil)
     result_type = utils.reportPauliHamil().restype
     argument_type = utils.reportPauliHamil().argtype
