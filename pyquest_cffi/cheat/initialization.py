@@ -1,4 +1,4 @@
-"""Initialization objects in PyQuest-cffi"""
+"""Initialisation objects in PyQuest-cffi"""
 # Copyright 2019 HQS Quantum Simulations GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
