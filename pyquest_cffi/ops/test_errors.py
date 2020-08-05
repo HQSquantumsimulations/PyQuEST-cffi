@@ -31,7 +31,7 @@ from pyquest_cffi import utils
                                       (ops.mixDepolarising, 3 / 4),
                                       (ops.mixDensityMatrix, 1 / 4)])
 def test_one_qubit_errors(prob, gate_def) -> None:
-    """Testing one qubit errors"""
+    """Testing one qubit errors and the mixDensityMatrix error"""
     op = gate_def[0]
     prob = prob * gate_def[1]
     env = utils.createQuestEnv()()

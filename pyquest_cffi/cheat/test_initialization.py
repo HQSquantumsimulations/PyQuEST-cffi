@@ -32,8 +32,12 @@ import numpy as np
                             [0.3, 0.2, 0.5, 0.1],
                             [[2, 1, 3, 0], [1, 2], [3, 0], [2, 0, 3]]])
     ])
-def test_apply_functions(init) -> None:
-    """Test applyPauliSum"""
+def test_init_functions(init) -> None:
+    """Test init functions
+
+    initZeroState, initPlusState, initDebugState, initBlankState, initClassicalState,
+    initPureState, initStateFromAmps, initPauliHamil
+    """
     env = utils.createQuestEnv()()
     qubits = utils.createQureg()(5, env)
     initialisation = init[0]()
@@ -48,7 +52,10 @@ def test_apply_functions(init) -> None:
 
 
 def test_set_amps_qureg() -> None:
-    """Testing setAmps, setDensityAmps, setWeightedQureg"""
+    """Testing set functions
+
+    setAmps, setDensityAmps, setWeightedQureg
+    """
     env = utils.createQuestEnv()()
     qureg_statevec = utils.createQureg()(2, env)
     qureg_dens = utils.createDensityQureg()(2, env)

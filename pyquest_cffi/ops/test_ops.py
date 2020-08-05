@@ -291,8 +291,10 @@ def test_multiRotateZ() -> None:
     """Testing multiRotateZ"""
     env = utils.createQuestEnv()()
     qureg = utils.createQureg()(3, env=env)
-    a = ops.multiRotateZ()
-    a(qureg, [0, 1, 2], 0.35)
+    ops.multiRotateZ()(
+        qureg=qureg,
+        qubits=[0, 1, 2],
+        angle=0.35)
 
 
 def build_one_qubit_matrix(gate, gate_args) -> np.ndarray:
@@ -328,7 +330,7 @@ def build_two_qubit_matrix(gate, gate_args) -> np.ndarray:
 
 
 def build_two_qubit_matrix_target(gate, gate_args, control=None) -> np.ndarray:
-    """Build two qubit matrix for tests"""
+    """Build two qubit matrix with target for tests"""
     matrix = np.zeros((4, 4), dtype=complex)
     for co, state in enumerate([np.array([1, 0, 0, 0]),
                                 np.array([0, 1, 0, 0]),
@@ -369,7 +371,7 @@ def build_two_qubit_matrix_target(gate, gate_args, control=None) -> np.ndarray:
 
 
 def build_two_qubit_matrix_targets(gate, gate_args, control=None) -> np.ndarray:
-    """Build two qubit matrix for tests"""
+    """Build two qubit matrix with multiple targets for tests"""
     matrix = np.zeros((4, 4), dtype=complex)
     for co, state in enumerate([np.array([1, 0, 0, 0]),
                                 np.array([0, 1, 0, 0]),
