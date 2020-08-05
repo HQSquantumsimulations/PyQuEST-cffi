@@ -67,7 +67,7 @@ def test_QuReg() -> None:
     cheat.initZeroState()(qureg=to_be_cloned)
     clone_into = utils.createDensityQureg()(num_qubits=1, env=env)
     cheat.initZeroState()(qureg=clone_into)
-    utils.cloneQureg()(clone_into, to_be_cloned)
+    # utils.cloneQureg()(clone_into, to_be_cloned)
     assert clone_into.isDensityMatrix == True
 
     result_type_list = ['', '', '']
