@@ -16,6 +16,7 @@ from typing import Union, List, Sequence
 import numpy as np
 from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, paulihamil, ffi_quest, qreal
 import warnings
+from pyquest_cffi import cheat
 
 
 class initZeroState(_PYQUEST):
@@ -119,16 +120,49 @@ class initStateFromAmps(_PYQUEST):
             qureg: the quantum register
             reals: The real parts of the statevector
             imags: The imaginary parts of the statevector
+
+        Raises:
+            RuntimeError: Shape of reals and imags for density matrix should be:
+                (2**qubits, 2**qubits) OR (4**qubits, 1)
+            RuntimeError: Need to set real and imaginary amplitudes for each qubit:
+                2**qubits for wavefunction qureg, 4**qubits for density matrix qureg
         """
         reals = list(reals)
         imags = list(imags)
         assert len(reals) == np.max(np.shape(reals))
         assert len(imags) == np.max(np.shape(imags))
-        if qureg.isDensityMatrix:
-            warnings.warn('qureg has to be a wavefunction qureg'
-                          + ' but density matrix qureg was used', RuntimeWarning)
+        size_amps = np.size(np.array(reals))
+        assert size_amps == np.size(np.array(imags))
+        num_qubits = cheat.getNumQubits()(qureg=qureg)
+
+        if size_amps == 2**num_qubits:
+            assert not qureg.isDensityMatrix
+            pointer_reals = ffi_quest.new("{}[{}]".format(qreal, len(reals)))
+            for co, c in enumerate(reals):
+                pointer_reals[co] = c
+            pointer_imags = ffi_quest.new("{}[{}]".format(qreal, len(imags)))
+            for co, c in enumerate(imags):
+                pointer_imags[co] = c
+            quest.initStateFromAmps(qureg, pointer_reals, pointer_imags)
+        elif size_amps == 4**num_qubits:
+            size_amps_rows = np.size(np.array(reals), 0)
+            size_amps_columns = np.size(np.array(reals), 1)
+            assert size_amps_rows == np.size(np.array(imags), 0)
+            assert size_amps_columns == np.size(np.array(imags), 1)
+            assert qureg.isDensityMatrix
+            cheat.initZeroState()(qureg=qureg)
+            if (size_amps_rows == size_amps_columns == 2**num_qubits):
+                cheat.setDensityAmps()(qureg=qureg, reals=reals, imags=imags)
+            elif size_amps_rows == 4**num_qubits:
+                reals = np.array(reals).reshape((2**num_qubits, 2**num_qubits))
+                imags = np.array(imags).reshape((2**num_qubits, 2**num_qubits))
+                cheat.setDensityAmps()(qureg=qureg, reals=reals, imags=imags)
+            else:
+                raise RuntimeError("Shape of reals and imags should be (2**qubits, 2**qubits) OR "
+                                   + "(4**qubits, 1)")
         else:
-            quest.initStateFromAmps(qureg, reals, imags)
+            raise RuntimeError("Need to set real and imaginary amplitudes for each qubit: "
+                               + "2**qubits for wavefunction, 4**qubits for density matrix")
 
 
 class initDebugState(_PYQUEST):
@@ -187,16 +221,28 @@ class initPauliHamil(_PYQUEST):
             pauli_hamil: PauliHamil instance to initialise
             coeffs: array of coefficients
             codes: array of Pauli codes
-        """
-        pointer_coeffs = ffi_quest.new("{}[{}]".format(qreal, len(coeffs)))
-        for co, c in enumerate(coeffs):
-            pointer_coeffs[co] = c
-        flat_list = [p for product in codes for p in product]
-        pointer_codes = ffi_quest.new("enum pauliOpType[{}]".format(len(flat_list)))
-        for co, p in enumerate(flat_list):
-            pointer_codes[co] = p
 
-        quest.initPauliHamil(pauli_hamil, pointer_coeffs, pointer_codes)
+        Raises:
+            RuntimeError: Need one coeff and one set of codes per qubit of PauliHamil and
+                need one term in each set of codes per PauliProduct
+        """
+        num_qubits = pauli_hamil.numQubits
+        num_pauliprods = pauli_hamil.numSumTerms
+
+        if (num_qubits == len(coeffs) == np.size(np.array(codes), 0)
+                and num_pauliprods == np.size(np.array(codes), 1)):
+            pointer_coeffs = ffi_quest.new("{}[{}]".format(qreal, len(coeffs)))
+            for co, c in enumerate(coeffs):
+                pointer_coeffs[co] = c
+            flat_list = [p for product in codes for p in product]
+            pointer_codes = ffi_quest.new("enum pauliOpType[{}]".format(len(flat_list)))
+            for co, p in enumerate(flat_list):
+                pointer_codes[co] = p
+
+            quest.initPauliHamil(pauli_hamil, pointer_coeffs, pointer_codes)
+        else:
+            raise RuntimeError("Need one coeff and one set of codes per qubit of PauliHamil and "
+                               + "need one term in each set of codes per PauliProduct")
 
 
 class setAmps(_PYQUEST):
@@ -257,44 +303,47 @@ class setDensityAmps(_PYQUEST):
 
     Args:
         qureg: The quantum register of a density matrix
-        startind: The index of the first element of the density matrix that is set
         reals: the new real values of the elements of the density matrix
                between startind and startind+numamps
         imags: the new imaginary values of the elements of the density matrix
                between startind and startind+numamps
-        numamps: the number of new values that are set in the density matrix
 
     """
 
     def call_interactive(self,
                          qureg: tqureg,
-                         startind: int,
-                         reals: Union[np.ndarray, List[float]],
-                         imags: Union[np.ndarray, List[float]],
-                         numamps: int
+                         reals: Union[np.ndarray, List[List[float]]],
+                         imags: Union[np.ndarray, List[List[float]]],
                          ) -> None:
         r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: The quantum register of a density matrix
-            startind: The index of the first element of the density matrix that is set
             reals: the new real values of the elements of the density matrix
                 between startind and startind+numamps
             imags: the new imaginary values of the elements of the density matrix
                 between startind and startind+numamps
-            numamps: the number of new values that are set in the density matrix
         """
         reals = list(reals)
         imags = list(imags)
-        assert len(reals) == np.max(np.shape(reals))
-        assert len(imags) == np.max(np.shape(imags))
-        assert len(reals) == numamps
-        assert len(reals) == numamps
+        num_amps = cheat.getNumAmps()(qureg=qureg)
+
         if not qureg.isDensityMatrix:
             warnings.warn('qureg has to be a density matrix qureg'
                           + ' but wavefunction qureg was used', RuntimeWarning)
         else:
-            quest.statevec_setAmps(qureg, startind, reals, imags, numamps)
+            for i in range(num_amps):
+                j = num_amps * i
+                reals_flat = reals[i]
+                imags_flat = imags[i]
+                pointer_reals = ffi_quest.new("{}[{}]".format(qreal, len(reals_flat)))
+                for co, c in enumerate(reals_flat):
+                    pointer_reals[co] = c
+                pointer_imags = ffi_quest.new("{}[{}]".format(qreal, len(imags_flat)))
+                for co, c in enumerate(imags_flat):
+                    pointer_imags[co] = c
+                quest.statevec_setAmps(qureg, j, pointer_reals, pointer_imags, num_amps)
+            # quest.setDensityAmps(qureg, pointer_reals, pointer_imags)  --> not yet in the API
 
 
 class setWeightedQureg(_PYQUEST):

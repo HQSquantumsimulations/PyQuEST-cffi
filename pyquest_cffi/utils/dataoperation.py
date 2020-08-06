@@ -15,6 +15,7 @@
 
 from pyquest_cffi.questlib import quest, _PYQUEST, tquestenv, tqureg, paulihamil
 from typing import List
+from pyquest_cffi import cheat
 
 
 class createQuestEnv(_PYQUEST):
@@ -152,11 +153,18 @@ class cloneQureg(_PYQUEST):
         Raises:
             TypeError: The quregs need to be of the same type, so either both density
                 matrices OR both wave functions
+            ValueError: The quregs need to contain the same number of qubits
         """
         if qureg_clone.isDensityMatrix and qureg_original.isDensityMatrix:
-            quest.cloneQureg(qureg_clone, qureg_original)
+            if cheat.getNumQubits()(qureg=qureg_clone) == cheat.getNumQubits()(qureg=qureg_clone):
+                quest.cloneQureg(qureg_clone, qureg_original)
+            else:
+                raise ValueError("The quregs need to contain the same number of qubits")
         elif not qureg_clone.isDensityMatrix and not qureg_original.isDensityMatrix:
-            quest.cloneQureg(qureg_clone, qureg_original)
+            if cheat.getNumQubits()(qureg=qureg_clone) == cheat.getNumQubits()(qureg=qureg_clone):
+                quest.cloneQureg(qureg_clone, qureg_original)
+            else:
+                raise ValueError("The quregs need to contain the same number of qubits")
         else:
             raise TypeError("The quregs need to be of the same type, so either both "
                             + "density matrices OR both wave functions")
@@ -181,6 +189,8 @@ class createPauliHamil(_PYQUEST):
         Returns:
             PauliHamil: created Pauli Hamiltonian
         """
+        assert number_qubits > 0
+        assert number_pauliprods > 0
         return quest.createPauliHamil(number_qubits, number_pauliprods)
 
 

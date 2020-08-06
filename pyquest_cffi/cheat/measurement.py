@@ -576,8 +576,12 @@ class getEnvironmentString(_PYQUEST):
             env: object representing the execution environment
             qureg: quantum register of which to query the simulating hardware
             string: string to be populated with the output string
+
+        Raises:
+            NotImplementedError: Function added to QuEST.h but not QuEST.c
         """
-        quest.getEnvironmentString(env, qureg, string)
+        # quest.getEnvironmentString(env, qureg, string)
+        raise NotImplementedError("Function added to QuEST.h but not QuEST.c")
 
 
 class calcExpecPauliSum(_PYQUEST):
@@ -666,10 +670,10 @@ class calcExpecPauliProd(_PYQUEST):
             float
 
         Raises:
-            RuntimeError: ''
+            RuntimeError: 'Need the number of qubits and pauli products to be equal'
         """
         if not len(qubits) == len(paulis):
-            raise RuntimeError("")
+            raise RuntimeError("Need the number of qubits and pauli products to be equal")
         flat_list = [p for p in paulis]
         pointer_paulis = ffi_quest.new("enum pauliOpType[{}]".format(len(flat_list)))
         for co, p in enumerate(flat_list):

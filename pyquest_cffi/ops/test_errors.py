@@ -39,9 +39,8 @@ def test_one_qubit_errors(prob, gate_def) -> None:
     state = np.random.random((2, 1)) + 1j * np.random.random((2, 1))
     state = state / np.linalg.norm(state)
     state_dm = state @ state.conjugate().T
-    state_dm = state_dm.reshape((4, 1))
-    cheat.setDensityAmps()(dm, startind=0,
-                           reals=np.real(state_dm), imags=np.imag(state_dm), numamps=4)
+    cheat.setDensityAmps()(dm,
+                           reals=np.real(state_dm), imags=np.imag(state_dm))
     if gate_def[1] == 1 / 4:
         dm_other = utils.createDensityQureg()(1, env)
         op()(qureg=dm, probability=prob, qureg_other=dm_other)
@@ -49,6 +48,7 @@ def test_one_qubit_errors(prob, gate_def) -> None:
         op()(qureg=dm, qubit=0, probability=prob)
     try:
         superop = op().superoperator_matrix(probability=prob)
+        state_dm = state_dm.reshape((4, 1))
         end_matrix = (superop @ state_dm).reshape((2, 2), order='F')
         matrix = cheat.getDensityMatrix()(dm)
         npt.assert_array_almost_equal(matrix, end_matrix)
@@ -75,7 +75,6 @@ def test_two_qubit_errors(prob, gate_def) -> None:
     cheat.initStateFromAmps()(dm,
                               reals=np.real(state_dm),
                               imags=np.imag(state_dm))
-
     op()(qureg=dm, qubit1=0, qubit2=1, probability=prob)
 
 

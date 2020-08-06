@@ -45,13 +45,16 @@ def test_QuReg() -> None:
     cloned_qureg = utils.createCloneQureg()(qureg=density_qureg, env=env)
     cheat.initZeroState()(qureg=cloned_qureg)
 
-    # [wave_string, density_string, cloned_string] = ['', '', '']
-    # cheat.getEnvironmentString()(env=env, qureg=wave_qureg, string=wave_string)
-    # cheat.getEnvironmentString()(env=env, qureg=density_qureg, string=density_string)
-    # cheat.getEnvironmentString()(env=env, qureg=cloned_qureg, string=cloned_string)
-    # assert cloned_string == density_string
-    # cheat.getEnvironmentString()(env=env, qureg=cloned_qureg, string=cloned_string)
-    # assert cloned_string == wave_string
+    try:
+        [wave_string, density_string, cloned_string] = ['', '', '']
+        cheat.getEnvironmentString()(env=env, qureg=wave_qureg, string=wave_string)
+        cheat.getEnvironmentString()(env=env, qureg=density_qureg, string=density_string)
+        cheat.getEnvironmentString()(env=env, qureg=cloned_qureg, string=cloned_string)
+        assert cloned_string == density_string
+        cheat.getEnvironmentString()(env=env, qureg=cloned_qureg, string=cloned_string)
+        assert cloned_string == wave_string
+    except NotImplementedError:
+        pass  # getEnvironmentString unittest not implemented
 
     assert wave_qureg.isDensityMatrix == False
     assert density_qureg.isDensityMatrix == True
@@ -65,13 +68,13 @@ def test_QuReg() -> None:
 
     to_be_cloned = utils.createDensityQureg()(num_qubits=3, env=env)
     cheat.initZeroState()(qureg=to_be_cloned)
-    clone_into = utils.createDensityQureg()(num_qubits=1, env=env)
+    clone_into = utils.createDensityQureg()(num_qubits=3, env=env)
     cheat.initZeroState()(qureg=clone_into)
-    # utils.cloneQureg()(clone_into, to_be_cloned)
+    utils.cloneQureg()(clone_into, to_be_cloned)
     assert clone_into.isDensityMatrix == True
 
     result_type_list = ['', '', '']
-    argument_type_list = ['', '', '']
+    argument_type_list = [[''], [''], ['']]
     for qureg in [wave_qureg, density_qureg, cloned_qureg]:
         utils.reportQuregParams()(qureg=qureg)
         utils.reportState()(qureg=qureg)
@@ -93,10 +96,10 @@ def test_QuReg() -> None:
 def test_PauliHamil() -> None:
     """Testing the creation, destruction and reporting of a PauliHamil"""
     env = utils.createQuestEnv()()
-    pauli_hamil = utils.createPauliHamil()(number_qubits=5, number_pauliprods=1)
+    pauli_hamil = utils.createPauliHamil()(number_qubits=5, number_pauliprods=3)
     cheat.initPauliHamil()(pauli_hamil=pauli_hamil,
-                           coeffs=[0.1, 0.2, 0.3],
-                           codes=[[2, 1, 3, 0], [1, 2], [3, 0]])
+                           coeffs=[0.1, 0.2, 0.3, 0.2, 0.4],
+                           codes=[[2, 1, 3], [1, 2, 0], [3, 0, 0], [3, 0, 0], [3, 0, 0]])
     utils.reportPauliHamil()(pauli_hamil=pauli_hamil)
     result_type = utils.reportPauliHamil().restype
     argument_type = utils.reportPauliHamil().argtype

@@ -338,8 +338,11 @@ def build_two_qubit_matrix_target(gate, gate_args, control=None) -> np.ndarray:
                                 np.array([0, 0, 0, 1]), ]):
         env = utils.createQuestEnv()()
         if control is None:
-            qubits = utils.createQureg()(3, env)
-            cheat.initStateFromAmps()(qubits, np.real(state), np.imag(state))
+            qubits = utils.createQureg()(2, env)
+            cheat.initStateFromAmps()(
+                qubits,
+                np.real(state),
+                np.imag(state))
             gate()(qureg=qubits, target_qubit_1=0, target_qubit_2=1, **gate_args)
         elif control is True:
             qubits = utils.createQureg()(3, env)

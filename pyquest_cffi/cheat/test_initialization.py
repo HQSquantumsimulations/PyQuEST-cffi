@@ -26,11 +26,11 @@ import numpy as np
     (cheat.initDebugState, ['qureg']),
     (cheat.initBlankState, ['qureg']),
     (cheat.initClassicalState, ['qureg', 1]),
-    (cheat.initPureState, ['qureg', utils.createQureg()(5, utils.createQuestEnv()())]),
-    (cheat.initStateFromAmps, ['qureg', [1, 4, 2, 3, 0], [3, 0, 2, 0, 5]]),
+    (cheat.initPureState, ['qureg', utils.createQureg()(3, utils.createQuestEnv()())]),
+    (cheat.initStateFromAmps, ['qureg', [1, 4, 2, 3, 0, 7, 6, 3], [9, 2, 3, 3, 0, 2, 0, 5]]),
     (cheat.initPauliHamil, ['pauli',
-                            [0.3, 0.2, 0.5, 0.1],
-                            [[2, 1, 3, 0], [1, 2], [3, 0], [2, 0, 3]]])
+                            [0.3, 0.2, 0.5],
+                            [[2, 1, 0], [1, 2, 0], [2, 0, 3]]])
     ])
 def test_init_functions(init) -> None:
     """Test init functions
@@ -39,14 +39,14 @@ def test_init_functions(init) -> None:
     initPureState, initStateFromAmps, initPauliHamil
     """
     env = utils.createQuestEnv()()
-    qubits = utils.createQureg()(5, env)
+    qubits = utils.createQureg()(3, env)
     initialisation = init[0]()
     args = init[1]
 
     if args[0] == 'qureg':
         args[0] = qubits
     elif args[0] == 'pauli':
-        args[0] = utils.createPauliHamil()(number_qubits=5, number_pauliprods=1)
+        args[0] = utils.createPauliHamil()(number_qubits=3, number_pauliprods=3)
 
     initialisation(*args)
 
@@ -71,14 +71,15 @@ def test_set_amps_qureg() -> None:
     state_array = np.array([1 + 0j, 2 + 3j, 0 + 4j, 1 + 3j])
     assert np.all(state_vec == state_array)
 
-    # cheat.setDensityAmps()(qureg=qureg_dens,
-    #                        startind=0,
-    #                        reals=[[1, 2, 1, 2], [1, 2, 1, 2], [1, 2, 1, 2], [1, 2, 1, 2]],
-    #                        imags=[[4, 3, 4, 3], [4, 3, 4, 3], [4, 3, 4, 3], [4, 3, 4, 3]],
-    #                        numamps=4)
-    # dens_mat = cheat.getDensityMatrix()(qureg=qureg_dens)
-    dens_array = np.array([[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
-    # assert np.all(dens_mat == dens_array)
+    cheat.setDensityAmps()(qureg=qureg_dens,
+                           reals=[[1, 2, 1, 2], [0, 1, 0, 1], [1, 0, 1, 0], [2, 1, 2, 1]],
+                           imags=[[4, 3, 4, 3], [3, 2, 3, 2], [2, 3, 2, 3], [3, 4, 3, 4]],)
+    dens_mat = cheat.getDensityMatrix()(qureg=qureg_dens)
+    dens_array = np.array([[1 + 4j, 2 + 3j, 1 + 4j, 2 + 3j],
+                           [3j, 1 + 2j, 3j, 1 + 2j],
+                           [1 + 2j, 3j, 1 + 2j, 3j],
+                           [2 + 3j, 1 + 4j, 2 + 3j, 1 + 4j]]).T
+    assert np.all(dens_mat == dens_array)
 
     # for a wavefunction qureg:
     quregout = utils.createQureg()(2, env)
