@@ -19,7 +19,6 @@ from pyquest_cffi.questlib import (
 import numpy as np
 from typing import Sequence, Optional, Tuple
 from pyquest_cffi import cheat
-import warnings
 
 
 class hadamard(_PYQUEST):
@@ -2260,11 +2259,14 @@ class applyDiagonalOp(_PYQUEST):
             qureg: quantum register
             operator: operator acting on a certain number of qubits (operator[0]: int)
                 and in a certain QuEST environment (operator[1]: tquestenv)
+
+        Raises:
+            RuntimeError: Qureg and DiagonalOp must be defined for the same number of qubits
         """
         diagonal_op = quest.createDiagonalOp(operator[0], operator[1])
         if not (cheat.getNumQubits()(qureg=qureg) == diagonal_op.numQubits):
-            warnings.warn('Qureg and DiagonalOp must be defined for the '
-                          + 'same number of qubits', RuntimeWarning)
+            raise RuntimeError("Qureg and DiagonalOp must be defined for the "
+                               + "same number of qubits")
         quest.applyDiagonalOp(qureg, diagonal_op)
         quest.destroyDiagonalOp(diagonal_op, operator[1])
 
@@ -2558,10 +2560,13 @@ class applyPauliHamil(_PYQUEST):
             qureg: quantum register
             pauli_hamil: PauliHamil instance to be applied
             qureg_out: quantum register after application of Pauli sum
+
+        Raises:
+            RuntimeError: Qureg and PauliHamil must be defined for the same number of qubits
         """
         if not (cheat.getNumQubits()(qureg=qureg) == pauli_hamil.numQubits):
-            warnings.warn('Qureg and PauliHamil must be defined for the '
-                          + 'same number of qubits', RuntimeWarning)
+            raise RuntimeError("Qureg and PauliHamil must be defined for the "
+                               + "same number of qubits")
         quest.applyPauliHamil(qureg,
                               pauli_hamil,
                               qureg_out)

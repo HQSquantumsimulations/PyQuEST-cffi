@@ -31,7 +31,7 @@ def test_calc_simple() -> None:
     qureg_main = utils.createQureg()(2, env)
     cheat.initZeroState()(qureg)
 
-    with npt.assert_warns(RuntimeWarning):
+    with npt.assert_raises(RuntimeError):
         purity = cheat.calcPurity()(qureg)
         density_inner_product = cheat.calcDensityInnerProduct()(qureg1=qureg,
                                                                             qureg2=qureg_main)
@@ -42,17 +42,15 @@ def test_calc_simple() -> None:
     prob_of_outcome = cheat.calcProbOfOutcome()(qureg, 1, 0)
     total_prob = cheat.calcTotalProb()(qureg)
 
-    assert purity is None
     assert fidelity == 1
     assert (inner_product.real == 1 and inner_product.imag == 0)
     assert prob_of_outcome == 1.0
     assert total_prob == 1
-    assert density_inner_product is None
 
     qureg = utils.createDensityQureg()(2, env)
     cheat.initZeroState()(qureg)
 
-    with npt.assert_warns(RuntimeWarning):
+    with npt.assert_raises(RuntimeError):
         fidelity = cheat.calcFidelity()(qureg=qureg_main,
                                                     qureg_reference=qureg)
         inner_product_1 = cheat.calcInnerProduct()(qureg1=qureg,
@@ -72,12 +70,8 @@ def test_calc_simple() -> None:
     total_prob = cheat.calcTotalProb()(qureg)
 
     assert purity == 1
-    assert fidelity is None
-    for inner_product in [inner_product_1, inner_product_2, inner_product_3]:
-        assert inner_product is None
     assert prob_of_outcome == 1.0
     assert total_prob == 1
-    assert [density_inner_product_1, density_inner_product_2] == [None, None]
     assert density_inner_product_3 == 1
 
 
@@ -93,7 +87,7 @@ def test_get_simple() -> None:
     index = 1
     operator_matrix = np.array([[1, 0, 2, 0], [0, 1, 0, 2], [0, 2, 0, 1], [2, 0, 1, 0]])
 
-    with npt.assert_warns(RuntimeWarning):
+    with npt.assert_raises(RuntimeError):
         density_matrix = cheat.getDensityAmp()(qureg=qureg, row=1, column=1)
     state_vec = cheat.getAmp()(qureg=qureg, index=index)
     abs_val_state_vec = cheat.getProbAmp()(qureg=qureg, index=1)
@@ -105,7 +99,6 @@ def test_get_simple() -> None:
                                             operator_matrix=operator_matrix)
 
     assert state_vec == 0
-    assert density_matrix is None
     assert abs_val_state_vec == 0
     assert real_val_sate_vec == 0
     assert imag_val_sate_vec == 0
@@ -116,7 +109,7 @@ def test_get_simple() -> None:
     qureg = utils.createDensityQureg()(2, env)
     cheat.initZeroState()(qureg)
 
-    with npt.assert_warns(RuntimeWarning):
+    with npt.assert_raises(RuntimeError):
         state_vec = cheat.getAmp()(qureg=qureg, index=index)
         abs_val_state_vec = cheat.getProbAmp()(qureg=qureg, index=1)
         real_val_sate_vec = cheat.getRealAmp()(qureg=qureg, index=1)
@@ -127,11 +120,7 @@ def test_get_simple() -> None:
     expec_val = cheat.getExpectationValue()(qureg=qureg,
                                             operator_matrix=operator_matrix)
 
-    assert state_vec is None
     assert density_matrix == 0
-    assert abs_val_state_vec is None
-    assert real_val_sate_vec is None
-    assert imag_val_sate_vec is None
     assert num_amps == 4
     assert num_qubits == 2
     assert expec_val == 1

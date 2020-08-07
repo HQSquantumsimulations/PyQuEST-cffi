@@ -14,8 +14,7 @@
 # limitations under the License.
 from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, ffi_quest, qreal, tquestenv, paulihamil
 import numpy as np
-from typing import Sequence, Optional, Union, List, Tuple
-import warnings
+from typing import Sequence, Union, List, Tuple
 from pyquest_cffi import cheat
 
 
@@ -38,7 +37,7 @@ class calcFidelity(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg, qureg_reference: tqureg) -> Optional[float]:
+    def call_interactive(self, qureg: tqureg, qureg_reference: tqureg) -> float:
         r"""Interactive call of PyQuest-cffi
 
         Args:
@@ -46,14 +45,17 @@ class calcFidelity(_PYQUEST):
             qureg_reference: a qureg containing a wavefunction
 
         Returns:
-            Optional[float]
+            float
+
+        Raises:
+            RuntimeError: Reference qureg has to be a wavefunction qureg
+                but density matrix qureg was used
         """
         if not qureg_reference.isDensityMatrix:
             return quest.calcFidelity(qureg, qureg_reference)
         else:
-            warnings.warn('reference qureg has to be a wavefunction qureg'
-                          + ' but density matrix qureg was used', RuntimeWarning)
-            return None
+            raise RuntimeError("Reference qureg has to be a wavefunction qureg but "
+                               + "density matrix qureg was used")
 
 
 class calcInnerProduct(_PYQUEST):
@@ -70,7 +72,7 @@ class calcInnerProduct(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg1: tqureg, qureg2: tqureg) -> Optional[float]:
+    def call_interactive(self, qureg1: tqureg, qureg2: tqureg) -> float:
         r"""Interactive call of PyQuest-cffi
 
         Args:
@@ -78,18 +80,20 @@ class calcInnerProduct(_PYQUEST):
             qureg2: a qureg containing a wavefunction
 
         Returns:
-            Optional[float]
+            float
+
+        Raises:
+            RuntimeError: Qureg1 has to be a wavefunction qureg but density matrix qureg was used
+            RuntimeError: Qureg2 has to be a wavefunction qureg but density matrix qureg was used
         """
         if qureg1.isDensityMatrix:
-            warnings.warn('qureg1 has to be a wavefunction qureg'
-                          + ' but density matrix qureg was used', RuntimeWarning)
-            return None
+            raise RuntimeError("Qureg1 has to be a wavefunction qureg but "
+                               + "density matrix qureg was used")
         elif qureg2.isDensityMatrix:
-            warnings.warn('qureg2 has to be a wavefunction qureg'
-                          + ' but density matrix qureg was used', RuntimeWarning)
-            return None
-        else:
-            return quest.calcInnerProduct(qureg1, qureg2)
+            raise RuntimeError("Qureg2 has to be a wavefunction qureg but "
+                               + "density matrix qureg was used")
+
+        return quest.calcInnerProduct(qureg1, qureg2)
 
 
 class calcProbOfOutcome(_PYQUEST):
@@ -130,21 +134,23 @@ class calcPurity(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg) -> Optional[float]:
+    def call_interactive(self, qureg: tqureg) -> float:
         r"""Interactive call of PyQuest-cffi
 
         Args:
             qureg: a qureg containing a density matrix
 
         Returns:
-            Optional[float]
+            float
+
+        Raises:
+            RuntimeError: Qureg has to be a density matrix qureg but wavefunction qureg was used
         """
         if qureg.isDensityMatrix:
             return quest.calcPurity(qureg)
         else:
-            warnings.warn('qureg has to be a density matrix qureg'
-                          + ' but wavefunction qureg was used', RuntimeWarning)
-            return None
+            raise RuntimeError("Qureg has to be a density matrix qureg but "
+                               + "wavefunction qureg was used")
 
 
 class calcTotalProb(_PYQUEST):
@@ -182,7 +188,7 @@ class getStateVectoratIndex(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> Optional[float]:
+    def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> float:
         r"""Interactive call of PyQuest-cffi
 
         Args:
@@ -191,17 +197,19 @@ class getStateVectoratIndex(_PYQUEST):
                 of 0 and 1 referencing the corresponding basis state
 
         Returns:
-            Optional[float]
+            float
+
+        Raises:
+            RuntimeError: Qureg has to be a wavefunction qureg but density matrix qureg was used
         """
         if hasattr(index, '__len__'):
             index = basis_state_to_index(index)
         if qureg.isDensityMatrix:
-            warnings.warn('qureg has to be a wavefunction qureg'
-                          + ' but density matrix qureg was used', RuntimeWarning)
-            return None
-        else:
-            cComplex = quest.getAmp(qureg, index)
-            return cComplex.real + 1j * cComplex.imag
+            raise RuntimeError("Qureg has to be a wavefunction qureg but "
+                               + "density matrix qureg was used")
+
+        cComplex = quest.getAmp(qureg, index)
+        return cComplex.real + 1j * cComplex.imag
 
 
 getAmp = getStateVectoratIndex
@@ -222,7 +230,7 @@ class getDensityMatrixatRowColumn(_PYQUEST):
 
     def call_interactive(self, qureg: tqureg,
                          row: Union[int, Sequence[int]],
-                         column: Union[int, Sequence[int]]) -> Optional[float]:
+                         column: Union[int, Sequence[int]]) -> float:
         r"""Interactive call of PyQuest-cffi
 
         Args:
@@ -233,7 +241,10 @@ class getDensityMatrixatRowColumn(_PYQUEST):
                 of 0 and 1 referencing the corresponding basis state
 
         Returns:
-            Optional[float]
+            float
+
+        Raises:
+            RuntimeError: Qureg has to be a density matrix qureg but wavefunction qureg was used
         """
         if hasattr(row, '__len__'):
             row = basis_state_to_index(row)
@@ -243,9 +254,8 @@ class getDensityMatrixatRowColumn(_PYQUEST):
             cComplex = quest.getDensityAmp(qureg, row, column)
             return cComplex.real + 1j * cComplex.imag
         else:
-            warnings.warn('qureg has to be a density matrix qureg'
-                          + ' but wavefunction qureg was used', RuntimeWarning)
-            return None
+            raise RuntimeError("Qureg has to be a density matrix qureg but "
+                               + "wavefunction qureg was used")
 
 
 getDensityAmp = getDensityMatrixatRowColumn
@@ -261,7 +271,7 @@ class getAbsoluteValSquaredatIndex(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> Optional[float]:
+    def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> float:
         r"""Interactive call of PyQuest-cffi
 
         Args:
@@ -270,16 +280,18 @@ class getAbsoluteValSquaredatIndex(_PYQUEST):
                 of 0 and 1 referencing the corresponding basis state
 
         Returns:
-            Optional[float]
+            float
+
+        Raises:
+            RuntimeError: Qureg has to be a wavefunction qureg but density matrix qureg was used
         """
         if hasattr(index, '__len__'):
             index = basis_state_to_index(index)
         if qureg.isDensityMatrix:
-            warnings.warn('qureg has to be a wavefunction qureg'
-                          + ' but density matrix qureg was used', RuntimeWarning)
-            return None
-        else:
-            return quest.getProbAmp(qureg, index)
+            raise RuntimeError("Qureg has to be a wavefunction qureg but "
+                               + "density matrix qureg was used")
+
+        return quest.getProbAmp(qureg, index)
 
 
 getProbAmp = getAbsoluteValSquaredatIndex
@@ -296,7 +308,7 @@ class getRealAmp(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> Optional[float]:
+    def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> float:
         r"""Interactive call of PyQuest-cffi
 
         Args:
@@ -305,16 +317,18 @@ class getRealAmp(_PYQUEST):
                 of 0 and 1 referencing the corresponding basis state
 
         Returns:
-            Optional[float]
+            float
+
+        Raises:
+            RuntimeError: Qureg has to be a wavefunction qureg but density matrix qureg was used
         """
         if hasattr(index, '__len__'):
             index = basis_state_to_index(index)
         if qureg.isDensityMatrix:
-            warnings.warn('qureg has to be a wavefunction qureg'
-                          + ' but density matrix qureg was used', RuntimeWarning)
-            return None
-        else:
-            return quest.getRealAmp(qureg, index)
+            raise RuntimeError("Qureg has to be a wavefunction qureg but "
+                               + "density matrix qureg was used")
+
+        return quest.getRealAmp(qureg, index)
 
 
 class getImagAmp(_PYQUEST):
@@ -328,7 +342,7 @@ class getImagAmp(_PYQUEST):
 
     """
 
-    def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> Optional[float]:
+    def call_interactive(self, qureg: tqureg, index: Union[int, Sequence[int]]) -> float:
         r"""Interactive call of PyQuest-cffi
 
         Args:
@@ -337,16 +351,18 @@ class getImagAmp(_PYQUEST):
                 of 0 and 1 referencing the corresponding basis state
 
         Returns:
-            Optional[float]
+            float
+
+        Raises:
+            RuntimeError: Qureg has to be a wavefunction qureg but density matrix qureg was used
         """
         if hasattr(index, '__len__'):
             index = basis_state_to_index(index)
         if qureg.isDensityMatrix:
-            warnings.warn('qureg has to be a wavefunction qureg'
-                          + ' but density matrix qureg was used', RuntimeWarning)
-            return None
-        else:
-            return quest.getImagAmp(qureg, index)
+            raise RuntimeError("Qureg has to be a wavefunction qureg but "
+                               + "density matrix qureg was used")
+
+        return quest.getImagAmp(qureg, index)
 
 
 class getNumAmps(_PYQUEST):
@@ -543,13 +559,16 @@ class getStateVector(_PYQUEST):
 
         Returns:
             np.ndarray
+
+        Raises:
+            RuntimeError: Reference qureg has to be a wavefunction qureg
+                but density matrix qureg was used
         """
         N = qureg.numQubitsRepresented
         state_vec = np.zeros((2**N,), dtype=np.complex)
         if qureg.isDensityMatrix:
-            warnings.warn('reference qureg has to be a wavefunction qureg'
-                          + ' but density matrix qureg was used', RuntimeWarning)
-            return None
+            raise RuntimeError("Reference qureg has to be a wavefunction qureg but "
+                               + "density matrix qureg was used")
         else:
             for index in range(2**N):
                 state_vec[index] = getStateVectoratIndex()(qureg, index)
@@ -670,7 +689,7 @@ class calcExpecPauliProd(_PYQUEST):
             float
 
         Raises:
-            RuntimeError: 'Need the number of qubits and pauli products to be equal'
+            RuntimeError: Need the number of qubits and pauli products to be equal
         """
         if not len(qubits) == len(paulis):
             raise RuntimeError("Need the number of qubits and pauli products to be equal")
@@ -747,10 +766,13 @@ class calcExpecPauliHamil(_PYQUEST):
 
         Returns:
             float
+
+        Raises:
+            RuntimeError: Qureg and PauliHamil must be defined for the same number of qubits
         """
         if not (cheat.getNumQubits()(qureg=qureg) == pauli_hamil.numQubits):
-            warnings.warn('Qureg and PauliHamil must be defined for the '
-                          + 'same number of qubits', RuntimeWarning)
+            raise RuntimeError("Qureg and PauliHamil must be defined for the "
+                               + "same number of qubits")
         return quest.calcExpecPauliHamil(qureg,
                                          pauli_hamil,
                                          workspace)
@@ -795,7 +817,7 @@ class calcDensityInnerProduct(_PYQUEST):
     def call_interactive(self,
                          qureg1: tqureg,
                          qureg2: tqureg
-                         ) -> Optional[float]:
+                         ) -> float:
         r"""Interactive call of PyQuest-cffi
 
         Args:
@@ -803,19 +825,21 @@ class calcDensityInnerProduct(_PYQUEST):
             qureg2: first quantum register
 
         Returns:
-            Optional[float]
+            float
+
+        Raises:
+            RuntimeError: Qureg1 has to be a density matrix qureg but wavefunction qureg was used
+            RuntimeError: Qureg2 has to be a density matrix qureg but wavefunction qureg was used
         """
         if not qureg1.isDensityMatrix:
-            warnings.warn('qureg1 has to be a density matrix qureg'
-                          + ' but wavefunction qureg was used', RuntimeWarning)
-            return None
+            raise RuntimeError("Qureg1 has to be a density matrix qureg but "
+                               + "wavefunction qureg was used")
         elif not qureg2.isDensityMatrix:
-            warnings.warn('qureg2 has to be a density matrix qureg'
-                          + ' but wavefunction qureg was used', RuntimeWarning)
-            return None
-        else:
-            return quest.calcDensityInnerProduct(qureg1,
-                                                 qureg2)
+            raise RuntimeError("Qureg2 has to be a density matrix qureg but "
+                               + "wavefunction qureg was used")
+
+        return quest.calcDensityInnerProduct(qureg1,
+                                             qureg2)
 
 
 class seedQuEST(_PYQUEST):

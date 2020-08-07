@@ -15,7 +15,6 @@
 from typing import Union, List, Sequence
 import numpy as np
 from pyquest_cffi.questlib import quest, _PYQUEST, tqureg, paulihamil, ffi_quest, qreal
-import warnings
 from pyquest_cffi import cheat
 
 
@@ -122,6 +121,10 @@ class initStateFromAmps(_PYQUEST):
             imags: The imaginary parts of the statevector
 
         Raises:
+            RuntimeError: Size of reals and imags needs to match
+            RuntimeError: Shape of reals and imags for wavefunction should be: (1, 2**qubits)
+            RuntimeError: Shape of reals and imags for density matrix should be:
+                (2**qubits, 2**qubits) OR (4**qubits, 1)
             RuntimeError: Shape of reals and imags for density matrix should be:
                 (2**qubits, 2**qubits) OR (4**qubits, 1)
             RuntimeError: Need to set real and imaginary amplitudes for each qubit:
@@ -132,11 +135,14 @@ class initStateFromAmps(_PYQUEST):
         assert len(reals) == np.max(np.shape(reals))
         assert len(imags) == np.max(np.shape(imags))
         size_amps = np.size(np.array(reals))
-        assert size_amps == np.size(np.array(imags))
+        if not size_amps == np.size(np.array(imags)):
+            raise RuntimeError("Size of reals and imags needs to match")
         num_qubits = cheat.getNumQubits()(qureg=qureg)
 
         if size_amps == 2**num_qubits:
-            assert not qureg.isDensityMatrix
+            if qureg.isDensityMatrix:
+                raise RuntimeError("Shape of reals and imags for wavefunction should be: "
+                                   + "(1, 2**qubits)")
             pointer_reals = ffi_quest.new("{}[{}]".format(qreal, len(reals)))
             for co, c in enumerate(reals):
                 pointer_reals[co] = c
@@ -145,11 +151,14 @@ class initStateFromAmps(_PYQUEST):
                 pointer_imags[co] = c
             quest.initStateFromAmps(qureg, pointer_reals, pointer_imags)
         elif size_amps == 4**num_qubits:
+            if not qureg.isDensityMatrix:
+                raise RuntimeError("Shape of reals and imags for density matrix should be:"
+                                   + "(2**qubits, 2**qubits) OR (4**qubits, 1)")
             size_amps_rows = np.size(np.array(reals), 0)
             size_amps_columns = np.size(np.array(reals), 1)
-            assert size_amps_rows == np.size(np.array(imags), 0)
-            assert size_amps_columns == np.size(np.array(imags), 1)
-            assert qureg.isDensityMatrix
+            if (not (size_amps_rows == np.size(np.array(imags), 0))
+                    or not (size_amps_columns == np.size(np.array(imags), 1))):
+                raise RuntimeError("Size of reals and imags needs to match")
             cheat.initZeroState()(qureg=qureg)
             if (size_amps_rows == size_amps_columns == 2**num_qubits):
                 cheat.setDensityAmps()(qureg=qureg, reals=reals, imags=imags)
@@ -278,6 +287,9 @@ class setAmps(_PYQUEST):
             imags: the new imaginary values of the elements of the statevector
                 between startind and startind+numamps
             numamps: the number of new values that are set in the statevector
+
+        Raises:
+            RuntimeError: Qureg has to be a wavefunction qureg but density matrix qureg was used
         """
         reals = list(reals)
         imags = list(imags)
@@ -286,10 +298,10 @@ class setAmps(_PYQUEST):
         assert len(reals) == numamps
         assert len(reals) == numamps
         if qureg.isDensityMatrix:
-            warnings.warn('qureg has to be a wavefunction qureg'
-                          + ' but density matrix qureg was used', RuntimeWarning)
-        else:
-            quest.setAmps(qureg, startind, reals, imags, numamps)
+            raise RuntimeError("Qureg has to be a wavefunction qureg but "
+                               + "density matrix qureg was used")
+
+        quest.setAmps(qureg, startind, reals, imags, numamps)
 
 
 # can't find it in the API
@@ -323,26 +335,28 @@ class setDensityAmps(_PYQUEST):
                 between startind and startind+numamps
             imags: the new imaginary values of the elements of the density matrix
                 between startind and startind+numamps
+
+        Raises:
+            RuntimeError: Qureg has to be a density matrix qureg but wavefunction qureg was used
         """
         reals = list(reals)
         imags = list(imags)
         num_amps = cheat.getNumAmps()(qureg=qureg)
 
         if not qureg.isDensityMatrix:
-            warnings.warn('qureg has to be a density matrix qureg'
-                          + ' but wavefunction qureg was used', RuntimeWarning)
-        else:
-            for i in range(num_amps):
-                j = num_amps * i
-                reals_flat = reals[i]
-                imags_flat = imags[i]
-                pointer_reals = ffi_quest.new("{}[{}]".format(qreal, len(reals_flat)))
-                for co, c in enumerate(reals_flat):
-                    pointer_reals[co] = c
-                pointer_imags = ffi_quest.new("{}[{}]".format(qreal, len(imags_flat)))
-                for co, c in enumerate(imags_flat):
-                    pointer_imags[co] = c
-                quest.statevec_setAmps(qureg, j, pointer_reals, pointer_imags, num_amps)
+            raise RuntimeError("Qureg has to be a density matrix qureg but "
+                               + "wavefunction qureg was used")
+        for i in range(num_amps):
+            j = num_amps * i
+            reals_flat = reals[i]
+            imags_flat = imags[i]
+            pointer_reals = ffi_quest.new("{}[{}]".format(qreal, len(reals_flat)))
+            for co, c in enumerate(reals_flat):
+                pointer_reals[co] = c
+            pointer_imags = ffi_quest.new("{}[{}]".format(qreal, len(imags_flat)))
+            for co, c in enumerate(imags_flat):
+                pointer_imags[co] = c
+            quest.statevec_setAmps(qureg, j, pointer_reals, pointer_imags, num_amps)
             # quest.setDensityAmps(qureg, pointer_reals, pointer_imags)  --> not yet in the API
 
 
@@ -379,6 +393,9 @@ class setWeightedQureg(_PYQUEST):
             qureg2: second qureg in sum
             facout: prefactor of output qureg
             quregout: output qureg
+
+        Raises:
+            RuntimeError: Qureg has to be a wavefunction qureg but density matrix qureg was used
         """
         if qureg1.isDensityMatrix and qureg2.isDensityMatrix and quregout.isDensityMatrix:
             quest.setWeightedQureg((fac1.real, fac1.imag), qureg1,
@@ -391,5 +408,5 @@ class setWeightedQureg(_PYQUEST):
                                    (fac2.real, fac2.imag), qureg2,
                                    (facout.real, facout.imag), quregout)
         else:
-            warnings.warn('All three quregs need to be of the same type, so all three '
-                          + 'wavefunctions OR all three density matrices', RuntimeWarning)
+            raise RuntimeError("All three quregs need to be of the same type, so all three "
+                               + "wavefunctions OR all three density matrices")

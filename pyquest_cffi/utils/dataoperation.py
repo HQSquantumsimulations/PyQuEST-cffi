@@ -188,9 +188,12 @@ class createPauliHamil(_PYQUEST):
 
         Returns:
             PauliHamil: created Pauli Hamiltonian
+
+        Raises:
+            RuntimeError: number_qubits and number_pauliprods need to be positive integers
         """
-        assert number_qubits > 0
-        assert number_pauliprods > 0
+        if number_pauliprods <= 0 or number_pauliprods <= 0:
+            raise RuntimeError("number_qubits and number_pauliprods need to be positive integers")
         return quest.createPauliHamil(number_qubits, number_pauliprods)
 
 
