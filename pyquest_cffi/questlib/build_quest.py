@@ -55,7 +55,7 @@ def build_quest_so() -> None:
     lines += ["int generateMeasurementOutcome(qreal zeroProb, qreal *outcomeProb);"]
     lines += ["int getQuEST_PREC(void);"]
 
-    _lines = []
+    _lines = ""
     no_def = True
     skip = False
     for l in lines:
@@ -71,9 +71,10 @@ def build_quest_so() -> None:
                 no_def = False
             elif l.startswith("#endif"):
                 no_def = True
-    _lines = ["".join(_lines).replace('qreal', qreal)]
+    _lines = "".join(_lines).replace('qreal', qreal)
 
     ffibuilder = FFI()
+    
     ffibuilder.cdef(_lines)
     ffibuilder.set_source(
         "_quest", r'''
