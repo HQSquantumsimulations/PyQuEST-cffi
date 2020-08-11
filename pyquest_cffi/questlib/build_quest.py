@@ -74,7 +74,7 @@ def build_quest_so() -> None:
     _str_lines = "".join(_lines).replace('qreal', qreal)
 
     ffibuilder = FFI()
-    
+
     ffibuilder.cdef(_str_lines)
     ffibuilder.set_source(
         "_quest", r'''
