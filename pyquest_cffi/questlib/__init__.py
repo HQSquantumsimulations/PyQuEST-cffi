@@ -15,9 +15,9 @@
 
 # Requires LD_LIBRARY_PATH=path/to/this/dir to run
 import os
-from pyquest_cffi.questlib._abstract import _PYQUEST, tquestenv, tqureg
-from ._quest import ffi as ffi_quest
-from ._quest import lib as quest
+from pyquest_cffi.questlib._abstract import _PYQUEST, tquestenv, tqureg, paulihamil
+from pyquest_cffi.questlib._quest import ffi as ffi_quest
+from pyquest_cffi.questlib._quest import lib as quest
 if quest.getQuEST_PREC() == 1:
     qreal = "float"
 elif quest.getQuEST_PREC() == 2:
