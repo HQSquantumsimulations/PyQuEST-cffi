@@ -138,7 +138,7 @@ def setup_packages():
                       + ' to QuEST quantum simulation toolkit;'
                       + '  Compile functionality, create, build and import'
                       + ' valid QuEST source code from python'),
-                  'version': '3.2.0',
+                  'version': '3.2.1',
                   'long_description': readme,
                   'packages': packages,
                   # 'package_dir': {'': 'pyquest_cffi'},

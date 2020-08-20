@@ -92,7 +92,8 @@ def build_quest_so() -> None:
         extra_link_args=['-Wl,-rpath,$ORIGIN'],
         # extra_link_args=['-Wl,-rpath={}'.format(lib_path)],
     )
-    ffibuilder.compile(verbose=True)
+    # For working import also under macos target must produce .so library
+    ffibuilder.compile(target = '_quest.so', verbose=True)
 
     #Setting relative paths in libraries
     if platform.system() == 'Darwin':
