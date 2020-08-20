@@ -99,13 +99,13 @@ def build_quest_so() -> None:
     if platform.system() == 'Darwin':
         librun = subprocess.run(['otool', '-L', os.path.join(lib_path, '_quest.so')],
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
-        libraries_text = librun.split('\n')
-        for line in libraries_text.stdout:
+        libraries_text = librun.stdout.split('\n')
+        for line in libraries_text:
             if 'libQuEST.dylib' in line:
                 pathname = line.strip().split('/libQuEST.dylib')[0]
                 break
         subprocess.run(['install_name_tool', '-change',
-                        os.path, join(pathname, 'libQuEST.dylib'), '@loader_path/libQuEST.dylib',
+                        os.path.join(pathname, 'libQuEST.dylib'), '@loader_path/libQuEST.dylib',
                         os.path.join(lib_path, '_quest.so')], check=True)
 
 
