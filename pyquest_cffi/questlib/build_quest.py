@@ -17,6 +17,7 @@ import ctypes
 from cffi import FFI
 import os
 import platform
+import subprocess
 
 
 def build_quest_so() -> None:
@@ -92,6 +93,19 @@ def build_quest_so() -> None:
         # extra_link_args=['-Wl,-rpath={}'.format(lib_path)],
     )
     ffibuilder.compile(verbose=True)
+
+    #Setting relative paths in libraries
+    if platform.system() == Darwin:
+        librun = subprocess.run(['otool', '-L', os.path.join(lib_path, '_quest.so')],
+                                stout=subprocess.PIPE, sterr=subprocess.PIPE, text=True, check=True)
+        libraries_text = librun.split('\n')
+        for line in libraries_text:
+            if 'libQuEST.dylib' in line:
+                pathname = line.strip().split('/libQuEST.dylib')[0]
+                break
+        subprocess.run(['install_name_tool', '-change',
+                        os.path, join(pathname, 'libQuEST.dylib'), '@loader_path/libQuEST.dylib',
+                        os.path.join(lib_path, '_quest.so')]check=True)
 
 
 if __name__ == '__main__':
