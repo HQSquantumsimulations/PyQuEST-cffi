@@ -16,6 +16,7 @@
 import ctypes
 from cffi import FFI
 import os
+import platform
 
 
 def build_quest_so() -> None:
@@ -26,7 +27,11 @@ def build_quest_so() -> None:
     """
     lib_path = os.path.dirname(os.path.realpath(__file__))
     quest_path = os.path.join(lib_path, "../../QuEST/QuEST")
-    questlib = os.path.join(lib_path, "libQuEST.so")
+
+    if platform.system == 'Darwin':
+        questlib = os.path.join(lib_path, "libQuEST.dylib")
+    else:
+        questlib = os.path.join(lib_path, "libQuEST.so")
     include = [os.path.join(quest_path, "include")]
 
     _questlib = ctypes.CDLL(questlib)
