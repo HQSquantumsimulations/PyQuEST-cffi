@@ -105,7 +105,7 @@ def build_quest_so() -> None:
                 break
         subprocess.run(['install_name_tool', '-change',
                         os.path, join(pathname, 'libQuEST.dylib'), '@loader_path/libQuEST.dylib',
-                        os.path.join(lib_path, '_quest.so')]check=True)
+                        os.path.join(lib_path, '_quest.so')], check=True)
 
 
 if __name__ == '__main__':
