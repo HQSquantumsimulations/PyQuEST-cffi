@@ -16,6 +16,8 @@
 import ctypes
 from cffi import FFI
 import os
+import platform
+import subprocess
 
 
 def build_quest_so() -> None:
@@ -26,7 +28,11 @@ def build_quest_so() -> None:
     """
     lib_path = os.path.dirname(os.path.realpath(__file__))
     quest_path = os.path.join(lib_path, "../../QuEST/QuEST")
-    questlib = os.path.join(lib_path, "libQuEST.so")
+
+    if platform.system() == 'Darwin':
+        questlib = os.path.join(lib_path, "libQuEST.dylib")
+    else:
+        questlib = os.path.join(lib_path, "libQuEST.so")
     include = [os.path.join(quest_path, "include")]
 
     _questlib = ctypes.CDLL(questlib)
@@ -86,7 +92,21 @@ def build_quest_so() -> None:
         extra_link_args=['-Wl,-rpath,$ORIGIN'],
         # extra_link_args=['-Wl,-rpath={}'.format(lib_path)],
     )
-    ffibuilder.compile(verbose=True)
+    # For working import also under macos target must produce .so library
+    ffibuilder.compile(target = '_quest.so', verbose=True)
+
+    #Setting relative paths in libraries
+    if platform.system() == 'Darwin':
+        librun = subprocess.run(['otool', '-L', os.path.join(lib_path, '_quest.so')],
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+        libraries_text = librun.stdout.split('\n')
+        for line in libraries_text:
+            if 'libQuEST.dylib' in line:
+                pathname = line.strip().split('/libQuEST.dylib')[0]
+                break
+        subprocess.run(['install_name_tool', '-change',
+                        os.path.join(pathname, 'libQuEST.dylib'), '@loader_path/libQuEST.dylib',
+                        os.path.join(lib_path, '_quest.so')], check=True)
 
 
 if __name__ == '__main__':

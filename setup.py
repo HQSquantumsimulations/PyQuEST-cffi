@@ -17,8 +17,10 @@ from setuptools import find_packages, setup, Extension
 from setuptools.command.build_ext import build_ext
 from setuptools.command import build_py
 import subprocess
+import platform
 import os
 path = os.path.dirname(os.path.abspath(__file__))
+
 
 class CustomExtension(Extension):
     """Custom Extension class"""
@@ -34,24 +36,30 @@ class CustomBuild(build_ext):
 
     def run(self) -> None:
         """Run custom build function"""
-        try:
-            subprocess.run(['make', '--version'], check=True)
-        except OSError:
-            raise RuntimeError(
-                "Make must be installed to build the following extensions: "
-                + ", ".join(e.name for e in self.extensions))
+        # try:
+        #     subprocess.run(['make', '--version'], check=True)
+        # except OSError:
+        #     raise RuntimeError(
+        #         "Make must be installed to build pyquest"
+        #     )
         try:
             subprocess.run(['wget', '--version'], check=True)
         except OSError:
             raise RuntimeError(
-                "Wget must be installed to build the following extensions: "
-                + ", ".join(e.name for e in self.extensions))
+                "Wget must be installed to build pyquest "
+            )
         try:
             subprocess.run(['tar', '--version'], check=True)
         except OSError:
             raise RuntimeError(
-                "Tar must be installed to build the following extensions: "
-                + ", ".join(e.name for e in self.extensions))
+                "Tar must be installed to build pyquest: "
+            )
+        try:
+            subprocess.run(['cmake', '--version'], check=True)
+        except OSError:
+            raise RuntimeError(
+                "Cmake must be installed to build pyquest"
+            )
         for ext in self.extensions:
             self.build_extension(ext)
 
@@ -83,11 +91,20 @@ class CustomBuild(build_ext):
                                 os.path.join(src_path, 'QuEST/'),
                                 '--strip-components=1'],
                                check=True)
+            # Switch off Multithreading on macos because of openmp problems
+            if platform.system() == 'Darwin':
+                args_for_cmake = ['-DMULTITHREADED=0']
+            else:
+                args_for_cmake = []
+
             os.chdir(os.path.join(src_path, 'pyquest_cffi/questlib/'))
-            subprocess.run(['make'], check=True)
-            #subprocess.run(['python', 'build_quest.py'], check=True)
+            run_command_make = ['cmake', os.path.join(src_path, 'QuEST/QuEST/')] + args_for_cmake
+            run_command_build = ['cmake', '--build', '.']
+            subprocess.run(run_command_make, check=True)
+            subprocess.run(run_command_build, check=True)
             from build_quest import build_quest_so
             build_quest_so()
+            print(os.listdir('.'))
             os.chdir(old_path)
 
 
@@ -102,7 +119,7 @@ class BuildPyCommand(build_py.build_py):
 
 def setup_packages():
     """Setup method"""
-    with open(os.path.join(path,'README.md')) as file:
+    with open(os.path.join(path, 'README.md')) as file:
         readme = file.read()
 
     with open(os.path.join('LICENSE')) as file:
@@ -121,20 +138,20 @@ def setup_packages():
                       + ' to QuEST quantum simulation toolkit;'
                       + '  Compile functionality, create, build and import'
                       + ' valid QuEST source code from python'),
-                  'version': '3.2.0',
+                  'version': '3.2.1',
                   'long_description': readme,
                   'packages': packages,
                   # 'package_dir': {'': 'pyquest_cffi'},
                   'author': 'HQS Quantum Simulations: Sebastian Zanker, Nicolas Vogt',
                   'author_email': 'info@quantumsimulations.de',
                   'url': '',
-                  'download_url': '',
+                  'download_url': 'https://github.com/HQSquantumsimulations/PyQuEST-cffi/archive/3.2.0.tar.gz',
                   'license': License,
                   'install_requires': install_requires,
                   'setup_requires': ['cffi'],
-                  #'include_package_data': True,
-                  'package_data': {'pyquest_cffi': ['questlib/*', 'questlib/*.so']},
-                  'data_files': [("", ["LICENSE", "pyquest_cffi/questlib/makefile"])],
+                  # 'include_package_data': True,
+                  'package_data': {'pyquest_cffi': ['questlib/*', 'questlib/*.so',  'questlib/*.dylib']},
+                  'data_files': [("", ["LICENSE"])],
                   # add custom build_ext command
                   'cmdclass': {'build_ext': CustomBuild,
                                'build_py': BuildPyCommand},
