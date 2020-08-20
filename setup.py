@@ -36,12 +36,12 @@ class CustomBuild(build_ext):
 
     def run(self) -> None:
         """Run custom build function"""
-        try:
-            subprocess.run(['make', '--version'], check=True)
-        except OSError:
-            raise RuntimeError(
-                "Make must be installed to build pyquest"
-            )
+        # try:
+        #     subprocess.run(['make', '--version'], check=True)
+        # except OSError:
+        #     raise RuntimeError(
+        #         "Make must be installed to build pyquest"
+        #     )
         try:
             subprocess.run(['wget', '--version'], check=True)
         except OSError:
