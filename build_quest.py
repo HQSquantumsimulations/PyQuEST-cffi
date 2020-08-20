@@ -21,7 +21,7 @@ import platform
 def build_quest_so():
     lib_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pyquest_cffi/questlib/')
     quest_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "QuEST/QuEST")
-    if platform.system == 'Darwin':
+    if platform.system() == 'Darwin':
         questlib = os.path.join(lib_path, "libQuEST.dylib")
     else:
         questlib = os.path.join(lib_path, "libQuEST.so")
