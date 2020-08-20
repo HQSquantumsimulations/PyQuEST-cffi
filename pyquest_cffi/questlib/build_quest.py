@@ -95,7 +95,7 @@ def build_quest_so() -> None:
     ffibuilder.compile(verbose=True)
 
     #Setting relative paths in libraries
-    if platform.system() == Darwin:
+    if platform.system() == 'Darwin':
         librun = subprocess.run(['otool', '-L', os.path.join(lib_path, '_quest.so')],
                                 stout=subprocess.PIPE, sterr=subprocess.PIPE, text=True, check=True)
         libraries_text = librun.split('\n')
