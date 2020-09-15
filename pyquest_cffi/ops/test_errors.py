@@ -51,7 +51,7 @@ def test_one_qubit_errors(prob, gate_def) -> None:
         state_dm = state_dm.reshape((4, 1))
         end_matrix = (superop @ state_dm).reshape((2, 2), order='F')
         matrix = cheat.getDensityMatrix()(dm)
-        npt.assert_array_almost_equal(matrix, end_matrix)
+        npt.assert_array_almost_equal(matrix, end_matrix.T)
     except NotImplementedError:
         pass
 
