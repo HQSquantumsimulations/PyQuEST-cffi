@@ -348,8 +348,8 @@ class setDensityAmps(_PYQUEST):
                                + "wavefunction qureg was used")
         for i in range(num_amps):
             j = num_amps * i
-            reals_flat = reals[i]
-            imags_flat = imags[i]
+            reals_flat = [real[i] for real in reals]
+            imags_flat = [imag[i] for imag in imags]
             pointer_reals = ffi_quest.new("{}[{}]".format(qreal, len(reals_flat)))
             for co, c in enumerate(reals_flat):
                 pointer_reals[co] = c
