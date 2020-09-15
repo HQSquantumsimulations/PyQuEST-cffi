@@ -145,7 +145,7 @@ def setup_packages():
                   'author': 'HQS Quantum Simulations: Sebastian Zanker, Nicolas Vogt',
                   'author_email': 'info@quantumsimulations.de',
                   'url': '',
-                  'download_url': 'https://github.com/HQSquantumsimulations/PyQuEST-cffi/archive/3.2.0.tar.gz',
+                  'download_url': 'https://github.com/HQSquantumsimulations/PyQuEST-cffi/archive/3.2.2.tar.gz',
                   'license': License,
                   'install_requires': install_requires,
                   'setup_requires': ['cffi'],
