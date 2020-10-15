@@ -78,7 +78,7 @@ def test_set_amps_qureg() -> None:
     dens_array = np.array([[1 + 4j, 2 + 3j, 1 + 4j, 2 + 3j],
                            [3j, 1 + 2j, 3j, 1 + 2j],
                            [1 + 2j, 3j, 1 + 2j, 3j],
-                           [2 + 3j, 1 + 4j, 2 + 3j, 1 + 4j]]).T
+                           [2 + 3j, 1 + 4j, 2 + 3j, 1 + 4j]])
     assert np.all(dens_mat == dens_array)
 
     # for a wavefunction qureg:
