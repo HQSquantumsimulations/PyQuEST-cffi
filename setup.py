@@ -93,6 +93,11 @@ class CustomBuild(build_ext):
                                check=True)
             # Switch off Multithreading on macos because of openmp problems
             if platform.system() == 'Darwin':
+                # Disabling implicit function declaration warning in C compilation
+                if 'CFLAGS' in os.environ.keys():
+                    os.environ['CFLAGS'] = os.environ['CFLAGS'] + " -Wno-implicit-function-declaration"
+                else:
+                    os.environ['CFLAGS'] = "-Wno-implicit-function-declaration"
                 args_for_cmake = ['-DMULTITHREADED=0']
             else:
                 args_for_cmake = []
@@ -137,7 +142,7 @@ def setup_packages():
                       + ' valid QuEST source code from python'),
                   'version': '3.2.3',
                   'long_description': readme,
-                  'long_description_content_type':'text/markdown',
+                  'long_description_content_type': 'text/markdown',
                   'packages': packages,
                   # 'package_dir': {'': 'pyquest_cffi'},
                   'author': 'HQS Quantum Simulations: Sebastian Zanker, Nicolas Vogt',
