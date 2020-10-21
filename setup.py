@@ -93,6 +93,11 @@ class CustomBuild(build_ext):
                                check=True)
             # Switch off Multithreading on macos because of openmp problems
             if platform.system() == 'Darwin':
+                # Disabling implicit function declaration warning in C compilation
+                if 'CFLAGS' in os.environ.keys():
+                    os.environ['CFLAGS'] = os.environ['CFLAGS'] + " -Wno-implicit-function-declaration"
+                else:
+                    os.environ['CFLAGS'] = "-Wno-implicit-function-declaration"
                 args_for_cmake = ['-DMULTITHREADED=0']
             else:
                 args_for_cmake = []
@@ -122,9 +127,6 @@ def setup_packages():
     with open(os.path.join(path, 'README.md')) as file:
         readme = file.read()
 
-    with open(os.path.join('LICENSE')) as file:
-        License = file.read()
-
     install_requires = [
         'cffi',
         'numpy',
@@ -138,15 +140,16 @@ def setup_packages():
                       + ' to QuEST quantum simulation toolkit;'
                       + '  Compile functionality, create, build and import'
                       + ' valid QuEST source code from python'),
-                  'version': '3.2.2',
+                  'version': '3.2.3',
                   'long_description': readme,
+                  'long_description_content_type': 'text/markdown',
                   'packages': packages,
                   # 'package_dir': {'': 'pyquest_cffi'},
                   'author': 'HQS Quantum Simulations: Sebastian Zanker, Nicolas Vogt',
                   'author_email': 'info@quantumsimulations.de',
                   'url': '',
                   'download_url': 'https://github.com/HQSquantumsimulations/PyQuEST-cffi/archive/3.2.0.tar.gz',
-                  'license': License,
+                  'license': "Apache License 2.0",
                   'install_requires': install_requires,
                   'setup_requires': ['cffi'],
                   # 'include_package_data': True,
@@ -156,6 +159,7 @@ def setup_packages():
                   'cmdclass': {'build_ext': CustomBuild,
                                'build_py': BuildPyCommand},
                   'zip_safe': False,
+                  'python_requires': '>=3.6',
                   'ext_modules': [CustomExtension('questlib')],
                   }
     setup(**setup_args)
