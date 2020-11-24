@@ -74,7 +74,7 @@ class CustomBuild(build_ext):
             src_path = os.path.dirname(os.path.realpath(__file__))
             print('src_path', src_path)
             os.chdir(src_path)
-            QuEST_release_link = 'https://github.com/QuEST-Kit/QuEST/archive/v3.2.0.tar.gz'
+            QuEST_release_link = 'https://github.com/QuEST-Kit/QuEST/archive/v3.2.3.tar.gz'
             # https://github.com/QuEST-Kit/QuEST/releases/tag/v3.2.0
             if not os.path.exists(os.path.join(src_path, 'QuEST')):
                 print('quest_path', os.path.join(src_path, 'QuEST/'))
@@ -98,9 +98,9 @@ class CustomBuild(build_ext):
                     os.environ['CFLAGS'] = os.environ['CFLAGS'] + " -Wno-implicit-function-declaration"
                 else:
                     os.environ['CFLAGS'] = "-Wno-implicit-function-declaration"
-                args_for_cmake = ['-DMULTITHREADED=0']
+                args_for_cmake = ['-DMULTITHREADED=0', "-DCMAKE_POLICY_DEFAULT_CMP0012=NEW"]
             else:
-                args_for_cmake = []
+                args_for_cmake = ["-DCMAKE_POLICY_DEFAULT_CMP0012=NEW"]
 
             os.chdir(os.path.join(src_path, 'pyquest_cffi/questlib/'))
             run_command_make = ['cmake', os.path.join(src_path, 'QuEST/QuEST/')] + args_for_cmake
@@ -140,7 +140,7 @@ def setup_packages():
                       + ' to QuEST quantum simulation toolkit;'
                       + '  Compile functionality, create, build and import'
                       + ' valid QuEST source code from python'),
-                  'version': '3.2.3',
+                  'version': '3.2.3.1',
                   'long_description': readme,
                   'long_description_content_type': 'text/markdown',
                   'packages': packages,
@@ -148,7 +148,7 @@ def setup_packages():
                   'author': 'HQS Quantum Simulations: Sebastian Zanker, Nicolas Vogt',
                   'author_email': 'info@quantumsimulations.de',
                   'url': '',
-                  'download_url': 'https://github.com/HQSquantumsimulations/PyQuEST-cffi/archive/3.2.0.tar.gz',
+                  'download_url': 'https://github.com/HQSquantumsimulations/PyQuEST-cffi/archive/3.2.3.tar.gz',
                   'license': "Apache License 2.0",
                   'install_requires': install_requires,
                   'setup_requires': ['cffi'],
