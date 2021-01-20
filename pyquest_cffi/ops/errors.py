@@ -634,7 +634,7 @@ class mixMultiQubitKrausMap(_PYQUEST):
                 raise RuntimeError("Number of target qubits"
                                    + " and dimension of Kraus operators mismatch")
         operator_sum = np.sum([op.conjugate().T @ op for op in operators], axis=0)
-        if not np.array_equal(operator_sum, np.eye(operators[0].shape[0])):
+        if not np.isclose(operator_sum, np.eye(operators[0].shape[0])).all():
             raise RuntimeError("Not a valid Kraus map")
         operator_pointers = ffi_quest.new("ComplexMatrixN[{}]".format(len(operators)))
         for co, op in enumerate(operators):
@@ -718,7 +718,7 @@ class mixTwoQubitKrausMap(_PYQUEST):
                 raise RuntimeError("Number of target qubits"
                                    + " and dimension of Kraus operators mismatch")
         operator_sum = np.sum([op.conjugate().T @ op for op in operators], axis=0)
-        if not np.array_equal(operator_sum, np.eye(4)):
+        if not np.isclose(operator_sum, np.eye(4)).all():
             raise RuntimeError("Not a valid Kraus map")
         operator_pointers = ffi_quest.new("ComplexMatrix4[{}]".format(len(operators)))
         for co, op in enumerate(operators):
@@ -793,7 +793,7 @@ class mixKrausMap(_PYQUEST):
                 raise RuntimeError("Number of target qubits"
                                    + " and dimension of Kraus operators mismatch")
         operator_sum = np.sum([op.conjugate().T @ op for op in operators], axis=0)
-        if not np.array_equal(operator_sum, np.eye(2)):
+        if not np.isclose(operator_sum, np.eye(2)).all():
             raise RecursionError("Not a valid Kraus map")
         operator_pointers = ffi_quest.new("ComplexMatrix2[{}]".format(len(operators)))
         for co, op in enumerate(operators):
