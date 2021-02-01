@@ -18,6 +18,7 @@ from cffi import FFI
 import os
 import platform
 
+
 def build_quest_so():
     lib_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pyquest_cffi/questlib/')
     quest_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "QuEST/QuEST")
@@ -43,33 +44,31 @@ def build_quest_so():
     del(QuESTPrec)
     del(QuESTPrecFunc)
 
-
     with open(os.path.join(include[0], "QuEST.h"), "r") as f:
         lines = [line for line in f]
 
     lines += ["void statevec_setAmps(Qureg qureg, long long int startInd,"
-            + " qreal* reals, qreal* imags, long long int numAmps);"]
+              + " qreal* reals, qreal* imags, long long int numAmps);"]
     lines += ["qreal densmatr_calcProbOfOutcome(Qureg qureg, const int measureQubit, int outcome);"]
     lines += ["qreal statevec_calcProbOfOutcome(Qureg qureg, const int measureQubit, int outcome);"]
     lines += ["int generateMeasurementOutcome(qreal zeroProb, qreal *outcomeProb);"]
     lines += ["int getQuEST_PREC(void);"]
 
-
     _lines = []
     no_def = True
     skip = False
-    for l in lines:
-        if not l.find("getEnvironmentString") >= 0:
+    for line in lines:
+        if not line.find("getEnvironmentString") >= 0:
             if skip:
-                if l.startswith('#endif'):
+                if line.startswith('#endif'):
                     skip = False
-            elif l.startswith('#ifndef __cplusplus'):
+            elif line.startswith('#ifndef __cplusplus'):
                 skip = True
-            elif no_def and not l.startswith("#"):
-                _lines.append(l)
-            elif l.startswith("#ifdef"):
+            elif no_def and not line.startswith("#"):
+                _lines.append(line)
+            elif line.startswith("#ifdef"):
                 no_def = False
-            elif l.startswith("#endif"):
+            elif line.startswith("#endif"):
                 no_def = True
     _lines = "".join(_lines).replace('qreal', qreal)
 
@@ -86,6 +85,7 @@ def build_quest_so():
         # extra_link_args=['-Wl,-rpath={}'.format(lib_path)],
     )
     ffibuilder.compile(verbose=True)
+
 
 if __name__ == '__main__':
     build_quest_so()

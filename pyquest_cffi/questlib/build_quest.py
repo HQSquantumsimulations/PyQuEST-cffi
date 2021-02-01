@@ -64,18 +64,18 @@ def build_quest_so() -> None:
     _lines = []
     no_def = True
     skip = False
-    for l in lines:
-        if not l.find("getEnvironmentString") >= 0:
+    for line in lines:
+        if not line.find("getEnvironmentString") >= 0:
             if skip:
-                if l.startswith('#endif'):
+                if line.startswith('#endif'):
                     skip = False
-            elif l.startswith('#ifndef __cplusplus'):
+            elif line.startswith('#ifndef __cplusplus'):
                 skip = True
-            elif no_def and not l.startswith("#"):
-                _lines.append(l)
-            elif l.startswith("#ifdef"):
+            elif no_def and not line.startswith("#"):
+                _lines.append(line)
+            elif line.startswith("#ifdef"):
                 no_def = False
-            elif l.startswith("#endif"):
+            elif line.startswith("#endif"):
                 no_def = True
     _str_lines = "".join(_lines).replace('qreal', qreal)
 
@@ -93,12 +93,13 @@ def build_quest_so() -> None:
         # extra_link_args=['-Wl,-rpath={}'.format(lib_path)],
     )
     # For working import also under macos target must produce .so library
-    ffibuilder.compile(target = '_quest.so', verbose=True)
+    ffibuilder.compile(target='_quest.so', verbose=True)
 
-    #Setting relative paths in libraries
+    # Setting relative paths in libraries
     if platform.system() == 'Darwin':
         librun = subprocess.run(['otool', '-L', os.path.join(lib_path, '_quest.so')],
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                universal_newlines=True, check=True)
         libraries_text = librun.stdout.split('\n')
         for line in libraries_text:
             if 'libQuEST.dylib' in line:
