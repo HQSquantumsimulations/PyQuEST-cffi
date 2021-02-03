@@ -421,10 +421,10 @@ def build_two_qubit_matrix_targets(gate, gate_args, control=None) -> np.ndarray:
     (ops.applyMatrixN, [[1, 2], 'matrix']),
     (ops.applyMultiControlledMatrixN, [[1, 2], [3, 4], 'matrix']),
     (ops.applyPauliHamil, [utils.createPauliHamil()(5, 2),
-                           utils.createQureg()(5, utils.createQuestEnv()())]),
+                           utils.createQureg()(5, utils.createQuestEnv()()), 'pauli'],),
     (ops.applyPauliSum, [[[0, 1, 2, 3], [3, 2, 1, 0]], [0.4, 0.3],
                          utils.createQureg()(5, utils.createQuestEnv()())]),
-    (ops.applyTrotterCircuit, [utils.createPauliHamil()(5, 2), 0.7, 1, 2])
+    (ops.applyTrotterCircuit, [utils.createPauliHamil()(5, 2), 0.7, 1, 2, 'pauli'])
     ])
 def test_apply_functions(applied) -> None:
     """Test all non-deprecated apply functions"""
@@ -438,6 +438,13 @@ def test_apply_functions(applied) -> None:
         args = [qubits]
         args.extend(positional_args)
         args[-1] = matrix
+    elif positional_args[-1] == 'pauli':
+        pauli_hamil = positional_args[0]
+        cheat.initPauliHamil()(pauli_hamil=pauli_hamil,
+                               coeffs=[0.0, 0.0, 0.0, 0.0, 0.0],
+                               codes=[[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]])
+        args = [qubits, pauli_hamil]
+        args.extend(positional_args[1:-1])
     else:
         args = [qubits]
         args.extend(positional_args)

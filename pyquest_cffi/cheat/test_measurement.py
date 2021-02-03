@@ -33,12 +33,9 @@ def test_calc_simple() -> None:
 
     with npt.assert_raises(RuntimeError):
         purity = cheat.calcPurity()(qureg)
-        density_inner_product = cheat.calcDensityInnerProduct()(qureg1=qureg,
-                                                                            qureg2=qureg_main)
-    fidelity = cheat.calcFidelity()(qureg=qureg_main,
-                                                qureg_reference=qureg)
-    inner_product = cheat.calcInnerProduct()(qureg1=qureg,
-                                                         qureg2=qureg_main)
+        density_inner_product = cheat.calcDensityInnerProduct()(qureg1=qureg, qureg2=qureg_main)
+    fidelity = cheat.calcFidelity()(qureg=qureg_main, qureg_reference=qureg)
+    inner_product = cheat.calcInnerProduct()(qureg1=qureg, qureg2=qureg_main)
     prob_of_outcome = cheat.calcProbOfOutcome()(qureg, 1, 0)
     total_prob = cheat.calcTotalProb()(qureg)
 
@@ -202,6 +199,9 @@ def test_calc_Expec_Pauli_Hamil() -> None:
     env = utils.createQuestEnv()()
     qubits = utils.createQureg()(4, env)
     pauli_hamil = utils.createPauliHamil()(number_qubits=4, number_pauliprods=1)
+    cheat.initPauliHamil()(pauli_hamil=pauli_hamil,
+                           coeffs=[0.0, 0.0, 0.0, 0.0],
+                           codes=[[0], [0], [0], [0]])
     workspace = utils.createQureg()(4, env)
     a = cheat.calcExpecPauliHamil()(
         qureg=qubits,
