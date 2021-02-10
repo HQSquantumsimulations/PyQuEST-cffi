@@ -54,7 +54,7 @@ class hadamard(_PYQUEST):
         Returns:
             np.ndarray
         """
-        matrix = 1 / np.sqrt(2) * np.array([[1, 1], [1, -1]], dtype=np.complex)
+        matrix = 1 / np.sqrt(2) * np.array([[1, 1], [1, -1]], dtype=complex)
         return matrix
 
 
@@ -91,7 +91,7 @@ class pauliX(_PYQUEST):
         Returns:
             np.ndarray
         """
-        matrix = np.array([[0, 1], [1, 0]], dtype=np.complex)
+        matrix = np.array([[0, 1], [1, 0]], dtype=complex)
         return matrix
 
 
@@ -128,7 +128,7 @@ class pauliY(_PYQUEST):
         Returns:
             np.ndarray
         """
-        matrix = np.array([[0, -1j], [1j, 0]], dtype=np.complex)
+        matrix = np.array([[0, -1j], [1j, 0]], dtype=complex)
         return matrix
 
 
@@ -165,7 +165,7 @@ class pauliZ(_PYQUEST):
         Returns:
             np.ndarray
         """
-        matrix = np.array([[1, 0], [0, -1]], dtype=np.complex)
+        matrix = np.array([[1, 0], [0, -1]], dtype=complex)
         return matrix
 
 
@@ -202,7 +202,7 @@ class sGate(_PYQUEST):
         Returns:
             np.ndarray
         """
-        matrix = np.array([[1, 0], [0, 1j]], dtype=np.complex)
+        matrix = np.array([[1, 0], [0, 1j]], dtype=complex)
         return matrix
 
 
@@ -239,7 +239,7 @@ class tGate(_PYQUEST):
         Returns:
             np.ndarray
         """
-        matrix = np.array([[1, 0], [0, np.exp(1j * np.pi / 4)]], dtype=np.complex)
+        matrix = np.array([[1, 0], [0, np.exp(1j * np.pi / 4)]], dtype=complex)
         return matrix
 
 
@@ -294,7 +294,7 @@ class compactUnitary(_PYQUEST):
         Returns:
             np.ndarray
         """
-        matrix = np.array([[alpha, -np.conj(beta)], [beta, np.conj(alpha)]], dtype=np.complex)
+        matrix = np.array([[alpha, -np.conj(beta)], [beta, np.conj(alpha)]], dtype=complex)
         return matrix
 
 
@@ -336,7 +336,7 @@ class phaseShift(_PYQUEST):
         Returns:
             np.ndarray
         """
-        matrix = np.array([[1, 0], [0, np.exp(1j * theta)]], dtype=np.complex)
+        matrix = np.array([[1, 0], [0, np.exp(1j * theta)]], dtype=complex)
         return matrix
 
 
@@ -404,7 +404,7 @@ class rotateAroundAxis(_PYQUEST):
         vy = vector[1]
         vz = vector[2]
         matrix = np.array([[c - 1j * s * vz, s * (-1j * vx - vy)],
-                           [s * (-1j * vx + vy), c + 1j * s * vz]], dtype=np.complex)
+                           [s * (-1j * vx + vy), c + 1j * s * vz]], dtype=complex)
         return matrix
 
 
@@ -473,7 +473,7 @@ class rotateAroundSphericalAxis(_PYQUEST):
         vy = vector[1]
         vz = vector[2]
         matrix = np.array([[c - 1j * s * vz, s * (-1j * vx - vy)],
-                           [s * (-1j * vx + vy), c + 1j * s * vz]], dtype=np.complex)
+                           [s * (-1j * vx + vy), c + 1j * s * vz]], dtype=complex)
         return matrix
 
 
@@ -523,7 +523,7 @@ class rotateX(_PYQUEST):
         """
         c = np.cos(theta / 2)
         s = np.sin(theta / 2)
-        matrix = np.array([[c, -1j * s], [-1j * s, c]], dtype=np.complex)
+        matrix = np.array([[c, -1j * s], [-1j * s, c]], dtype=complex)
         return matrix
 
 
@@ -573,7 +573,7 @@ class rotateY(_PYQUEST):
         """
         c = np.cos(theta / 2)
         s = np.sin(theta / 2)
-        matrix = np.array([[c, -s], [s, c]], dtype=np.complex)
+        matrix = np.array([[c, -s], [s, c]], dtype=complex)
         return matrix
 
 
@@ -623,7 +623,7 @@ class rotateZ(_PYQUEST):
         """
         c = np.cos(theta / 2)
         s = np.sin(theta / 2)
-        matrix = np.array([[c - 1j * s, 0], [0, c + 1j * s]], dtype=np.complex)
+        matrix = np.array([[c - 1j * s, 0], [0, c + 1j * s]], dtype=complex)
         return matrix
 
 
@@ -854,7 +854,7 @@ class controlledCompactUnitary(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, alpha, -np.conj(beta)],
-                           [0, 0, beta, np.conj(alpha)]], dtype=np.complex)
+                           [0, 0, beta, np.conj(alpha)]], dtype=complex)
         return matrix
 
 
@@ -901,7 +901,7 @@ class controlledNot(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, 0, 1],
-                           [0, 0, 1, 0]], dtype=np.complex)
+                           [0, 0, 1, 0]], dtype=complex)
         return matrix
 
 
@@ -948,7 +948,7 @@ class controlledPauliY(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, 0, -1j],
-                           [0, 0, 1j, 0]], dtype=np.complex)
+                           [0, 0, 1j, 0]], dtype=complex)
         return matrix
 
 
@@ -995,7 +995,7 @@ class controlledPhaseFlip(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, 1, 0],
-                           [0, 0, 0, -1]], dtype=np.complex)
+                           [0, 0, 0, -1]], dtype=complex)
         return matrix
 
 
@@ -1042,7 +1042,7 @@ class swapGate(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 0, 1, 0],
                            [0, 1, 0, 0],
-                           [0, 0, 0, 1]], dtype=np.complex)
+                           [0, 0, 0, 1]], dtype=complex)
         return matrix
 
 
@@ -1089,7 +1089,7 @@ class sqrtSwapGate(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, (1 + 1j) / 2, (1 - 1j) / 2, 0],
                            [0, (1 - 1j) / 2, (1 + 1j) / 2, 0],
-                           [0, 0, 0, 1]], dtype=np.complex)
+                           [0, 0, 0, 1]], dtype=complex)
         return matrix
 
 
@@ -1142,7 +1142,7 @@ class sqrtISwap(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1 / np.sqrt(2), 1j / np.sqrt(2), 0],
                            [0, 1j / np.sqrt(2), 1 / np.sqrt(2), 0],
-                           [0, 0, 0, 1]], dtype=np.complex)
+                           [0, 0, 0, 1]], dtype=complex)
         return matrix
 
 
@@ -1195,7 +1195,7 @@ class invSqrtISwap(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1 / np.sqrt(2), -1j / np.sqrt(2), 0],
                            [0, -1j / np.sqrt(2), 1 / np.sqrt(2), 0],
-                           [0, 0, 0, 1]], dtype=np.complex)
+                           [0, 0, 0, 1]], dtype=complex)
         return matrix
 
 
@@ -1247,7 +1247,7 @@ class controlledPhaseShift(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, 1, 0],
-                           [0, 0, 0, np.exp(1j * theta)]], dtype=np.complex)
+                           [0, 0, 0, np.exp(1j * theta)]], dtype=complex)
         return matrix
 
 
@@ -1334,7 +1334,7 @@ class controlledRotateAroundAxis(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, c - 1j * s * vz, s * (-1j * vx - vy)],
-                           [0, 0, s * (-1j * vx + vy), c + 1j * s * vz]], dtype=np.complex)
+                           [0, 0, s * (-1j * vx + vy), c + 1j * s * vz]], dtype=complex)
         return matrix
 
 
@@ -1396,7 +1396,7 @@ class controlledRotateX(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, c, -1j * s],
-                           [0, 0, -1j * s, c]], dtype=np.complex)
+                           [0, 0, -1j * s, c]], dtype=complex)
         return matrix
 
 
@@ -1458,7 +1458,7 @@ class controlledRotateY(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, c, -s],
-                           [0, 0, s, c]], dtype=np.complex)
+                           [0, 0, s, c]], dtype=complex)
         return matrix
 
 
@@ -1520,7 +1520,7 @@ class controlledRotateZ(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1, 0, 0],
                            [0, 0, c - 1j * s, 0],
-                           [0, 0, 0, c + 1j * s]], dtype=np.complex)
+                           [0, 0, 0, c + 1j * s]], dtype=complex)
         return matrix
 
 
@@ -1575,7 +1575,7 @@ class controlledUnitary(_PYQUEST):
         mat = np.array([[1, 0, 0, 0],
                         [0, 1, 0, 0],
                         [0, 0, matrix[0, 0], matrix[0, 1]],
-                        [0, 0, matrix[1, 0], matrix[1, 1]]], dtype=np.complex)
+                        [0, 0, matrix[1, 0], matrix[1, 1]]], dtype=complex)
         return mat
 
 
@@ -2229,7 +2229,7 @@ class MolmerSorensenXX(_PYQUEST):
         matrix = np.array([[1, 0, 0, 1j],
                            [0, 1, 1j, 0],
                            [0, 1j, 1, 0],
-                           [1j, 0, 0, 1]], dtype=np.complex) * (1 - 1j) / 2
+                           [1j, 0, 0, 1]], dtype=complex) * (1 - 1j) / 2
         return matrix
 
 

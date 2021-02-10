@@ -430,7 +430,7 @@ class getExpectationValue(_PYQUEST):
             float
         """
         density_matrix = getDensityMatrix()(qureg)
-        return np.trace(operator_matrix @ density_matrix)
+        return float(np.trace(operator_matrix @ density_matrix))
 
 
 class getDensityMatrix(_PYQUEST):
@@ -451,13 +451,13 @@ class getDensityMatrix(_PYQUEST):
             np.ndarray
         """
         N = qureg.numQubitsRepresented
-        density_matrix = np.zeros((2**N, 2**N), dtype=np.complex)
+        density_matrix = np.zeros((2**N, 2**N), dtype=complex)
         if qureg.isDensityMatrix:
             for row in range(2**N):
                 for column in range(2**N):
                     density_matrix[row, column] = getDensityMatrixatRowColumn()(qureg, row, column)
         else:
-            state_vec = np.zeros((2**N, 1), dtype=np.complex)
+            state_vec = np.zeros((2**N, 1), dtype=complex)
             for index in range(2**N):
                 state_vec[index] = getStateVectoratIndex()(qureg, index)
             density_matrix = state_vec @ state_vec.conj().T
@@ -482,7 +482,7 @@ class getOccupationProbability(_PYQUEST):
             np.ndarray
         """
         N = qureg.numQubitsRepresented
-        prob_vec = np.zeros((2**N,), dtype=np.complex)
+        prob_vec = np.zeros((2**N,), dtype=complex)
         if qureg.isDensityMatrix:
             for index in range(2**N):
                 prob_vec[index] = (
@@ -565,7 +565,7 @@ class getStateVector(_PYQUEST):
                 but density matrix qureg was used
         """
         N = qureg.numQubitsRepresented
-        state_vec = np.zeros((2**N,), dtype=np.complex)
+        state_vec = np.zeros((2**N,), dtype=complex)
         if qureg.isDensityMatrix:
             raise RuntimeError("Reference qureg has to be a wavefunction qureg but "
                                + "density matrix qureg was used")
