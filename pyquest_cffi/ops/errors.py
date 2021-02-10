@@ -146,8 +146,8 @@ class mixDephasing(_PYQUEST):
         """
         sqp = np.sqrt(probability)
         sqmp = np.sqrt(1 - probability)
-        dephasing = np.array([[sqp, 0], [0, -sqp]], dtype=np.complex)
-        residual = np.array([[sqmp, 0], [0, sqmp]], dtype=np.complex)
+        dephasing = np.array([[sqp, 0], [0, -sqp]], dtype=complex)
+        residual = np.array([[sqmp, 0], [0, sqmp]], dtype=complex)
         return (residual, dephasing)
 
     def superoperator_matrix(self, probability: float, **kwargs) -> np.ndarray:
@@ -170,7 +170,7 @@ class mixDephasing(_PYQUEST):
         matrix = np.array([[1, 0, 0, 0],
                            [0, 1 - 2 * probability, 0, 0],
                            [0, 0, 1 - 2 * probability, 0],
-                           [0, 0, 0, 1]], dtype=np.complex)
+                           [0, 0, 0, 1]], dtype=complex)
         return matrix
 
 
@@ -233,13 +233,13 @@ class mixDepolarising(_PYQUEST):
         sqp = np.sqrt(probability / 3)
         sqmp = np.sqrt(1 - probability)
         residual = np.array([[sqmp, 0],
-                             [0, sqmp]], dtype=np.complex)
+                             [0, sqmp]], dtype=complex)
         depol1 = np.array([[0, sqp],
-                           [sqp, 0]], dtype=np.complex)
+                           [sqp, 0]], dtype=complex)
         depol2 = np.array([[0, -1j * sqp],
-                           [1j * sqp, 0]], dtype=np.complex)
+                           [1j * sqp, 0]], dtype=complex)
         depol3 = np.array([[sqp, 0],
-                           [0, -sqp]], dtype=np.complex)
+                           [0, -sqp]], dtype=complex)
         return (residual, depol1, depol2, depol3)
 
     def superoperator_matrix(self, probability: float, **kwargs) -> np.ndarray:
@@ -265,7 +265,7 @@ class mixDepolarising(_PYQUEST):
         matrix = np.array([[one_plus, 0, 0, two_three],
                            [0, one_minus, 0, 0],
                            [0, 0, one_minus, 0],
-                           [two_three, 0, 0, one_plus]], dtype=np.complex)
+                           [two_three, 0, 0, one_plus]], dtype=complex)
         return matrix
 
 
@@ -316,8 +316,8 @@ class mixDamping(_PYQUEST):
         """
         sqp = np.sqrt(probability)
         sqmp = np.sqrt(1 - probability)
-        damping = np.array([[0, sqp], [0, 0]], dtype=np.complex)
-        residual = np.array([[1, 0], [0, sqmp]], dtype=np.complex)
+        damping = np.array([[0, sqp], [0, 0]], dtype=complex)
+        residual = np.array([[1, 0], [0, sqmp]], dtype=complex)
         return (residual, damping)
 
     def superoperator_matrix(self, probability: float, **kwargs) -> np.ndarray:
@@ -338,11 +338,11 @@ class mixDamping(_PYQUEST):
             np.ndarray
         """
         sqmp = np.sqrt(1 - probability)
-        matrix = np.zeros((16, 16), dtype=np.complex)
+        matrix = np.zeros((16, 16), dtype=complex)
         matrix = np.array([[1, 0, 0, probability],
                            [0, sqmp, 0, 0],
                            [0, 0, sqmp, 0],
-                           [0, 0, 0, 1 - probability]], dtype=np.complex)
+                           [0, 0, 0, 1 - probability]], dtype=complex)
         return matrix
 
 
@@ -478,19 +478,19 @@ class mixTwoQubitDephasing(_PYQUEST):
         residual = np.array([[sqmp, 0, 0, 0],
                              [0, sqmp, 0, 0],
                              [0, 0, sqmp, 0],
-                             [0, 0, 0, sqmp]], dtype=np.complex)
+                             [0, 0, 0, sqmp]], dtype=complex)
         dephasing1 = np.array([[sqp, 0, 0, 0],
                                [0, 0, sqp, 0],
                                [0, 0, -sqp, 0],
-                               [0, 0, 0, -sqp]], dtype=np.complex)
+                               [0, 0, 0, -sqp]], dtype=complex)
         dephasing2 = np.array([[sqp, 0, 0, 0],
                                [0, 0, -sqp, 0],
                                [0, 0, sqp, 0],
-                               [0, 0, 0, -sqp]], dtype=np.complex)
+                               [0, 0, 0, -sqp]], dtype=complex)
         dephasing3 = np.array([[-sqp, 0, 0, 0],
                                [0, 0, sqp, 0],
                                [0, 0, sqp, 0],
-                               [0, 0, 0, -sqp]], dtype=np.complex)
+                               [0, 0, 0, -sqp]], dtype=complex)
         return (residual, dephasing1, dephasing2, dephasing3)
 
     def superoperator_matrix(self, probability: float, **kwargs) -> np.ndarray:
@@ -514,7 +514,7 @@ class mixTwoQubitDephasing(_PYQUEST):
             NotImplementedError: not implemented
         """
         raise NotImplementedError()
-        matrix = np.zeros((16, 16), dtype=np.complex)
+        matrix = np.zeros((16, 16), dtype=complex)
         for ci in range(0, 16):
             matrix[ci, ci] = 1 if (ci % 4) == 1 else 1 - 2 * (probability)
         return matrix
@@ -677,7 +677,7 @@ class mixMultiQubitKrausMap(_PYQUEST):
         Returns:
             np.ndarray
         """
-        matrix = np.zeros((2 * operators[0].shape[0], 2 * operators[0].shape[0]), dtype=np.complex)
+        matrix = np.zeros((2 * operators[0].shape[0], 2 * operators[0].shape[0]), dtype=complex)
         for op in operators:
             matrix += np.kron(op, op.conjugate().T)
         return matrix
@@ -755,7 +755,7 @@ class mixTwoQubitKrausMap(_PYQUEST):
         Returns:
             np.ndarray
         """
-        matrix = np.zeros((2 * operators[0].shape[0], 2 * operators[0].shape[0]), dtype=np.complex)
+        matrix = np.zeros((2 * operators[0].shape[0], 2 * operators[0].shape[0]), dtype=complex)
         for op in operators:
             matrix += np.kron(op, op.conjugate().T)
         return matrix
@@ -829,7 +829,7 @@ class mixKrausMap(_PYQUEST):
         Returns:
             np.ndarray
         """
-        matrix = np.zeros((2 * operators[0].shape[0], 2 * operators[0].shape[0]), dtype=np.complex)
+        matrix = np.zeros((2 * operators[0].shape[0], 2 * operators[0].shape[0]), dtype=complex)
         for op in operators:
             matrix += np.kron(op, op.conjugate().T)
         return matrix
@@ -908,7 +908,7 @@ class mixPauli(_PYQUEST):
             np.ndarray
         """
         operators = self.Kraus_matrices(probX, probY, probZ)
-        matrix = np.zeros((2 * operators[0].shape[0], 2 * operators[0].shape[0]), dtype=np.complex)
+        matrix = np.zeros((2 * operators[0].shape[0], 2 * operators[0].shape[0]), dtype=complex)
         for op in operators:
             matrix += np.kron(op, op.conjugate().T)
         return matrix
