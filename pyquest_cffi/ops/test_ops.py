@@ -422,7 +422,7 @@ def build_two_qubit_matrix_targets(gate, gate_args, control=None) -> np.ndarray:
     (ops.applyMultiControlledMatrixN, [[1, 2], [3, 4], 'matrix']),
     (ops.applyPauliHamil, [utils.createPauliHamil()(5, 2),
                            utils.createQureg()(5, utils.createQuestEnv()()), 'pauli'],),
-    (ops.applyPauliSum, [[[0, 1, 2, 3], [3, 2, 1, 0]], [0.4, 0.3],
+    (ops.applyPauliSum, [[[0, 1, 2, 3, 0], [3, 2, 1, 0, 0]], [0.4, 0.3],
                          utils.createQureg()(5, utils.createQuestEnv()())]),
     (ops.applyTrotterCircuit, [utils.createPauliHamil()(5, 2), 0.7, 1, 2, 'pauli'])
     ])
