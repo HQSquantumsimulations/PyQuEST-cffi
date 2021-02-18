@@ -2626,7 +2626,7 @@ class applyPauliSum(_PYQUEST):
             pointer_paulis[co] = p
         pointer = ffi_quest.new("{}[{}]".format(qreal, len(coefficients)))
         for co, c in enumerate(coefficients):
-            pointer[co] = c
+            pointer[co] = float(c)
         quest.applyPauliSum(qureg,
                             pointer_paulis,
                             pointer,
