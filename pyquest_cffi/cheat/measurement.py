@@ -530,10 +530,12 @@ class getRepeatedMeasurement(_PYQUEST):
         return_record = np.zeros((number_measurements, len(qubits_to_readout_index_dict)))
         if qureg.isDensityMatrix:
             for index in range(2**N):
-                probabilities[index] = np.real(getDensityMatrixatRowColumn()(qureg, index, index))
+                probabilities[index] = np.abs(
+                    np.real(getDensityMatrixatRowColumn()(qureg, index, index)))
         else:
             for index in range(2**N):
-                probabilities[index] = np.real(getAbsoluteValSquaredatIndex()(qureg, index))
+                probabilities[index] = np.abs(
+                    np.real(getAbsoluteValSquaredatIndex()(qureg, index)))
         outcomes = np.random.choice(range(2**N), number_measurements, p=probabilities)
         for co, out in enumerate(outcomes):
             measurement_record[co, :] = index_to_basis_state(out, number_qubits)
