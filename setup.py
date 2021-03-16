@@ -130,7 +130,6 @@ def setup_packages():
     install_requires = [
         'cffi',
         'numpy',
-        'pytest',
     ]
     packages = find_packages(exclude=('docs'))
 
@@ -149,7 +148,7 @@ def setup_packages():
                   'author_email': 'info@quantumsimulations.de',
                   'url': '',
                   'download_url': 'https://github.com/HQSquantumsimulations/PyQuEST-cffi/archive/3.2.3.tar.gz',
-                  'license': "Apache License 2.0",
+                  'license': 'Apache-2.0',
                   'install_requires': install_requires,
                   'setup_requires': ['cffi'],
                   # 'include_package_data': True,
