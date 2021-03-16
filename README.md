@@ -1,10 +1,10 @@
 # PyQuEST-cffi README
 
 [![Documentation Status](https://readthedocs.org/projects/pyquest/badge/?version=latest)](https://pyquest.readthedocs.io/en/latest/?badge=latest)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/HQSquantumsimulations/PyQuEST-cffi/Python%20package)
-![PyPI](https://img.shields.io/pypi/v/pyquest_cffi)
+[![GitHub Workflow Status](https://github.com/HQSquantumsimulations/PyQuEST-cffi/workflows/Python%20package/badge.svg)](https://github.com/HQSquantumsimulations/PyQuEST-cffi/actions)
+[![PyPI](https://img.shields.io/pypi/v/pyquest_cffi)](https://pypi.org/project/pyquest_cffi/)
 ![PyPI - License](https://img.shields.io/pypi/l/pyquest_cffi)
-![PyPI - Format](https://img.shields.io/pypi/format/pyquest_cffi)
+[![PyPI - Format](https://img.shields.io/pypi/format/pyquest_cffi)](https://pypi.org/project/pyquest_cffi/)
 
 PyQuEST-cffi is a python interface to [QuEST](https://github.com/QuEST-Kit/QuEST) based on [cffi](https://cffi.readthedocs.io/en/latest/index.html) developed by HQS Quantum Simulations. QuEST is an open source toolkit for the simulation of quantum circuits (quantum computers).
 
