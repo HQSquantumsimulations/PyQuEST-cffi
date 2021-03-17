@@ -32,6 +32,6 @@ If you want to install PyQuEST-cffi in development mode we recommend
 
 ```shell
 # PyQuEST-cffi add QuEST as a git submodule
-git clone --recurse-submodules https://github.com/HQSquantumsimulations/pyquest_cffi.git
-pip install -e pyquest_cffi/
+git clone --recurse-submodules https://github.com/HQSquantumsimulations/PyQuEST-cffi.git
+pip install -e PyQuEST-cffi/
 ```
