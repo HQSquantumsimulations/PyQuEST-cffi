@@ -813,14 +813,6 @@ class mixKrausMap(_PYQUEST):
                     operator_pointers[co].real[i][j] = float(np.real(op[i][j]))
                     operator_pointers[co].imag[i][j] = float(np.imag(op[i][j]))
 
-        # for co, op in enumerate(operators):
-        #     for i in range(2):
-        #         for j in range(2):
-        #             if operator_pointers[co].real[i][j] != op[i][j].real:
-        #                 raise RuntimeError("Reals don't match")
-        #             if operator_pointers[co].imag[i][j] != op[i][j].imag:
-        #                 raise RuntimeError("Imags don't match")
-
         quest.mixKrausMap(
             qureg,
             qubit,
