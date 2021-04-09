@@ -6,3 +6,4 @@
 *tmp*
 *.egg-info
 _quest.c
+pyquest_cffi/questlib/*

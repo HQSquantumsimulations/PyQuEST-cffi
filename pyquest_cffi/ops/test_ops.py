@@ -20,7 +20,7 @@ import numpy.testing as npt
 from pyquest_cffi import ops
 from pyquest_cffi import cheat
 from pyquest_cffi import utils
-from typing import List
+from typing import List, Tuple, Any
 
 
 @pytest.mark.parametrize("gate", [ops.hadamard,
@@ -415,18 +415,18 @@ def build_two_qubit_matrix_targets(gate, gate_args, control=None) -> np.ndarray:
 
 
 @pytest.mark.parametrize("applied", [
-    (ops.applyDiagonalOp, [(5, utils.createQuestEnv()())]),
-    (ops.applyMatrix2, [2, np.array([[0, 1], [2, 1]])]),
+    (ops.applyDiagonalOp, [(5, utils.createQuestEnv()()), 'Neither']),
+    (ops.applyMatrix2, [2, np.array([[0, 1], [2, 1]]), 'Neither']),
     (ops.applyMatrix4, [1, 3, 'matrix']),
     (ops.applyMatrixN, [[1, 2], 'matrix']),
     (ops.applyMultiControlledMatrixN, [[1, 2], [3, 4], 'matrix']),
     (ops.applyPauliHamil, [utils.createPauliHamil()(5, 2),
                            utils.createQureg()(5, utils.createQuestEnv()()), 'pauli'],),
     (ops.applyPauliSum, [[[0, 1, 2, 3, 0], [3, 2, 1, 0, 0]], [0.4, 0.3],
-                         utils.createQureg()(5, utils.createQuestEnv()())]),
+                         utils.createQureg()(5, utils.createQuestEnv()()), 'Neither']),
     (ops.applyTrotterCircuit, [utils.createPauliHamil()(5, 2), 0.7, 1, 2, 'pauli'])
     ])
-def test_apply_functions(applied) -> None:
+def test_apply_functions(applied: Tuple[Any, List]) -> None:
     """Test all non-deprecated apply functions"""
     env = utils.createQuestEnv()()
     qubits = utils.createQureg()(5, env)
@@ -434,23 +434,24 @@ def test_apply_functions(applied) -> None:
     op = applied[0]()
     positional_args = applied[1]
     matrix = np.array([[1, 0, 0, 1], [0, 2, 0, 2], [2, 0, 2, 0], [1, 0, 0, 1]])
-    if positional_args[-1] == 'matrix':
+    last_element: str = positional_args.pop()
+    if last_element == 'matrix':
         args = [qubits]
         args.extend(positional_args)
-        args[-1] = matrix
-    elif positional_args[-1] == 'pauli':
-        pauli_hamil = positional_args[0]
+        args.append(matrix)
+    elif last_element == 'pauli':
+        pauli_hamil = positional_args.pop(0)
         cheat.initPauliHamil()(pauli_hamil=pauli_hamil,
                                coeffs=[0.0, 0.0, 0.0, 0.0, 0.0],
                                codes=[[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]])
         args = [qubits, pauli_hamil]
-        args.extend(positional_args[1:-1])
+        args.extend(positional_args)
     else:
         args = [qubits]
         args.extend(positional_args)
 
     op(*args)
-    if positional_args[-1] == 'matrix':
+    if last_element == 'matrix':
         npt.assert_array_equal(matrix, op.matrix(matrix=matrix))
 
 
