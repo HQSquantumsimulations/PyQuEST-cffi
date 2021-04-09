@@ -64,21 +64,21 @@ def test_set_amps_qureg() -> None:
 
     cheat.setAmps()(qureg=qureg_statevec,
                     startind=0,
-                    reals=[1, 2, 0, 1],
-                    imags=[0, 3, 4, 3],
+                    reals=[0.70710678, 0, 0, 0],
+                    imags=[0, 0, 0, 0.70710678],
                     numamps=4)
     state_vec = cheat.getStateVector()(qureg=qureg_statevec)
-    state_array = np.array([1 + 0j, 2 + 3j, 0 + 4j, 1 + 3j])
+    state_array = 0.70710678 * np.array([1, 0, 0, 1j])
     assert np.all(state_vec == state_array)
 
     cheat.setDensityAmps()(qureg=qureg_dens,
-                           reals=[[1, 2, 1, 2], [0, 1, 0, 1], [1, 0, 1, 0], [2, 1, 2, 1]],
-                           imags=[[4, 3, 4, 3], [3, 2, 3, 2], [2, 3, 2, 3], [3, 4, 3, 4]],)
+                           reals=[[0.5, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0.5]],
+                           imags=[[0, 0, 0, -0.5], [0, 0, 0, 0], [0, 0, 0, 0], [0.5, 0, 0, 0]],)
     dens_mat = cheat.getDensityMatrix()(qureg=qureg_dens)
-    dens_array = np.array([[1 + 4j, 2 + 3j, 1 + 4j, 2 + 3j],
-                           [3j, 1 + 2j, 3j, 1 + 2j],
-                           [1 + 2j, 3j, 1 + 2j, 3j],
-                           [2 + 3j, 1 + 4j, 2 + 3j, 1 + 4j]])
+    dens_array = np.array([[0.5, 0, 0, -0.5j],
+                           [0, 0, 0, 0],
+                           [0, 0, 0, 0],
+                           [0.5j, 0, 0, 0.5]])
     assert np.all(dens_mat == dens_array)
 
     # for a wavefunction qureg:
