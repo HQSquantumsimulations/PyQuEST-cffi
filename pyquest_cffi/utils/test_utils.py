@@ -87,7 +87,7 @@ def test_QuReg() -> None:
         argument_type_list[2] = utils.reportStateToScreen().argtype
 
     npt.assert_array_equal(result_type_list, ["void", "void", "void"])
-    npt.assert_array_equal(argument_type_list, [["Qureg"], ["Qureg"], ["Qureg", "QuESTEnv", "int"]])
+    npt.assert_equal(argument_type_list, [["Qureg"], ["Qureg"], ["Qureg", "QuESTEnv", "int"]])
 
     for qureg in [wave_qureg, density_qureg, cloned_qureg]:
         utils.destroyQureg()(env=env, qubits=qureg)

@@ -82,7 +82,7 @@ def test_get_simple() -> None:
     qureg = utils.createQureg()(2, env)
     cheat.initZeroState()(qureg)
     index = 1
-    operator_matrix = np.array([[1, 0, 2, 0], [0, 1, 0, 2], [0, 2, 0, 1], [2, 0, 1, 0]])
+    operator_matrix = 0.5 * np.array([[1, 0, 2, 0], [0, 1, 0, 2], [0, 2, 0, 1], [2, 0, 1, 0]])
 
     with npt.assert_raises(RuntimeError):
         density_matrix = cheat.getDensityAmp()(qureg=qureg, row=1, column=1)
@@ -101,7 +101,7 @@ def test_get_simple() -> None:
     assert imag_val_sate_vec == 0
     assert num_amps == 4
     assert num_qubits == 2
-    assert expec_val == 1
+    assert expec_val == 0.5
 
     qureg = utils.createDensityQureg()(2, env)
     cheat.initZeroState()(qureg)
@@ -120,7 +120,7 @@ def test_get_simple() -> None:
     assert density_matrix == 0
     assert num_amps == 4
     assert num_qubits == 2
-    assert expec_val == 1
+    assert expec_val == 0.5
 
 
 def test_get_complicated() -> None:
