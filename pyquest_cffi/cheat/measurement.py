@@ -527,7 +527,7 @@ class getRepeatedMeasurement(_PYQUEST):
         number_qubits = qureg.numQubitsRepresented
         probabilities = np.zeros((2**N, ))
         measurement_record = np.zeros((number_measurements, N))
-        return_record = np.zeros((number_measurements, len(qubits_to_readout_index_dict)))
+        return_record = np.zeros((number_measurements, len(qubits_to_readout_index_dict)), dtype=int)
         if qureg.isDensityMatrix:
             for index in range(2**N):
                 probabilities[index] = np.abs(
@@ -975,7 +975,7 @@ def index_to_basis_state(index: int,
     """
     b_list = list()
     for k in range(0, num_qubits_represented):
-        b_list.append((index // 2**k) % 2)
+        b_list.append((int(index) // 2**k) % 2)
     if endianness == 'little':
         basis_state = b_list
     elif endianness == 'big':
