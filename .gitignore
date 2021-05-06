@@ -6,3 +6,11 @@
 *tmp*
 *.egg-info
 _quest.c
+pyquest_cffi/questlib/*.o
+pyquest_cffi/questlib/*.c
+pyquest_cffi/questlib/*.dylib
+pyquest_cffi/questlib/src/*
+pyquest_cffi/questlib/CMakeFiles/*
+pyquest_cffi/questlib/*.txt
+pyquest_cffi/questlib/Makefile
+pyquest_cffi/questlib/*.cmake

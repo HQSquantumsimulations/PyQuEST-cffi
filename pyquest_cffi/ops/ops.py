@@ -2596,7 +2596,7 @@ class applyPauliSum(_PYQUEST):
         qureg: quantum register input, is not changed
         paulis: List of Lists of Pauli operators in each product
                 encoded as int via IDENTITY=0, PAULI_X=1, PAULI_Y=2, PAULI_Z=3
-        matrix: N by N matrix that defines the N qubit gate
+        coefficients: coefficients of the paulis to be summed
         qureg_out: quantum register after application of Pauli sum
 
     Warning:
@@ -2622,11 +2622,15 @@ class applyPauliSum(_PYQUEST):
 
         Raises:
             RuntimeError: Size of Qureg and number of lenght of PauliProduct does not match
+            ValueError: Pauli arrays need to only have values in [0, 1, 2, 3]
         """
         for product in paulis:
             if qureg.numQubitsRepresented != len(product):
                 raise RuntimeError(
                     "Size of Qureg and number of lenght of PauliProduct does not match")
+            if not all((pauli in [0, 1, 2, 3]) for pauli in product):
+                raise ValueError("Pauli arrays need to only have values in [0, 1, 2, 3]")
+
         if qureg.numQubitsRepresented != qureg_out.numQubitsRepresented:
             raise RuntimeError("Size of Qureg and output QuregS does not match")
         flat_list = [p for product in paulis for p in product]

@@ -785,13 +785,24 @@ class mixKrausMap(_PYQUEST):
             operators: The Kraus operators
 
         Raises:
+            RuntimeError: Qureg has to be a density matrix qureg but wavefunction qureg was used
+            RuntimeError: Target qubit is not in the Qureg
+            RuntimeError: Too many operators given, must be in [1, 4]
             RuntimeError: Number of target qubits and dimension of Kraus operators mismatch
             RecursionError: Not a valid Kraus map
         """
+        if not qureg.isDensityMatrix:
+            raise RuntimeError("Qureg has to be a density matrix qureg but "
+                               + "wavefunction qureg was used")
+        if qubit not in list(range(qureg.numQubitsRepresented)):
+            raise RuntimeError("Target qubit is not in the Qureg")
+        if len(operators) < 1 or len(operators) > 4:
+            raise RuntimeError("Too many operators given, must be in [1, 4]")
         for op in operators:
             if op.shape[0] != 2 or op.shape[1] != 2:
                 raise RuntimeError("Number of target qubits"
                                    + " and dimension of Kraus operators mismatch")
+
         operator_sum = np.sum([op.conjugate().T @ op for op in operators], axis=0)
         if not np.isclose(operator_sum, np.eye(2)).all():
             raise RecursionError("Not a valid Kraus map")
@@ -799,8 +810,9 @@ class mixKrausMap(_PYQUEST):
         for co, op in enumerate(operators):
             for i in range(2):
                 for j in range(2):
-                    operator_pointers[co].real[i][j] = np.real(op[i, j])
-                    operator_pointers[co].imag[i][j] = np.imag(op[i, j])
+                    operator_pointers[co].real[i][j] = float(np.real(op[i][j]))
+                    operator_pointers[co].imag[i][j] = float(np.imag(op[i][j]))
+
         quest.mixKrausMap(
             qureg,
             qubit,

@@ -430,7 +430,7 @@ class getExpectationValue(_PYQUEST):
             float
         """
         density_matrix = getDensityMatrix()(qureg)
-        return float(np.trace(operator_matrix @ density_matrix))
+        return complex(np.trace(operator_matrix @ density_matrix))
 
 
 class getDensityMatrix(_PYQUEST):
