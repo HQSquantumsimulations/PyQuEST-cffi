@@ -139,7 +139,7 @@ def setup_packages():
                       + ' to QuEST quantum simulation toolkit;'
                       + '  Compile functionality, create, build and import'
                       + ' valid QuEST source code from python'),
-                  'version': '3.2.4',
+                  'version': '3.2.5',
                   'long_description': readme,
                   'long_description_content_type': 'text/markdown',
                   'packages': packages,
