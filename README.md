@@ -16,7 +16,7 @@ For more information see the detailed code [documentation](https://pyquest.readt
 
 Please note, PyQuEST-cffi is not an official QuEST project.
 
-In the developing branches of QuEST the QuEST project has implemented a [ctypes](https://docs.python.org/3.6/library/ctypes.html)-based python interface [QuestPy](https://github.com/QuEST-Kit/QuEST/tree/master/utilities/QuESTPy) for unit testing.
+In the developing branches of QuEST the QuEST project has implemented a [ctypes](https://docs.python.org/3.7/library/ctypes.html)-based python interface [QuestPy](https://github.com/QuEST-Kit/QuEST/tree/master/utilities/QuESTPy) for unit testing.
 
 Do not assume that any bugs occuring using PyQuEST-cffi are QuEST bugs unless the same bug occurs when compiling/using a QuEST c-program with the official release version of [QuEST](https://github.com/QuEST-Kit/QuEST).
 

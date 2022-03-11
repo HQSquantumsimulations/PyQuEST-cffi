@@ -158,7 +158,7 @@ def setup_packages():
                   'cmdclass': {'build_ext': CustomBuild,
                                'build_py': BuildPyCommand},
                   'zip_safe': False,
-                  'python_requires': '>=3.6',
+                  'python_requires': '>=3.7',
                   'ext_modules': [CustomExtension('questlib')],
                   }
     setup(**setup_args)
