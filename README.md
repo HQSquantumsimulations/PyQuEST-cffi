@@ -1,3 +1,7 @@
+# Archive note
+
+The PyQuEST-cffi project is no longer actively developed by HQS Quantum Simulations and the repository has been archived. Consider using [qoqo](https://github.com/HQSquantumsimulations/qoqo) with [qoqo-quest](https://github.com/HQSquantumsimulations/qoqo-quest) instead.
+
 # PyQuEST-cffi README
 
 [![Documentation Status](https://readthedocs.org/projects/pyquest/badge/?version=latest)](https://pyquest.readthedocs.io/en/latest/?badge=latest)
